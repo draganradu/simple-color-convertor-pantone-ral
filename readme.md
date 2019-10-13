@@ -1,16 +1,16 @@
-# Simple color convertor Pantone Ral
-This is a simple package to convert colors.
+# Simple color converter Pantone Ral
+It's as simple as install and use. Add the input to the correct data passed and the to the desired output and that is it.
 
 ## Install
 ```
-$ npm install simple-color-convertor-pantone-ral
+$ npm install simple-color-converter
 ```
 ## Usage
 
 ```javascript
-const colorConvertor = require('simple-color-convertor-pantone-ral');
+const colorConverter = require('simple-color-convertor');
 
-var color = colorConvertor({
+var color = colorConverter({
     hex3: '#4ff',
     to: 'ral'
 })
