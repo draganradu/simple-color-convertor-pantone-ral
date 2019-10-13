@@ -1,15 +1,18 @@
 {
   "name": "simple-color-convertor-pantone-ral",
-  "version": "1.0.1",
-  "description": "This is a simple colors convertor packeged as a pachage",
+  "version": "1.0.2",
+  "description": "This is a simple colors convertor packeged as a npm pachage",
   "keywords": [
     "color",
     "pantone",
     "ral",
     "color convertor",
-    "hex color"
+    "hex color",
+    "rgb",
+    "hsl"
   ],
   "main": "color-convertor-compoent.js",
+  "repository": "draganradu/simple-color-convertor-pantone-ral",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
