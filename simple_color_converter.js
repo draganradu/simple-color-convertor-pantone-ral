@@ -10,13 +10,13 @@ colorConvertor.hex6.hex3 = function (hex6) {
         let temp = ''
         temp = [a, b].join('')
         temp = parseInt(temp, 16)/16
-        temp = Math.round(temp)
+        temp = Math.floor(temp)
         return temp.toString(16)
     }
     const temp = {
         r: convertor(hex6[0], hex6[1]),
         g: convertor(hex6[2], hex6[3]),
-        b: convertor(hex6[3], hex6[4]),
+        b: convertor(hex6[4], hex6[5]),
     }
     return [temp.r, temp.g, temp.b].join('')
 }
@@ -54,7 +54,7 @@ colorConvertor.hex6.hsl = function (hex6) {
 // --- hex 3
 colorConvertor.hex3 = {};
 colorConvertor.hex3.hex6 = function (hex3) {
-    return [hex3[0],hex3[0],hex3[1],hex3[1],hex3[1],hex3[2],hex3[2]].join('')
+    return [hex3[0],hex3[0],hex3[1],hex3[1],hex3[2],hex3[2]].join('')
 }
 
 colorConvertor.hex3.rgb = function (hex3) {
@@ -188,6 +188,9 @@ colorConvertor.rgb.pantone = function(rgb){
 // --- factory cleaning squad
 const factoryCleanar = {}
 factoryCleanar.from = function (objectData) {
+    if(objectData.hasOwnProperty('hex')){
+        objectData.hex6 = objectData.hex
+    }
     return Object.keys(objectData).filter(from => ['hex6', 'hex3', 'rgb', 'ral', 'pantone', 'hsl'].indexOf(from) > -1  )[0]
 } 
 
@@ -215,7 +218,7 @@ factoryCleanar.to = function (to) {
 const colorFactory = function (settings) {
     
     settings.from = factoryCleanar.from(settings)
-    settings.to =  factoryCleanar.to(settings.to || 'hex6')
+    settings.to =  factoryCleanar.to(settings.to)
     if (settings.from === settings.to) { 
         settings.output = settings[settings.from]
         return settings

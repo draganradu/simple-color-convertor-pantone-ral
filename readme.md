@@ -8,7 +8,7 @@ $ npm install simple-color-converter
 ## Usage
 
 ```javascript
-const colorConverter = require('simple-color-convertor');
+const colorConverter = require('simple-color-converter');
 
 var color = colorConverter({
     hex3: '#4ff',

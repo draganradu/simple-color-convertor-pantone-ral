@@ -1,13 +1,13 @@
 {
   "name": "simple-color-converter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This is a simple colors converter packaged as an npm package",
   "keywords": [
-    "simple color converter",
+    "simple-color-converter",
     "color",
     "pantone",
     "ral",
-    "color converter",
+    "color-converter",
     "hex color",
     "rgb",
     "hsl"
@@ -15,7 +15,7 @@
   "main": "simple_color_convertor.js",
   "repository": "draganradu/simple-color-convertor-pantone-ral",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node index.test.js"
   },
   "author": "Radu Dragan <draganaurelradu@gmail.com>",
   "license": "MIT"
