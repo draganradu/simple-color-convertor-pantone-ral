@@ -20,23 +20,24 @@ console.log(color) // { ral: 'RAL 9010', name: 'Pure white' }
 
 **to** is the argument used to generate the correct outptut, all posible inputs are strings 
 
-| to    | output    | note  |
-| ---   | ---       | ---   |
-| hex   | '44fffff' | it defaults to hex6 |
-| hex6  | '44fffff' |       |
-| hex3  | '4ff'     |       |
-| rgb   | { r: 68, g: 255, b: 255 }||
-| HSL   | { h: 140, s: 39.7, l: 55.1 } ||
-|pantone| 305-c ||
-| ral   | { ral: 'RAL 9010', name: 'Pure white' } | |
+| to        | output    | data type     | note  |
+| ---       | ---       | ---           | ---   |
+| hex       | '44FFFF'  | string [6]    | it defaults to hex6 |
+| hex6      | '44FFFF'  | string [6]    |       |
+| hex3      | '4FF'     | string [3]    |       |
+| rgb       | { r: 68, g: 255, b: 255 }     | object [3] |       |
+| hsl       | { h: 140, s: 39.7, l: 55.1 }  | object [3] |       |
+|pantone    | '305-c'   | string [5]        |       |
+| ral       | { ral: 'RAL 9010', name: 'Pure white' } | object [2] |       |
+| grayscale | 78        | integer           |       |
 
 
 **input** is the argument used for the correct input color.
 
-| innput| output    | type      |
-| ---   | ---       | ---       |
-| hex   | '44fffff' | string    |
-| hex6  | '#44fffff'| string    |
-| hex3  | '4ff'     | string    |
-| hex3  | '#4ff'    | string    |
-| rgb   | { r: 68, g: 255, b: 255 }| object / numbers|
+| input | output    | type          |
+| ---   | ---       | ---           |
+| hex   | '44FFFF'  | string [6]    |
+| hex6  | '#44FFFF' | string [7]    |
+| hex3  | '4ff'     | string [3]    |
+| hex3  | '#4ff'    | string [4]    |
+| rgb   | { r: 68, g: 255, b: 255 } | object / numbers|

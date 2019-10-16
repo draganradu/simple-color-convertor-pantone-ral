@@ -1,17 +1,19 @@
 const ralPattern = require('./compiled_ral.json')
 const pantonePattern = require('./compiled_pantone.json')
 
-const colorConvertor = {};
+const colorConvertor = {}
+const _this = colorConvertor
 
 // --- hex 6
-colorConvertor.hex6 = {};
+colorConvertor.hex6 = {}
 colorConvertor.hex6.hex3 = function (hex6) {
     function convertor (a,b) {
         let temp = ''
         temp = [a, b].join('')
         temp = parseInt(temp, 16)/16
         temp = Math.floor(temp)
-        return temp.toString(16)
+        temp = temp.toString(16)
+        return temp.toUpperCase()
     }
     const temp = {
         r: convertor(hex6[0], hex6[1]),
@@ -31,57 +33,70 @@ colorConvertor.hex6.rgb = function (hex6) {
 
 colorConvertor.hex6.ral = function (hex6) {
     var temp = hex6
-    temp = colorConvertor.hex6.rgb(temp)
-    temp = colorConvertor.rgb.ral(temp)
+    temp = _this.hex6.rgb(temp)
+    temp = _this.rgb.ral(temp)
     return temp
 }  
 
 colorConvertor.hex6.pantone = function (hex6) {
     var temp = hex6
-    temp = colorConvertor.hex6.rgb(temp)
-    temp = colorConvertor.rgb.pantone(temp)
+    temp = _this.hex6.rgb(temp)
+    temp = _this.rgb.pantone(temp)
     return temp
 }  
 
 colorConvertor.hex6.hsl = function (hex6) {
     var temp = hex6
-    temp = colorConvertor.hex6.rgb(temp)
-    temp = colorConvertor.rgb.hsl(temp)
+    temp = _this.hex6.rgb(temp)
+    temp = _this.rgb.hsl(temp)
     return temp
 }  
 
+colorConvertor.hex6.grayscale = function (hex6){
+    temp = hex6
+    temp = _this.hex6.rgb(temp)
+    temp = _this.rgb.grayscale(temp)
+    return temp
+}
 
 // --- hex 3
 colorConvertor.hex3 = {};
 colorConvertor.hex3.hex6 = function (hex3) {
-    return [hex3[0],hex3[0],hex3[1],hex3[1],hex3[2],hex3[2]].join('')
+    return [hex3[0],hex3[0],hex3[1],hex3[1],hex3[2],hex3[2]].join('').toUpperCase()
 }
 
 colorConvertor.hex3.rgb = function (hex3) {
-    var temp = colorConvertor.hex3.hex6(hex3)
-    temp = colorConvertor.hex6.rgb(temp)
+    var temp = hex3
+    temp = _this.hex3.hex6(temp)
+    temp = _this.hex6.rgb(temp)
     return temp
 }
 
 colorConvertor.hex3.ral = function (hex3) {
     var temp = hex3,
-    temp = colorConvertor.hex3.hex6(temp)
-    temp = colorConvertor.hex6.rgb(temp)
-    temp = colorConvertor.rgb.ral(temp)
+    temp = _this.hex3.hex6(temp)
+    temp = _this.hex6.rgb(temp)
+    temp = _this.rgb.ral(temp)
     return temp
 }
 
 colorConvertor.hex3.pantone = function (hex3) {
     var temp = hex3,
-    temp = colorConvertor.hex3.hex6(temp)
-    temp = colorConvertor.hex6.rgb(temp)
-    temp = colorConvertor.rgb.pantone(temp)
+    temp = _this.hex3.hex6(temp)
+    temp = _this.hex6.rgb(temp)
+    temp = _this.rgb.pantone(temp)
     return temp
 }
 
-
 colorConvertor.hex3.hsl = function (hex3){
-    return colorConvertor.rgb.hsl(colorConvertor.hex3.rgb(hex3))
+    return _this.rgb.hsl(colorConvertor.hex3.rgb(hex3))
+}
+
+colorConvertor.hex3.grayscale = function (hex3){
+    temp = hex3
+    temp = _this.hex3.rgb(temp)
+    temp = _this.rgb.grayscale(temp)
+    return temp
 }
 
 // --- rgb
@@ -90,7 +105,10 @@ colorConvertor.rgb.hex6 = function (rgb) {
     return [rgb.r.toString(16), rgb.g.toString(16), rgb.b.toString(16)].join('')
 }
 colorConvertor.rgb.hex3 = function (rgb) {
-    return colorConvertor.hex6.hex3(colorConvertor.rgb.hex6(rgb))
+    let temp = rgb
+    temp = _this.rgb.hex6(temp)
+    temp = _this.hex6.hex3(temp)
+    return temp.toUpperCase()
 }
 
 colorConvertor.rgb.hsl = function (rgb) {
@@ -137,6 +155,10 @@ colorConvertor.rgb.hsl = function (rgb) {
         rgb.l = +(rgb.l * 100).toFixed(1);
         
         return {h: rgb.h ,s: rgb.s ,l: rgb.l }
+}
+
+colorConvertor.rgb.grayscale = function (rgb) {
+    return Math.round(((0.3 * rgb.r) + (0.59 * rgb.g) + (0.11 * rgb.b))/ 2.56)
 }
 
 colorConvertor.rgb.compare = function (a,b) {
@@ -191,7 +213,7 @@ factoryCleanar.from = function (objectData) {
     if(objectData.hasOwnProperty('hex')){
         objectData.hex6 = objectData.hex
     }
-    return Object.keys(objectData).filter(from => ['hex6', 'hex3', 'rgb', 'ral', 'pantone', 'hsl'].indexOf(from) > -1  )[0]
+    return Object.keys(objectData).filter(from => ['hex6', 'hex3', 'rgb', 'ral', 'pantone', 'hsl', 'grayscale'].indexOf(from) > -1  )[0]
 } 
 
 factoryCleanar.hex = function (hex) {
@@ -206,6 +228,7 @@ factoryCleanar.to = function (to) {
         case 'ral': 
         case 'hsl':
         case 'pantone':
+        case 'grayscale':    
             return to
         case 'hex':
             return 'hex6'
