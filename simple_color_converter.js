@@ -3,6 +3,7 @@ const pantonePattern = require('./compiled_pantone.json')
 
 const colorConvertor = {}
 const _this = colorConvertor
+let error = ''
 
 // --- hex 6
 colorConvertor.hex6 = {}
@@ -39,41 +40,51 @@ colorConvertor.hex6.ral = function (hex6) {
 }  
 
 colorConvertor.hex6.pantone = function (hex6) {
-    var temp = hex6
+    let temp = hex6
     temp = _this.hex6.rgb(temp)
     temp = _this.rgb.pantone(temp)
     return temp
 }  
 
 colorConvertor.hex6.hsl = function (hex6) {
-    var temp = hex6
+    let temp = hex6
     temp = _this.hex6.rgb(temp)
     temp = _this.rgb.hsl(temp)
     return temp
 }  
 
 colorConvertor.hex6.grayscale = function (hex6){
-    temp = hex6
+    let temp = hex6
     temp = _this.hex6.rgb(temp)
     temp = _this.rgb.grayscale(temp)
     return temp
 }
 
+colorConvertor.hex6.hex6Grayscale = function (hex6) {
+    let temp = hex6
+    temp = _this.hex6.rgb(temp)
+    temp = _this.rgb.rgbGrayscale(temp)
+    temp = _this.rgb.hex6(temp)
+    return temp
+}
+
+
+
 // --- hex 3
-colorConvertor.hex3 = {};
+colorConvertor.hex3 = {}
 colorConvertor.hex3.hex6 = function (hex3) {
     return [hex3[0],hex3[0],hex3[1],hex3[1],hex3[2],hex3[2]].join('').toUpperCase()
 }
 
 colorConvertor.hex3.rgb = function (hex3) {
-    var temp = hex3
+    let temp = hex3
     temp = _this.hex3.hex6(temp)
     temp = _this.hex6.rgb(temp)
     return temp
 }
 
 colorConvertor.hex3.ral = function (hex3) {
-    var temp = hex3,
+    let temp = hex3,
     temp = _this.hex3.hex6(temp)
     temp = _this.hex6.rgb(temp)
     temp = _this.rgb.ral(temp)
@@ -81,7 +92,7 @@ colorConvertor.hex3.ral = function (hex3) {
 }
 
 colorConvertor.hex3.pantone = function (hex3) {
-    var temp = hex3,
+    let temp = hex3,
     temp = _this.hex3.hex6(temp)
     temp = _this.hex6.rgb(temp)
     temp = _this.rgb.pantone(temp)
@@ -93,14 +104,22 @@ colorConvertor.hex3.hsl = function (hex3){
 }
 
 colorConvertor.hex3.grayscale = function (hex3){
-    temp = hex3
+    let temp = hex3
     temp = _this.hex3.rgb(temp)
     temp = _this.rgb.grayscale(temp)
     return temp
 }
 
+colorConvertor.hex3.hex3Grayscale = function (hex3){
+    let temp = hex3
+    temp = _this.hex3.rgb(temp)
+    temp = _this.rgb.rgbGrayscale(temp)
+    temp = _this.rgb.hex3(temp)
+    return temp
+}
+
 // --- rgb
-colorConvertor.rgb = {};
+colorConvertor.rgb = {}
 colorConvertor.rgb.hex6 = function (rgb) {
     return [rgb.r.toString(16), rgb.g.toString(16), rgb.b.toString(16)].join('')
 }
@@ -113,9 +132,9 @@ colorConvertor.rgb.hex3 = function (rgb) {
 
 colorConvertor.rgb.hsl = function (rgb) {
     // Make r, g, and b fractions of 1
-    rgb.r /= 255;
-    rgb.g /= 255;
-    rgb.b /= 255;
+    rgb.r /= 255
+    rgb.g /= 255
+    rgb.b /= 255
 
     // Find greatest and smallest channel values
     rgb.cmin = Math.min(rgb.r,rgb.g,rgb.b),
@@ -123,42 +142,47 @@ colorConvertor.rgb.hsl = function (rgb) {
     rgb.delta = rgb.cmax - rgb.cmin,
     rgb.h = 0,
     rgb.s = 0,
-    rgb.l = 0;
+    rgb.l = 0
 
     // Calculate hue
     // No difference
     if (rgb.delta == 0)
-        rgb.h = 0;
+        rgb.h = 0
         // Red is max
     else if (rgb.cmax === rgb.r)
-        rgb.h = ((rgb.g - rgb.b) / rgb.delta) % 6;
+        rgb.h = ((rgb.g - rgb.b) / rgb.delta) % 6
         // Green is max
     else if (rgb.cmax === rgb.g)
-        rgb.h = (rgb.b - rgb.r) / rgb.delta + 2;
+        rgb.h = (rgb.b - rgb.r) / rgb.delta + 2
         // Blue is max
         else
-        rgb.h = (rgb.r - rgb.g) / rgb.delta + 4;
+        rgb.h = (rgb.r - rgb.g) / rgb.delta + 4
 
-        rgb.h = Math.round(rgb.h * 60);
+        rgb.h = Math.round(rgb.h * 60)
         
         // Make negative hues positive behind 360°
     if (rgb.h < 0)
-        rgb.h += 360;
+        rgb.h += 360
 
-        rgb.l = (rgb.cmax + rgb.cmin) / 2;
+        rgb.l = (rgb.cmax + rgb.cmin) / 2
 
             // Calculate saturation
-        rgb.s = rgb.delta == 0 ? 0 : rgb.delta / (1 - Math.abs(2 * rgb.l - 1));
+        rgb.s = rgb.delta == 0 ? 0 : rgb.delta / (1 - Math.abs(2 * rgb.l - 1))
               
             // Multiply l and s by 100
-        rgb.s = +(rgb.s * 100).toFixed(1);
-        rgb.l = +(rgb.l * 100).toFixed(1);
+        rgb.s = +(rgb.s * 100).toFixed(1)
+        rgb.l = +(rgb.l * 100).toFixed(1)
         
         return {h: rgb.h ,s: rgb.s ,l: rgb.l }
 }
 
 colorConvertor.rgb.grayscale = function (rgb) {
     return Math.round(((0.3 * rgb.r) + (0.59 * rgb.g) + (0.11 * rgb.b))/ 2.56)
+}
+
+colorConvertor.rgb.rgbGrayscale = function (rgb) {
+    const temp = Math.round((0.3 * rgb.r) + (0.59 * rgb.g) + (0.11 * rgb.b))
+    return {r: temp, g: temp, b: temp}
 }
 
 colorConvertor.rgb.compare = function (a,b) {
@@ -210,49 +234,74 @@ colorConvertor.rgb.pantone = function(rgb){
 // --- factory cleaning squad
 const factoryCleanar = {}
 factoryCleanar.from = function (objectData) {
-    if(objectData.hasOwnProperty('hex')){
-        objectData.hex6 = objectData.hex
+    let parameters = Object.keys(objectData).filter(from => ( from !== 'to'))
+    
+    if(parameters.indexOf('grayscale') > -1 && typeof objectData.grayscale === 'boolean') {
+        parameters.splice(parameters.indexOf('grayscale'), 1); 
     }
-    return Object.keys(objectData).filter(from => ['hex6', 'hex3', 'rgb', 'ral', 'pantone', 'hsl', 'grayscale'].indexOf(from) > -1  )[0]
+
+    if(parameters.indexOf('hex') > -1) {
+        parameters.splice(parameters.indexOf('hex'), 1); 
+        parameters.push('hex6')
+    }
+
+    if(parameters.length === 1 && _this.hasOwnProperty(parameters[0])){
+        return parameters[0]
+    } else {
+        error = 'The color specified in from is not an accepted input'
+        return false;
+    }
 } 
 
 factoryCleanar.hex = function (hex) {
     return hex.toLowerCase().replace(/[^a-f,^0-9]/g,'')
 }
 
-factoryCleanar.to = function (to) {
-    switch (to) {
-        case 'hex6':
-        case 'hex3':
-        case 'rgb': 
-        case 'ral': 
-        case 'hsl':
-        case 'pantone':
-        case 'grayscale':    
-            return to
-        case 'hex':
-            return 'hex6'
-        default:
-            return ''
-    }
+factoryCleanar.to = function (to, from) {
+    to = to.toLowerCase()
+    if(_this[from].hasOwnProperty(to)){
+        return to
+    } else if (to === 'hex') {
+        return 'hex6'
+    } 
+
+    error = 'The value you want to convert to is not acceptable'
+    return false
 }
 
 // factory
 const colorFactory = function (settings) {
-    
+    error = ''
     settings.from = factoryCleanar.from(settings)
-    settings.to =  factoryCleanar.to(settings.to)
+    settings.to =  factoryCleanar.to(settings.to, settings.from)
+
+    // Not so happy path :(
+    if(error){
+        return error
+    }
+    
+    // From and to are identical
     if (settings.from === settings.to) { 
         settings.output = settings[settings.from]
         return settings
     }
 
-    if(settings.from === 'hex' || settings.from === 'hex6' || settings.from === 'hex3'){
+    // I need to add a normalizer for every tipe of data not only for hex
+    if(settings.from === 'hex6' || settings.from === 'hex3'){
+        if (settings.hasOwnProperty('hex')){
+            settings.hex6 = settings.hex
+        }
         settings[settings.from] = factoryCleanar.hex(settings[settings.from])
     }
+    
+    // convert to grayscale
+    if(settings.grayscale === true){
+        settings[settings.from] = colorConvertor[settings.from][settings.from + 'Grayscale']((settings[settings.from]))
+    }
 
+    // Actual color convertor
     settings.output = colorConvertor[settings.from][settings.to](settings[settings.from])
     return settings.output 
 }
 
-module.exports = colorFactory;
+module.exports = colorFactory

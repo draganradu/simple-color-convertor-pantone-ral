@@ -41,3 +41,21 @@ console.log(color) // { ral: 'RAL 9010', name: 'Pure white' }
 | hex3  | '4ff'     | string [3]    |
 | hex3  | '#4ff'    | string [4]    |
 | rgb   | { r: 68, g: 255, b: 255 } | object / numbers|
+
+
+**flags** ar the arguments used for special modifiers.
+
+| flag      | output            | data type     | note  |
+| ---       | ---               | ---           | ---   |
+| grayscale | grayscale value in the from format  | boolean       |       |
+
+
+## Issues
+1 | **grayscale** there are some issues when outputing ral/pantone colors, they output colors that are not compleaty monochrome.
+
+## toDo
+1 | CMYK convert From/To
+2 | To color HTML
+3 | From input Grayscale
+4 | From input Ral
+5 | From input Pantone
