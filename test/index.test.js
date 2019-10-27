@@ -1,6 +1,6 @@
 //----------------------- Setup --------
 //--------------------------------------
-const testData = require('./data.test.js');
+let testData = require('./data.test.js');
 const colorConvertor = require('./../simple_color_converter.js');
 const tester = function (input, output) {
     const color = colorConvertor(input)
@@ -26,9 +26,14 @@ var settings = {
 
 //----------------------- Data- --------
 //--------------------------------------
+// Return only the last element not to run all elements
+if(process.argv.length === 3 && process.argv.indexOf('last') > -1 && process.argv.indexOf('all') === -1){
+    testData = [testData.pop()];
+}
 
 //----------------------- Run ----------
 //--------------------------------------
+
 for(let t in testData){
     tester (testData[t][0], testData[t][1]) 
 }

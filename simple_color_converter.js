@@ -1,11 +1,12 @@
-const ralPattern = require('./compiled_ral.json')
-const pantonePattern = require('./compiled_pantone.json')
+const ralPattern = require('./color_data/compiled_ral.json')
+const pantonePattern = require('./color_data/compiled_pantone.json')
+const htmlPattern = require('./color_data/compiled_html.json')
 
 const colorConvertor = {}
 const _this = colorConvertor
 let error = ''
 
-// --- hex 6
+// 1 | --- hex 6
 colorConvertor.hex6 = {}
 colorConvertor.hex6.hex3 = function (hex6) {
     function convertor (a,b) {
@@ -68,9 +69,22 @@ colorConvertor.hex6.hex6Grayscale = function (hex6) {
     return temp
 }
 
+colorConvertor.hex6.cmyk =  function (hex6){
+    let temp = hex6
+    temp = _this.hex6.rgb(temp)
+    temp = _this.rgb.cmyk(temp)
+    return temp
+}
 
+colorConvertor.hex6.html = function(hex6){
+    temp = hex6
+    temp = _this.hex6.rgb(temp)
+    temp = _this.rgb.html(temp)
 
-// --- hex 3
+    return temp
+}
+
+// 2 | --- hex 3
 colorConvertor.hex3 = {}
 colorConvertor.hex3.hex6 = function (hex3) {
     return [hex3[0],hex3[0],hex3[1],hex3[1],hex3[2],hex3[2]].join('').toUpperCase()
@@ -118,7 +132,22 @@ colorConvertor.hex3.hex3Grayscale = function (hex3){
     return temp
 }
 
-// --- rgb
+colorConvertor.hex3.cmyk =  function (hex3){
+    let temp = hex3
+    temp = _this.hex3.rgb(temp)
+    temp = _this.rgb.cmyk(temp)
+    return temp
+}
+
+colorConvertor.hex3.html = function(hex3){
+    temp = hex3
+    temp = _this.hex3.rgb(temp)
+    temp = _this.rgb.html(temp)
+
+    return temp
+}
+
+// 3 | --- rgb
 colorConvertor.rgb = {}
 colorConvertor.rgb.hex6 = function (rgb) {
     return [rgb.r.toString(16), rgb.g.toString(16), rgb.b.toString(16)].join('')
@@ -189,6 +218,42 @@ colorConvertor.rgb.compare = function (a,b) {
     return Math.abs(a.r - b.r ) + Math.abs(a.g - b.g ) + Math.abs(a.b - b.b )
 }
 
+colorConvertor.rgb.cmyk = function (rgb){
+    let cmyk = {
+        c: 0,
+        m: 0,
+        y: 0,
+        k: 0,
+    }
+
+    if (rgb.r === 0 && rgb.g === 0 && rgb.b === 0) {
+        cmyk.k = 100;
+    } else {
+
+        rgb.r = rgb.r / 255;
+        rgb.g = rgb.g / 255;
+        rgb.b = rgb.b / 255;
+
+        cmyk.k = 1 - Math.max(rgb.r, rgb.g, rgb.b);
+
+        if (cmyk.k == 1) {
+            cmyk.c = 0;
+            cmyk.m = 0;
+            cmyk.y = 0;
+        } else {
+            cmyk.c = (1 - rgb.r - cmyk.k) / (1 - cmyk.k);
+            cmyk.m = (1 - rgb.g - cmyk.k) / (1 - cmyk.k);
+            cmyk.y = (1 - rgb.b - cmyk.k) / (1 - cmyk.k);
+
+            cmyk.c = Math.round(cmyk.c * 100)
+            cmyk.m = Math.round(cmyk.m * 100)
+            cmyk.y = Math.round(cmyk.y * 100)
+            cmyk.k = Math.round(cmyk.k * 100)
+        }
+    }
+    return cmyk;
+}
+
 colorConvertor.rgb.ral = function (rgb){
     let temp = {
         index: 768,
@@ -231,6 +296,99 @@ colorConvertor.rgb.pantone = function(rgb){
     return temp.pantone
 }
 
+colorConvertor.rgb.html = function(rgb){
+    let temp = {
+        index: 768,
+        html: '',
+    }
+
+    for(let html in htmlPattern){
+        let t = Math.abs(htmlPattern[html].rgb.r - rgb.r ) + Math.abs(htmlPattern[html].rgb.g - rgb.g ) + Math.abs(htmlPattern[html].rgb.b - rgb.b )
+        if(t < temp.index){
+            temp.index = t
+            temp.html = htmlPattern[html].name
+            if(temp.index === 0) {
+                return temp.html
+            }
+        }
+    }
+
+    return temp.html
+}
+
+// 4 | --- CMYK
+colorConvertor.cmyk = {}
+colorConvertor.cmyk.rgb = function(cmyk){
+    let rgb = {
+        r: 0,
+        g: 0,
+        b: 0,
+    }
+    
+    rgb.r = Math.round(255 * ( 1 - cmyk.c / 100 ) * ( 1 - cmyk.k / 100 ))
+    rgb.g = Math.round(255 * ( 1 - cmyk.m / 100 ) * ( 1 - cmyk.k / 100 ))
+    rgb.b = Math.round(255 * ( 1 - cmyk.y / 100 ) * ( 1 - cmyk.k / 100 ))
+
+    return rgb
+}
+
+colorConvertor.cmyk.hex6 = function(cmyk){
+    temp = cmyk
+    temp = _this.cmyk.rgb(temp)
+    temp = _this.rgb.hex6(temp)
+
+    return temp
+}
+
+colorConvertor.cmyk.hex3 = function(cmyk){
+    temp = cmyk
+    temp = _this.cmyk.rgb(temp)
+    temp = _this.rgb.hex3(temp)
+
+    return temp
+}
+
+colorConvertor.cmyk.hsl = function(cmyk){
+    temp = cmyk
+    temp = _this.cmyk.rgb(temp)
+    temp = _this.rgb.hsl(temp)
+
+    return temp
+}
+
+colorConvertor.cmyk.pantone = function(cmyk){
+    temp = cmyk
+    temp = _this.cmyk.rgb(temp)
+    temp = _this.rgb.pantone(temp)
+
+    return temp
+}
+
+colorConvertor.cmyk.ral = function(cmyk){
+    temp = cmyk
+    temp = _this.cmyk.rgb(temp)
+    temp = _this.rgb.ral(temp)
+
+    return temp
+}
+
+colorConvertor.cmyk.grayscale = function(cmyk){
+    temp = cmyk
+    temp = _this.cmyk.rgb(temp)
+    temp = _this.rgb.grayscale(temp)
+
+    return temp
+}
+
+colorConvertor.cmyk.html = function(cmyk){
+    temp = cmyk
+    temp = _this.cmyk.rgb(temp)
+    temp = _this.rgb.html(temp)
+
+    return temp
+}
+
+
 // --- factory cleaning squad
 const factoryCleanar = {}
 factoryCleanar.from = function (objectData) {
@@ -248,7 +406,7 @@ factoryCleanar.from = function (objectData) {
     if(parameters.length === 1 && _this.hasOwnProperty(parameters[0])){
         return parameters[0]
     } else {
-        error = 'The color specified in from is not an accepted input'
+        error = {error: 'The color specified in from is not an accepted input'}
         return false;
     }
 } 
@@ -258,14 +416,17 @@ factoryCleanar.hex = function (hex) {
 }
 
 factoryCleanar.to = function (to, from) {
-    to = to.toLowerCase()
-    if(_this[from].hasOwnProperty(to)){
-        return to
-    } else if (to === 'hex') {
-        return 'hex6'
-    } 
+    if (!error){
+        to = to.toLowerCase()
+        if(_this[from].hasOwnProperty(to)){
+            return to
+        } else if (to === 'hex') {
+            return 'hex6'
+        } 
+        error = {error: 'The value you want to convert to is not acceptable'}
+        return false
+    }
 
-    error = 'The value you want to convert to is not acceptable'
     return false
 }
 

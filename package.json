@@ -1,6 +1,6 @@
 {
   "name": "simple-color-converter",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "This is a simple colors converter packaged as an npm package",
   "keywords": [
     "simple-color-converter",
@@ -16,7 +16,7 @@
   "main": "simple_color_convertor.js",
   "repository": "draganradu/simple-color-convertor-pantone-ral",
   "scripts": {
-    "test": "node test/index.test.js"
+    "test": "node test/index.test.js last"
   },
   "author": "Radu Dragan <draganaurelradu@gmail.com>",
   "license": "MIT"
