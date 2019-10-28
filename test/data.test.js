@@ -39,6 +39,22 @@ const testData = [
     [{hex3: '#fff', to: 'html'}, 'White' ],
     [{hex: '#782e1c', to: 'html'}, 'SaddleBrown' ],
     [{hex6: '#782e1c', to: 'html', grayscale: true }, 'DarkSlateGray' ],
+    [{grayscale: 100, to: 'rgb' }, { r: 255, g: 255, b: 255 } ],
+    [{grayscale: 0, to: 'rgb' }, { r: 0, g: 0, b: 0 } ],
+    [{grayscale: 28, to: 'cmyk' }, {c: 0, m: 0, y: 0, k: 28} ],
+    [{grayscale: 48, to: 'hex3' }, '777' ],
+    [{grayscale: 48, to: 'hex6' }, '7a7a7a' ],
+    [{grayscale: 48, to: 'hsl' }, { h: 0, s: 0, l: 47.8 } ],
+    [{grayscale: 48, to: 'html' }, 'Gray' ],
+    [{grayscale: 48, to: 'pantone' }, 'cool-gray-9-c' ],
+    [{grayscale: 48, to: 'ral' }, 'Dusty grey' ],
+    // [{from: '50' , to: 'html', grayscale: true }, 'DarkSlateGray' ],
+    // [{from: 50 , to: 'html', grayscale: true }, 'DarkSlateGray' ],
+    // [{from: '#000' , to: 'html', grayscale: true }, 'DarkSlateGray' ],
+    // [{from: '#34c9eb' , to: 'html', grayscale: true }, 'DarkSlateGray' ],
+    // [{from: '3aa174' , to: 'html', grayscale: true }, 'DarkSlateGray' ],
+    // [{from: '3aa174' , to: 'html', grayscale: true }, 'DarkSlateGray' ],
+    
   
 
 ]
