@@ -1,4 +1,4 @@
-let stampTime = process.hrtime.bigint()
+let stampTime = new Date()
 //----------------------- Setup --------
 //--------------------------------------
 let testData = require('./data.test.js');
@@ -41,5 +41,5 @@ for(let t in testData){
 
 settings.procent = (settings.pass / settings.total * 100).toFixed(2);
 console.log('-------------------------------------');
-console.log(`Pass: ${settings.pass} | Fail: ${settings.fail} || ${settings.procent}% `, process.hrtime.bigint() - stampTime) 
+console.log(`Pass: ${settings.pass} | Fail: ${settings.fail} || ${settings.procent}% T:`, new Date() - stampTime) 
 console.log('-------------------------------------');
