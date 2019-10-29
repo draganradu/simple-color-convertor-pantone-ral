@@ -23,15 +23,16 @@ console.log(color) // { ral: 'RAL 9010', name: 'Pure white' }
 #From
 **input** is the argument used for the color you want to convert from.
 
-| input     | output                        | type              | alt   |
-| ---       | ---                           | ---               |       |
-| cmyk      | { c: 0, m: 13, y: 77, k: 24 } | object / numbers  |       |
-| grayscale | 78                            | integer           |       |
-| hex       | '44FFFF'                      | string [6]        | hex6  |
-| hex3      | '4ff'                         | string [3]        |       |
-| hex3      | '#4ff'                        | string [4]        |       |
-| hex6      | '44FFFF'                      | string [6]        | hex6  |
-| rgb       | { r: 68, g: 255, b: 255 }     | object / numbers  |       |
+| input     | output                                    | type              | alt   |
+| ---       | ---                                       | ---               | ---   |
+| cmyk      | { c: 0, m: 13, y: 77, k: 24 }             | object / numbers  |       |
+| grayscale | 78                                        | integer           |       |
+| hex       | '44FFFF'                                  | string [6]        | hex6  |
+| hex3      | '4ff'                                     | string [3]        |       |
+| hex3      | '#4ff'                                    | string [4]        |       |
+| hex6      | '44FFFF'                                  | string [6]        | hex   |
+| hsl       | { h: 140, s: 39.7, l: 55.1 }              | object / numbers  |       |
+| rgb       | { r: 68, g: 255, b: 255 }                 | object / numbers  |       |
 
 
 #To 
@@ -48,13 +49,10 @@ console.log(color) // { ral: 'RAL 9010', name: 'Pure white' }
 | pantone   | '305-c'                                   | string [5]    |       |
 | ral       | { ral: 'RAL 9010', name: 'Pure white' }   | object [2]    |       |
 | rgb       | { r: 68, g: 255, b: 255 }                 | object [3]    |       |
+| xyz       | { x: 68, y: 255, z: 255 }                 | object [3]    |       |
 
 #Flags
 **flags** ar the arguments used for special modifiers.
-
-| flag      | output            | data type     | note  |
-| ---       | ---               | ---           | ---   |
-| grayscale | grayscale value in the from format  | boolean       |       |
 
 ```javascript
 const colorConverter = require('simple-color-converter');
@@ -68,12 +66,19 @@ var color = colorConverter({
 console.log(color) // { c: 0, m: 0, y: 0, k: 87 }
 ```
 
+| flag      | output            | data type     | note  |
+| ---       | ---               | ---           | ---   |
+| grayscale | grayscale value in the from format  | boolean       |       |
+
 #Errors
 #####'The value you want to convert to is not acceptable' 
 The *to* value is not in the accepted to, most of the times it is a misspelled value.
 
 #####'The color specified in from is not an accepted input'
 The *from* value is not in the accepted to, most of the times it is a misspelled value.
+
+#####'You can`t get the wavelength of no color'
+The color you are want to convert is grayscale, logicaly there is no answer to what you want to do
 
 
 ## Issues

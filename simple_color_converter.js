@@ -8,7 +8,9 @@ const colorConvertor = {
     grayscale: {},
     hex3: {},
     hex6: {},
+    hsl: {},
     rgb: {},
+    xyz: {},
 }
 
 const _this = colorConvertor
@@ -87,6 +89,20 @@ colorConvertor.cmyk.rgb = function(cmyk){
     return rgb
 }
 
+colorConvertor.cmyk.w = function (cmyk) {
+    let temp = hex6
+    temp = _this.cmyk.hsl(temp)
+    temp = _this.hsl.w(temp)
+    return temp
+}
+
+colorConvertor.cmyk.xyz = function (cmyk) {
+    let temp = cmyk
+    temp = _this.cmyk.rgb(temp)
+    temp = _this.rgb.xyz(temp)
+    return temp
+}
+
 // 2 | --- grayscale
 
 colorConvertor.grayscale.cmyk = function (grayscale) {
@@ -142,6 +158,17 @@ colorConvertor.grayscale.rgb = function (grayscale) {
     return {r: grayscale, g: grayscale, b: grayscale}
 }
 
+colorConvertor.grayscale.w = function (grayscale) {
+    return {error: 'You can`t get the wavelength of no color'}
+}
+
+colorConvertor.grayscale.xyz = function (grayscale) {
+    let temp = grayscale
+    temp = _this.grayscale.rgb(temp)
+    temp = _this.rgb.xyz(temp)
+    return temp
+}
+
 // 3 | --- hex 3
 colorConvertor.hex3.hex6 = function (hex3) {
     return [hex3[0],hex3[0],hex3[1],hex3[1],hex3[2],hex3[2]].join('').toUpperCase()
@@ -155,7 +182,7 @@ colorConvertor.hex3.rgb = function (hex3) {
 }
 
 colorConvertor.hex3.ral = function (hex3) {
-    let temp = hex3,
+    let temp = hex3
     temp = _this.hex3.hex6(temp)
     temp = _this.hex6.rgb(temp)
     temp = _this.rgb.ral(temp)
@@ -200,7 +227,20 @@ colorConvertor.hex3.html = function(hex3){
     temp = hex3
     temp = _this.hex3.rgb(temp)
     temp = _this.rgb.html(temp)
+    return temp
+}
 
+colorConvertor.hex3.w = function (hex3) {
+    let temp = hex3
+    temp = _this.hex3.hsl(temp)
+    temp = _this.hsl.w(temp)
+    return temp
+}
+
+colorConvertor.hex3.xyz = function (hex3) {
+    let temp = hex3
+    temp = _this.hex3.rgb(temp)
+    temp = _this.rgb.xyz(temp)
     return temp
 }
 
@@ -273,7 +313,7 @@ colorConvertor.hex6.cmyk =  function (hex6){
     return temp
 }
 
-colorConvertor.hex6.html = function(hex6){
+colorConvertor.hex6.html = function (hex6) {
     temp = hex6
     temp = _this.hex6.rgb(temp)
     temp = _this.rgb.html(temp)
@@ -281,9 +321,137 @@ colorConvertor.hex6.html = function(hex6){
     return temp
 }
 
+colorConvertor.hex6.w = function (hex6) {
+    let temp = hex6
+    temp = _this.hex6.hsl(temp)
+    temp = _this.hsl.w(temp)
+    return temp
+}
 
+colorConvertor.hex6.xyz = function (hex6) {
+    let temp = hex6
+    temp = _this.hex6.rgb(temp)
+    temp = _this.rgb.xyz(temp)
+    return temp
+}
 
-// 5 | --- rgb
+// 5 | --- hsl
+colorConvertor.hsl.cmyk = function (hsl) {
+    temp = hsl
+    temp = _this.hsl.rgb(temp)
+    temp = _this.rgb.cmyk(temp)
+    return temp
+}
+
+colorConvertor.hsl.grayscale = function (hsl) {
+    temp = hsl
+    temp = _this.hsl.rgb(temp)
+    temp = _this.rgb.grayscale(temp)
+    return temp
+}
+
+colorConvertor.hsl.hex3 = function (hsl) {
+    temp = hsl
+    temp = _this.hsl.rgb(temp)
+    temp = _this.rgb.hex3(temp)
+    return temp
+}
+
+colorConvertor.hsl.hex6 = function (hsl) {
+    temp = hsl
+    temp = _this.hsl.rgb(temp)
+    temp = _this.rgb.hex6(temp)
+    return temp
+}
+
+colorConvertor.hsl.html = function (hsl) {
+    temp = hsl
+    temp = _this.hsl.rgb(temp)
+    temp = _this.rgb.html(temp)
+    return temp
+}
+
+colorConvertor.hsl.pantone = function (hsl) {
+    temp = hsl
+    temp = _this.hsl.rgb(temp)
+    temp = _this.rgb.pantone(temp)
+    return temp
+}
+
+colorConvertor.hsl.ral = function (hsl) {
+    temp = hsl
+    temp = _this.hsl.rgb(temp)
+    temp = _this.rgb.ral(temp)
+    return temp
+}
+
+colorConvertor.hsl.rgb = function (hsl) {
+    const rgb = {
+        r: 0,
+        g: 0,
+        b: 0,
+    }
+
+    hsl.h /= 60
+    if (hsl.h < 0) {
+        hsl.h = 6 - (-hsl.h % 6)
+    }
+    hsl.h %= 6
+
+    hsl.s = Math.max(0, Math.min(1, hsl.s / 100))
+    hsl.l = Math.max(0, Math.min(1, hsl.l / 100))
+
+    hsl.c = (1 - Math.abs((2 * hsl.l) - 1)) * hsl.s
+    hsl.x = hsl.c * (1 - Math.abs((hsl.h % 2) - 1))
+
+    if (hsl.h < 1) {
+        rgb.r = hsl.c
+        rgb.g = hsl.x
+        rgb.b = 0
+    } else if (hsl.h < 2) {
+        rgb.r = hsl.x
+        rgb.g = hsl.c
+        rgb.b = 0
+    } else if (hsl.h < 3) {
+        rgb.r = 0
+        rgb.g = hsl.c
+        rgb.b = hsl.x
+    } else if (hsl.h < 4) {
+        rgb.r = 0
+        rgb.g = hsl.x
+        rgb.b = hsl.c
+    } else if (hsl.h < 5) {
+        rgb.r = hsl.x
+        rgb.g = 0
+        rgb.b = hsl.c
+    } else {
+        rgb.r = hsl.c
+        rgb.g = 0
+        rgb.b = hsl.x
+    }
+
+    hsl.m = hsl.l - hsl.c / 2
+    rgb.r = Math.round((rgb.r + hsl.m) * 255)
+    rgb.g = Math.round((rgb.g + hsl.m) * 255)
+    rgb.b = Math.round((rgb.b + hsl.m) * 255)
+
+    return rgb
+}
+
+colorConvertor.hsl.w = function (hsl) {
+    let temp = Math.round(620 - 170 / 270 * hsl.h)
+    
+    return temp
+}
+
+colorConvertor.hsl.xyz = function (hsl) {
+    let temp = hsl
+    temp = _this.hsl.rgb(temp)
+    temp = _this.rgb.xyz(temp)
+    return temp
+}
+
+// 6 | --- rgb
 colorConvertor.rgb.hex6 = function (rgb) {
     return [rgb.r.toString(16), rgb.g.toString(16), rgb.b.toString(16)].join('')
 }
@@ -450,6 +618,36 @@ colorConvertor.rgb.html = function(rgb){
 
     return temp.html
 }
+
+colorConvertor.rgb.w = function (rgb) {
+    let temp = rgb
+    temp = _this.rgb.hsl(temp)
+    temp = _this.hsl.w(temp)
+    return temp
+}
+
+colorConvertor.rgb.xyz = function(rgb) {
+    let xyz = {}
+	rgb.r /= 255
+	rgb.g /= 255
+	rgb.b /= 255
+
+	// assume sRGB
+	rgb.r = rgb.r > 0.04045 ? Math.pow(((rgb.r + 0.055) / 1.055), 2.4) : (rgb.r / 12.92)
+	rgb.g = rgb.g > 0.04045 ? Math.pow(((rgb.g + 0.055) / 1.055), 2.4) : (rgb.g / 12.92)
+	rgb.b = rgb.b > 0.04045 ? Math.pow(((rgb.b + 0.055) / 1.055), 2.4) : (rgb.b / 12.92)
+
+	xyz.x = (rgb.r * 0.41239079926595) + (rgb.g * 0.35758433938387) + (rgb.b * 0.18048078840183)
+	xyz.y = (rgb.r * 0.21263900587151) + (rgb.g * 0.71516867876775) + (rgb.b * 0.072192315360733)
+	xyz.z = (rgb.r * 0.019330818715591) + (rgb.g * 0.11919477979462) + (rgb.b * 0.95053215224966)
+
+    xyz.x = xyz.x * 94.972
+    xyz.y = xyz.y * 100
+    xyz.z = xyz.z * 122.638
+	return xyz;
+};
+
+// 7 | --- xyz
 
 // --- factory cleaning squad
 const factoryCleanar = {}
