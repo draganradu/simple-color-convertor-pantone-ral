@@ -1,3 +1,6 @@
+![build passing](https://travis-ci.org/draganradu/simple-color-convertor-pantone-ral.svg?branch=master)
+
+
 # Simple color converter Pantone Ral
 It's as simple as install and use. Add the input to the correct data passed and the to the desired output and that is it.
 
@@ -49,6 +52,7 @@ console.log(color) // { ral: 'RAL 9010', name: 'Pure white' }
 | pantone   | '305-c'                                   | string [5]    |       |
 | ral       | { ral: 'RAL 9010', name: 'Pure white' }   | object [2]    |       |
 | rgb       | { r: 68, g: 255, b: 255 }                 | object [3]    |       |
+| w         | 580                                       | integer       | wavelength is experimental |
 | xyz       | { x: 68, y: 255, z: 255 }                 | object [3]    |       |
 
 #Flags
@@ -70,16 +74,18 @@ console.log(color) // { c: 0, m: 0, y: 0, k: 87 }
 | ---       | ---               | ---           | ---   |
 | grayscale | grayscale value in the from format  | boolean       |       |
 
-#Errors
+#Error logs
 #####'The value you want to convert to is not acceptable' 
 The *to* value is not in the accepted to, most of the times it is a misspelled value.
 
 #####'The color specified in from is not an accepted input'
 The *from* value is not in the accepted to, most of the times it is a misspelled value.
 
-#####'You can`t get the wavelength of no color'
-The color you are want to convert is grayscale, logicaly there is no answer to what you want to do
+#####'You can't get the wavelength of no color'
+The color you want to convert is grayscale, logically there is no answer to what you want to do 
 
 
 ## Issues
-1 | **grayscale** there are some issues when outputing ral/pantone colors, they output colors that are not completely monochrome. Because the closest color may be a colored gray. Will be fixed when we start useing HSL compare algoritham in 1.2.0
+1 | **grayscale** there are some issues when outputting ral/pantone colors, they output colors that are not completely monochrome. Because the closest color may be a colored gray. Will be fixed when we start using HSL compare algorithm in 1.2.0
+
+2 | **wavelength** is experimental, it kind of works and i like the idea but the algorithm used is definitely not the correct one.
