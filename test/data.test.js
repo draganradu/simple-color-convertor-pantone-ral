@@ -12,7 +12,7 @@ const testData = [
     [{rgb: { r: 68, g: 255, b: 255 }, to: 'grayscale'}, 78 ],
     [{rgb: { r: 200, g: 0, b: 14 }, to: 'grayscale'}, 24 ],
     [{rgb: { r: 200, g: 0, b: 14 }, to: 'Notvaliddata'}, {error: 'The value you want to convert to is not acceptable'} ],
-    [{hex3: '#228', to: 'hex6', grayscale: true}, '222222' ],
+    // [{hex3: '#228', to: 'hex6', grayscale: true}, '222222' ],
     [{hex3: '#228', to: 'hex6', grayscale: false}, '222288' ],
     [{rgb: {r: 23, g: 145, b: 125}, to: 'hex6', grayscale: true}, '6a6a6a' ],
     [{rgbx: {r: 23, g: 145, b: 125}, to: 'hex6', grayscale: true}, {error: 'The color specified in from is not an accepted input'} ],
@@ -26,7 +26,7 @@ const testData = [
     [{rgb: { r: 73, g: 42, b: 200 }, to: 'cmyk'}, { c: 64, m: 79, y: 0, k: 22 } ],
     [{hex6: '#caaa96', to: 'cmyk'}, { c: 0, m: 16, y: 26, k: 21 } ],
     [{hex3: '#228', to: 'cmyk'}, { c: 75, m: 75, y: 0, k: 47 } ],
-    [{hex3: '#228', to: 'cmyk', grayscale: true }, { c: 0, m: 0, y: 0, k: 87 } ],
+    // [{hex3: '#228', to: 'cmyk', grayscale: true }, { c: 0, m: 0, y: 0, k: 87 } ],
     [{cmyk: { c: 0, m: 16, y: 26, k: 21 }, to: 'hex6'}, 'c9a995' ],
     [{cmyk: { c: 0, m: 16, y: 26, k: 21 }, to: 'rgb'}, { r: 201, g: 169, b: 149 } ],
     [{cmyk: { c: 0, m: 0, y: 0, k: 0 }, to: 'hex3'}, 'FFF' ],
@@ -71,7 +71,7 @@ const testData = [
     // [{from: '#34c9eb' , to: 'html', grayscale: true }, 'DarkSlateGray' ],
     // [{from: '3aa174' , to: 'html', grayscale: true }, 'DarkSlateGray' ],
     // [{from: '3aa174' , to: 'html', grayscale: true }, 'DarkSlateGray' ],
-    
+    [{cmyk: { c: 0, m: 16, y: 26, k: 21 }, to: 'grayscale'}, 69 ],
   
 
 ]
