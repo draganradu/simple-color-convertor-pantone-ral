@@ -1,7 +1,7 @@
 # Simple color converter Pantone Ral
 It's as simple as install and use. Add the input to the correct data passed and the to the desired output and that is it.
 
-![alt text](/assets/simple-color-convertor-pantone-ral.jpg)
+![simple color convertor logo](/assets/simple-color-convertor-pantone-ral.jpg)
 
 ## Install
 ```
@@ -10,9 +10,9 @@ $ npm install simple-color-converter
 ## Usage
 
 ```javascript
-const colorConverter = require('simple-color-converter');
+const simpleColorConverter = require('simple-color-converter');
 
-var color = colorConverter({
+var color = simpleColorConverter({
     hex3: '#4ff',
     to: 'ral'
 })
@@ -55,9 +55,9 @@ console.log(color) // { ral: 'RAL 9010', name: 'Pure white' }
 **flags** ar the arguments used for special modifiers.
 
 ```javascript
-const colorConverter = require('simple-color-converter');
+const simpleColorConverter = require('simple-color-converter');
 
-var color = colorConverter({
+var color = simpleColorConverter({
     hex3: '#228', 
     to: 'cmyk', 
     grayscale: true 
