@@ -49,6 +49,7 @@ console.log(color) // { ral: 'RAL 9010', name: 'Pure white' }
 | hex3      | '4FF'                                     | string [3]    |       |
 | hsl       | { h: 140, s: 39.7, l: 55.1 }              | object [3]    |       |
 | html      | 'DarkSlateGray'                           | string        |       | 
+| lab       | { l: 91, a: -44, b: -13 }                 | object [3]    |       | 
 | pantone   | '305-c'                                   | string [5]    |       |
 | ral       | { ral: 'RAL 9010', name: 'Pure white' }   | object [2]    |       |
 | rgb       | { r: 68, g: 255, b: 255 }                 | object [3]    |       |

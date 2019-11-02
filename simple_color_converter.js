@@ -1,6 +1,8 @@
 const ralPattern = require('./color_data/compiled_ral.json')
 const pantonePattern = require('./color_data/compiled_pantone.json')
 const htmlPattern = require('./color_data/compiled_html.json')
+const compareRGB = require('./compare_colors/rgb_liniar')
+const deltaE = require('./compare_colors/deltaE')
 // const color_identifier = require('./color_identifier.js')
 
 const colorConvertor = {
@@ -8,6 +10,7 @@ const colorConvertor = {
     grayscale: {},
     hex3: {},
     hex6: {},
+    lab: {},
     hsl: {},
     rgb: {},
     xyz: {},
@@ -39,15 +42,16 @@ colorConvertor.cmyk.rgb = function(cmyk){
     return rgb
 }
 
-colorConvertor.cmyk.grayscale   = function (data) { return colorMixer(data)('cmyk','rgb','grayscale')};
-colorConvertor.cmyk.hex3        = function (data) { return colorMixer(data)('cmyk','rgb','hex3')};
-colorConvertor.cmyk.hex6        = function (data) { return colorMixer(data)('cmyk','rgb','hex6')};
-colorConvertor.cmyk.hsl         = function (data) { return colorMixer(data)('cmyk','rgb','hsl')};
-colorConvertor.cmyk.html        = function (data) { return colorMixer(data)('cmyk','rgb','html')};
-colorConvertor.cmyk.pantone     = function (data) { return colorMixer(data)('cmyk','rgb','pantone')};
-colorConvertor.cmyk.ral         = function (data) { return colorMixer(data)('cmyk','rgb','ral')};
-colorConvertor.cmyk.w           = function (data) { return colorMixer(data)('cmyk','rgb','w')};
-colorConvertor.cmyk.xyz         = function (data) { return colorMixer(data)('cmyk','rgb','xyz')};
+colorConvertor.cmyk.grayscale   = function (data) { return colorMixer(data)('cmyk','rgb','grayscale')}
+colorConvertor.cmyk.hex3        = function (data) { return colorMixer(data)('cmyk','rgb','hex3')}
+colorConvertor.cmyk.hex6        = function (data) { return colorMixer(data)('cmyk','rgb','hex6')}
+colorConvertor.cmyk.hsl         = function (data) { return colorMixer(data)('cmyk','rgb','hsl')}
+colorConvertor.cmyk.html        = function (data) { return colorMixer(data)('cmyk','rgb','html')}
+colorConvertor.cmyk.lab         = function (data) { return colorMixer(data)('cmyk','rgb','lab')}
+colorConvertor.cmyk.pantone     = function (data) { return colorMixer(data)('cmyk','lab','pantone')}
+colorConvertor.cmyk.ral         = function (data) { return colorMixer(data)('cmyk','rgb','ral')}
+colorConvertor.cmyk.w           = function (data) { return colorMixer(data)('cmyk','rgb','w')}
+colorConvertor.cmyk.xyz         = function (data) { return colorMixer(data)('cmyk','rgb','xyz')}
 
 // 2 | --- grayscale
 
@@ -66,31 +70,33 @@ colorConvertor.grayscale.w = function (grayscale) {
     return {error: 'You can`t get the wavelength of no color'}
 }
 
-colorConvertor.grayscale.hex3       = function (data) { return colorMixer(data)('grayscale','rgb','hex3')};
-colorConvertor.grayscale.hex6       = function (data) { return colorMixer(data)('grayscale','rgb','hex6')};
-colorConvertor.grayscale.hsl        = function (data) { return colorMixer(data)('grayscale','rgb','hsl')};
-colorConvertor.grayscale.html       = function (data) { return colorMixer(data)('grayscale','rgb','html')};
-colorConvertor.grayscale.pantone    = function (data) { return colorMixer(data)('grayscale','rgb','pantone')};
-colorConvertor.grayscale.ral        = function (data) { return colorMixer(data)('grayscale','rgb','ral')};
-colorConvertor.grayscale.xyz        = function (data) { return colorMixer(data)('grayscale','rgb','xyz')};
+colorConvertor.grayscale.hex3       = function (data) { return colorMixer(data)('grayscale','rgb','hex3')}
+colorConvertor.grayscale.hex6       = function (data) { return colorMixer(data)('grayscale','rgb','hex6')}
+colorConvertor.grayscale.hsl        = function (data) { return colorMixer(data)('grayscale','rgb','hsl')}
+colorConvertor.grayscale.html       = function (data) { return colorMixer(data)('grayscale','rgb','html')}
+colorConvertor.grayscale.lab        = function (data) { return colorMixer(data)('grayscale','rgb','lab')}
+colorConvertor.grayscale.pantone    = function (data) { return colorMixer(data)('grayscale','lab','pantone')}
+colorConvertor.grayscale.ral        = function (data) { return colorMixer(data)('grayscale','rgb','ral')}
+colorConvertor.grayscale.xyz        = function (data) { return colorMixer(data)('grayscale','rgb','xyz')}
 
 // 3 | --- hex 3
 colorConvertor.hex3.hex6 = function (hex3) {
     return [hex3[0],hex3[0],hex3[1],hex3[1],hex3[2],hex3[2]].join('').toUpperCase()
 }
 
-colorConvertor.hex3.cmyk      = function (data) { return colorMixer(data)('hex3','rgb','cmyk')};
-colorConvertor.hex3.grayscale = function (data) { return colorMixer(data)('hex3','rgb','grayscale')};
-colorConvertor.hex3.hsl       = function (data) { return colorMixer(data)('hex3','rgb','hsl')};
-colorConvertor.hex3.html      = function (data) { return colorMixer(data)('hex3','rgb','html')};
-colorConvertor.hex3.pantone   = function (data) { return colorMixer(data)('hex3','rgb','pantone')};
-colorConvertor.hex3.ral       = function (data) { return colorMixer(data)('hex3','rgb','ral')};
-colorConvertor.hex3.rgb       = function (data) { return colorMixer(data)('hex3','hex6','rgb')};
-colorConvertor.hex3.w         = function (data) { return colorMixer(data)('hex3','hsl','w')};
-colorConvertor.hex3.xyz       = function (data) { return colorMixer(data)('hex3','rgb','xyz')};
-
+colorConvertor.hex3.cmyk      = function (data) { return colorMixer(data)('hex3','rgb','cmyk')}
+colorConvertor.hex3.grayscale = function (data) { return colorMixer(data)('hex3','rgb','grayscale')}
+colorConvertor.hex3.hsl       = function (data) { return colorMixer(data)('hex3','rgb','hsl')}
+colorConvertor.hex3.html      = function (data) { return colorMixer(data)('hex3','rgb','html')}
+colorConvertor.hex3.lab       = function (data) { return colorMixer(data)('hex3','rgb','lab')}
+colorConvertor.hex3.pantone   = function (data) { return colorMixer(data)('hex3','lab','pantone')}
+colorConvertor.hex3.ral       = function (data) { return colorMixer(data)('hex3','rgb','ral')}
+colorConvertor.hex3.rgb       = function (data) { return colorMixer(data)('hex3','hex6','rgb')}
+colorConvertor.hex3.w         = function (data) { return colorMixer(data)('hex3','hsl','w')}
+colorConvertor.hex3.xyz       = function (data) { return colorMixer(data)('hex3','rgb','xyz')}
 
 // 4 | --- hex 6
+
 colorConvertor.hex6.hex3 = function (hex6) {
     function convertor (a,b) {
         let temp = ''
@@ -116,14 +122,15 @@ colorConvertor.hex6.rgb = function (hex6) {
     return temp 
 }
 
-colorConvertor.hex6.cmyk            = function (data) { return colorMixer(data)('hex6','rgb','cmyk')};
-colorConvertor.hex6.grayscale       = function (data) { return colorMixer(data)('hex6','rgb','grayscale')};
-colorConvertor.hex6.hsl             = function (data) { return colorMixer(data)('hex6','rgb','hsl')};
-colorConvertor.hex6.html            = function (data) { return colorMixer(data)('hex6','rgb','html')};
-colorConvertor.hex6.pantone         = function (data) { return colorMixer(data)('hex6','rgb','pantone')};
-colorConvertor.hex6.ral             = function (data) { return colorMixer(data)('hex6','rgb','ral')};
-colorConvertor.hex6.w               = function (data) { return colorMixer(data)('hex6','hsl','w')};
-colorConvertor.hex6.xyz             = function (data) { return colorMixer(data)('hex6','rgb','xyz')};
+colorConvertor.hex6.cmyk            = function (data) { return colorMixer(data)('hex6','rgb','cmyk')}
+colorConvertor.hex6.grayscale       = function (data) { return colorMixer(data)('hex6','rgb','grayscale')}
+colorConvertor.hex6.hsl             = function (data) { return colorMixer(data)('hex6','rgb','hsl')}
+colorConvertor.hex6.html            = function (data) { return colorMixer(data)('hex6','rgb','html')}
+colorConvertor.hex6.lab             = function (data) { return colorMixer(data)('hex6','rgb','lab')}
+colorConvertor.hex6.pantone         = function (data) { return colorMixer(data)('hex6','lab','pantone')}
+colorConvertor.hex6.ral             = function (data) { return colorMixer(data)('hex6','rgb','ral')}
+colorConvertor.hex6.w               = function (data) { return colorMixer(data)('hex6','hsl','w')}
+colorConvertor.hex6.xyz             = function (data) { return colorMixer(data)('hex6','rgb','xyz')}
 
 
 colorConvertor.hex6.hex6Grayscale = function (hex6) {
@@ -135,14 +142,16 @@ colorConvertor.hex6.hex6Grayscale = function (hex6) {
 }
 
 // 5 | --- hsl
-colorConvertor.hsl.cmyk        = function (data) { return colorMixer(data)('hsl','rgb','cmyk')};
-colorConvertor.hsl.grayscale   = function (data) { return colorMixer(data)('hsl','rgb','grayscale')};
-colorConvertor.hsl.hex3        = function (data) { return colorMixer(data)('hsl','rgb','hex3')};
-colorConvertor.hsl.hex6        = function (data) { return colorMixer(data)('hsl','rgb','hex6')};
-colorConvertor.hsl.html        = function (data) { return colorMixer(data)('hsl','rgb','html')};
-colorConvertor.hsl.pantone     = function (data) { return colorMixer(data)('hsl','rgb','pantone')};
-colorConvertor.hsl.ral         = function (data) { return colorMixer(data)('hsl','rgb','ral')};
-colorConvertor.hsl.xyz         = function (data) { return colorMixer(data)('hsl','rgb','xyz')};
+
+colorConvertor.hsl.cmyk        = function (data) { return colorMixer(data)('hsl','rgb','cmyk')}
+colorConvertor.hsl.grayscale   = function (data) { return colorMixer(data)('hsl','rgb','grayscale')}
+colorConvertor.hsl.hex3        = function (data) { return colorMixer(data)('hsl','rgb','hex3')}
+colorConvertor.hsl.hex6        = function (data) { return colorMixer(data)('hsl','rgb','hex6')}
+colorConvertor.hsl.html        = function (data) { return colorMixer(data)('hsl','rgb','html')}
+colorConvertor.hsl.lab         = function (data) { return colorMixer(data)('hsl','rgb','lab')}
+colorConvertor.hsl.pantone     = function (data) { return colorMixer(data)('hsl','lab','pantone')}
+colorConvertor.hsl.ral         = function (data) { return colorMixer(data)('hsl','rgb','ral')}
+colorConvertor.hsl.xyz         = function (data) { return colorMixer(data)('hsl','rgb','xyz')}
 
 colorConvertor.hsl.rgb = function (hsl) {
     const rgb = {
@@ -203,11 +212,80 @@ colorConvertor.hsl.w = function (hsl) {
     return temp
 }
 
-// 6 | --- rgb
-colorConvertor.rgb.hex3 = function (data) { return colorMixer(data)('rgb','hex6','hex3')};
+// 6 | --- html
+
+// 7 | --- Lab
+
+colorConvertor.lab.pantone = function(lab){
+    let temp = {
+        index: 768,
+        name: '',
+    }
+
+    for(let pantone in pantonePattern){
+       
+        let t = deltaE(pantonePattern[pantone].lab, lab)
+        console.log(t)
+        if(t < temp.index){
+            temp.index = t
+            temp.name = pantonePattern[pantone].name
+            if(temp.index === 1) {
+                return temp.name
+            }
+        }
+    }
+
+    return temp.name
+}
+
+
+colorConvertor.lab.rgb = function (lab) {
+    let xyz = {
+        x: 0, y:0 , z: 0 
+    }
+
+    xyz.y = (lab.l + 16) / 116,
+    xyz.x = lab.a / 500 + xyz.y,
+    xyz.z = xyz.y - lab.b / 200,
+
+    xyz.x = 0.95047 * ((Math.pow(xyz.x,3) > 0.008856) ? Math.pow(xyz.x,3) : (xyz.x - 16/116) / 7.787)
+    xyz.y = 1.00000 * ((Math.pow(xyz.y,3) > 0.008856) ? Math.pow(xyz.y,3) : (xyz.y - 16/116) / 7.787)
+    xyz.z = 1.08883 * ((Math.pow(xyz.z,3) > 0.008856) ? Math.pow(xyz.z,3) : (xyz.z - 16/116) / 7.787)
+
+    let rgb = { r:0, g:0, b:0 }
+    rgb.r = xyz.x *  3.2406 + xyz.y * -1.5372 + xyz.z * -0.4986
+    rgb.g = xyz.x * -0.9689 + xyz.y *  1.8758 + xyz.z *  0.0415
+    rgb.b = xyz.x *  0.0557 + xyz.y * -0.2040 + xyz.z *  1.0570
+
+    rgb.r = (rgb.r > 0.0031308) ? (1.055 * Math.pow(rgb.r, 1/2.4) - 0.055) : 12.92 * rgb.r
+    rgb.g = (rgb.g > 0.0031308) ? (1.055 * Math.pow(rgb.g, 1/2.4) - 0.055) : 12.92 * rgb.g
+    rgb.b = (rgb.b > 0.0031308) ? (1.055 * Math.pow(rgb.b, 1/2.4) - 0.055) : 12.92 * rgb.b
+
+    rgb.r = Math.round(Math.max(0, Math.min(1, rgb.r)) * 255)
+    rgb.g = Math.round(Math.max(0, Math.min(1, rgb.g)) * 255)
+    rgb.b = Math.round(Math.max(0, Math.min(1, rgb.b)) * 255)
+
+    return rgb
+}
+
+colorConvertor.lab.cmyk        = function (data) { return colorMixer(data)('lab','rgb','cmyk')}
+colorConvertor.lab.grayscale   = function (data) { return colorMixer(data)('lab','rgb','grayscale')}
+colorConvertor.lab.hex3        = function (data) { return colorMixer(data)('lab','rgb','hex3')}
+colorConvertor.lab.hex6        = function (data) { return colorMixer(data)('lab','rgb','hex6')}
+colorConvertor.lab.hsl         = function (data) { return colorMixer(data)('lab','rgb','hsl')}
+colorConvertor.lab.html        = function (data) { return colorMixer(data)('lab','rgb','html')}
+
+colorConvertor.lab.ral         = function (data) { return colorMixer(data)('lab','rgb','ral')}
+colorConvertor.lab.w           = function (data) { return colorMixer(data)('lab','rgb','w')}
+colorConvertor.lab.xyz         = function (data) { return colorMixer(data)('lab','rgb','xyz')}
+
+// 8 | --- ral
+
+// 9 | --- rgb
+colorConvertor.rgb.hex3 = function (data) { return colorMixer(data)('rgb','hex6','hex3')}
 
 colorConvertor.rgb.hex6 = function (rgb) {
-    return [rgb.r.toString(16), rgb.g.toString(16), rgb.b.toString(16)].join('')
+    return [rgb.r.toString(16), rgb.g.toString(16), rgb.b.toString(16)].join('').toUpperCase()
 }
 
 colorConvertor.rgb.hsl = function (rgb) {
@@ -260,14 +338,34 @@ colorConvertor.rgb.grayscale = function (rgb) {
     return Math.round(((0.3 * rgb.r) + (0.59 * rgb.g) + (0.11 * rgb.b))/ 2.56)
 }
 
+colorConvertor.rgb.lab = function (rgb) {
+    rgb.r = rgb.r/255
+    rgb.g = rgb.g/255
+    rgb.b = rgb.b/255
+
+    rgb.r = (rgb.r > 0.04045) ? Math.pow((rgb.r + 0.055) / 1.055, 2.4) : rgb.r / 12.92
+    rgb.g = (rgb.g > 0.04045) ? Math.pow((rgb.g + 0.055) / 1.055, 2.4) : rgb.g / 12.92
+    rgb.b = (rgb.b > 0.04045) ? Math.pow((rgb.b + 0.055) / 1.055, 2.4) : rgb.b / 12.92
+
+    let xyz = { x: 0, y: 0, z: 0}
+
+    xyz.x = (rgb.r * 0.4124 + rgb.g * 0.3576 + rgb.b * 0.1805) / 0.95047
+    xyz.y = (rgb.r * 0.2126 + rgb.g * 0.7152 + rgb.b * 0.0722) / 1.00000
+    xyz.z = (rgb.r * 0.0193 + rgb.g * 0.1192 + rgb.b * 0.9505) / 1.08883
+
+    xyz.x = (xyz.x > 0.008856) ? Math.pow(xyz.x, 1/3) : (7.787 * xyz.x) + 16/116
+    xyz.y = (xyz.y > 0.008856) ? Math.pow(xyz.y, 1/3) : (7.787 * xyz.y) + 16/116
+    xyz.z = (xyz.z > 0.008856) ? Math.pow(xyz.z, 1/3) : (7.787 * xyz.z) + 16/116
+
+  return {l:((116 * xyz.y) - 16), a: (500 * (xyz.x - xyz.y)), b: (200 * (xyz.y - xyz.z))}
+}
+
 colorConvertor.rgb.rgbGrayscale = function (rgb) {
     const temp = Math.round((0.3 * rgb.r) + (0.59 * rgb.g) + (0.11 * rgb.b))
     return {r: temp, g: temp, b: temp}
 }
 
-colorConvertor.rgb.compare = function (a,b) {
-    return Math.abs(a.r - b.r ) + Math.abs(a.g - b.g ) + Math.abs(a.b - b.b )
-}
+colorConvertor.rgb.compare = compareRGB;
 
 colorConvertor.rgb.cmyk = function (rgb){
     let cmyk = {
@@ -278,23 +376,23 @@ colorConvertor.rgb.cmyk = function (rgb){
     }
 
     if (rgb.r === 0 && rgb.g === 0 && rgb.b === 0) {
-        cmyk.k = 100;
+        cmyk.k = 100
     } else {
 
-        rgb.r = rgb.r / 255;
-        rgb.g = rgb.g / 255;
-        rgb.b = rgb.b / 255;
+        rgb.r = rgb.r / 255
+        rgb.g = rgb.g / 255
+        rgb.b = rgb.b / 255
 
-        cmyk.k = 1 - Math.max(rgb.r, rgb.g, rgb.b);
+        cmyk.k = 1 - Math.max(rgb.r, rgb.g, rgb.b)
 
         if (cmyk.k == 1) {
-            cmyk.c = 0;
-            cmyk.m = 0;
-            cmyk.y = 0;
+            cmyk.c = 0
+            cmyk.m = 0
+            cmyk.y = 0
         } else {
-            cmyk.c = (1 - rgb.r - cmyk.k) / (1 - cmyk.k);
-            cmyk.m = (1 - rgb.g - cmyk.k) / (1 - cmyk.k);
-            cmyk.y = (1 - rgb.b - cmyk.k) / (1 - cmyk.k);
+            cmyk.c = (1 - rgb.r - cmyk.k) / (1 - cmyk.k)
+            cmyk.m = (1 - rgb.g - cmyk.k) / (1 - cmyk.k)
+            cmyk.y = (1 - rgb.b - cmyk.k) / (1 - cmyk.k)
 
             cmyk.c = Math.round(cmyk.c * 100)
             cmyk.m = Math.round(cmyk.m * 100)
@@ -302,7 +400,7 @@ colorConvertor.rgb.cmyk = function (rgb){
             cmyk.k = Math.round(cmyk.k * 100)
         }
     }
-    return cmyk;
+    return cmyk
 }
 
 colorConvertor.rgb.ral = function (rgb){
@@ -313,7 +411,7 @@ colorConvertor.rgb.ral = function (rgb){
     }
 
     for(let ral in ralPattern){
-        let t = colorConvertor.rgb.compare(ralPattern[ral].rgb, rgb)
+        let t = compareRGB(ralPattern[ral].rgb, rgb)
         if(t < temp.index){
             temp.index = t
             temp.ral = ralPattern[ral].ral
@@ -334,7 +432,7 @@ colorConvertor.rgb.pantone = function(rgb){
     }
 
     for(let pantone in pantonePattern){
-        let t = Math.abs(pantonePattern[pantone].rgb.r - rgb.r ) + Math.abs(pantonePattern[pantone].rgb.g - rgb.g ) + Math.abs(pantonePattern[pantone].rgb.b - rgb.b )
+        let t = compareRGB(pantonePattern[pantone].rgb, rgb)
         if(t < temp.index){
             temp.index = t
             temp.pantone = pantonePattern[pantone].pantone
@@ -367,7 +465,7 @@ colorConvertor.rgb.html = function(rgb){
     return temp.html
 }
 
-colorConvertor.rgb.w = function (data) { return colorMixer(data)('rgb','hsl','w')};
+colorConvertor.rgb.w = function (data) { return colorMixer(data)('rgb','hsl','w')}
 
 colorConvertor.rgb.xyz = function(rgb) {
     let xyz = {}
@@ -387,10 +485,12 @@ colorConvertor.rgb.xyz = function(rgb) {
     xyz.x = xyz.x * 94.972
     xyz.y = xyz.y * 100
     xyz.z = xyz.z * 122.638
-	return xyz;
-};
+	return xyz
+}
 
-// 7 | --- xyz
+// 10 | --- w
+
+// 11 | --- xyz
 
 // --- factory cleaning squad
 const factoryCleanar = {}
@@ -398,11 +498,11 @@ factoryCleanar.from = function (objectData) {
     let parameters = Object.keys(objectData).filter(from => ( from !== 'to'))
     
     if(parameters.indexOf('grayscale') > -1 && typeof objectData.grayscale === 'boolean') {
-        parameters.splice(parameters.indexOf('grayscale'), 1); 
+        parameters.splice(parameters.indexOf('grayscale'), 1) 
     }
 
     if(parameters.indexOf('hex') > -1) {
-        parameters.splice(parameters.indexOf('hex'), 1); 
+        parameters.splice(parameters.indexOf('hex'), 1) 
         parameters.push('hex6')
     }
 
@@ -410,7 +510,7 @@ factoryCleanar.from = function (objectData) {
         return parameters[0]
     } else {
         error = {error: 'The color specified in from is not an accepted input'}
-        return false;
+        return false
     }
 } 
 

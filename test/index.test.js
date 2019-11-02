@@ -6,7 +6,11 @@ const colorConvertor = require('./../simple_color_converter.js');
 const tester = function (input, output) {
     const color = colorConvertor(input)
     const temp = JSON.stringify(color) === JSON.stringify(output)
-    console.log(temp, color)
+    if (temp) {
+        console.log(temp, color)
+    } else {
+        console.log('\x1b[36m', temp, '\x1b[0m', color);
+    }
 
     if (temp === true) {
         settings.pass ++
