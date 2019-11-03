@@ -1,8 +1,10 @@
-const ralPattern = require('./color_data/compiled_ral.json')
-const pantonePattern = require('./color_data/compiled_pantone.json')
-const htmlPattern = require('./color_data/compiled_html.json')
+
+const ralPattern = require('./color_list/ral.json')
+const pantonePattern = require('./color_list/pantone.json')
+const htmlPattern = require('./color_list/html.json')
 const compareRGB = require('./compare_colors/rgb_liniar')
-const deltaE = require('./compare_colors/deltaE')
+// const deltaE = require('./compare_colors/deltaE_CIE76')
+const deltaE = require('./compare_colors/deltaE_CIEDE2000.js')
 // const color_identifier = require('./color_identifier.js')
 
 const colorConvertor = {
@@ -42,16 +44,16 @@ colorConvertor.cmyk.rgb = function(cmyk){
     return rgb
 }
 
-colorConvertor.cmyk.grayscale   = function (data) { return colorMixer(data)('cmyk','rgb','grayscale')}
-colorConvertor.cmyk.hex3        = function (data) { return colorMixer(data)('cmyk','rgb','hex3')}
-colorConvertor.cmyk.hex6        = function (data) { return colorMixer(data)('cmyk','rgb','hex6')}
-colorConvertor.cmyk.hsl         = function (data) { return colorMixer(data)('cmyk','rgb','hsl')}
-colorConvertor.cmyk.html        = function (data) { return colorMixer(data)('cmyk','rgb','html')}
-colorConvertor.cmyk.lab         = function (data) { return colorMixer(data)('cmyk','rgb','lab')}
-colorConvertor.cmyk.pantone     = function (data) { return colorMixer(data)('cmyk','lab','pantone')}
-colorConvertor.cmyk.ral         = function (data) { return colorMixer(data)('cmyk','rgb','ral')}
-colorConvertor.cmyk.w           = function (data) { return colorMixer(data)('cmyk','rgb','w')}
-colorConvertor.cmyk.xyz         = function (data) { return colorMixer(data)('cmyk','rgb','xyz')}
+colorConvertor.cmyk.grayscale   = (data) => { return colorMixer(data)('cmyk','rgb','grayscale')}
+colorConvertor.cmyk.hex3        = (data) => { return colorMixer(data)('cmyk','rgb','hex3')}
+colorConvertor.cmyk.hex6        = (data) => { return colorMixer(data)('cmyk','rgb','hex6')}
+colorConvertor.cmyk.hsl         = (data) => { return colorMixer(data)('cmyk','rgb','hsl')}
+colorConvertor.cmyk.html        = (data) => { return colorMixer(data)('cmyk','rgb','html')}
+colorConvertor.cmyk.lab         = (data) => { return colorMixer(data)('cmyk','rgb','lab')}
+colorConvertor.cmyk.pantone     = (data) => { return colorMixer(data)('cmyk','lab','pantone')}
+colorConvertor.cmyk.ral         = (data) => { return colorMixer(data)('cmyk','lab','ral')}
+colorConvertor.cmyk.w           = (data) => { return colorMixer(data)('cmyk','rgb','w')}
+colorConvertor.cmyk.xyz         = (data) => { return colorMixer(data)('cmyk','rgb','xyz')}
 
 // 2 | --- grayscale
 
@@ -70,30 +72,30 @@ colorConvertor.grayscale.w = function (grayscale) {
     return {error: 'You can`t get the wavelength of no color'}
 }
 
-colorConvertor.grayscale.hex3       = function (data) { return colorMixer(data)('grayscale','rgb','hex3')}
-colorConvertor.grayscale.hex6       = function (data) { return colorMixer(data)('grayscale','rgb','hex6')}
-colorConvertor.grayscale.hsl        = function (data) { return colorMixer(data)('grayscale','rgb','hsl')}
-colorConvertor.grayscale.html       = function (data) { return colorMixer(data)('grayscale','rgb','html')}
-colorConvertor.grayscale.lab        = function (data) { return colorMixer(data)('grayscale','rgb','lab')}
-colorConvertor.grayscale.pantone    = function (data) { return colorMixer(data)('grayscale','lab','pantone')}
-colorConvertor.grayscale.ral        = function (data) { return colorMixer(data)('grayscale','rgb','ral')}
-colorConvertor.grayscale.xyz        = function (data) { return colorMixer(data)('grayscale','rgb','xyz')}
+colorConvertor.grayscale.hex3       = (data) => { return colorMixer(data)('grayscale','rgb','hex3')}
+colorConvertor.grayscale.hex6       = (data) => { return colorMixer(data)('grayscale','rgb','hex6')}
+colorConvertor.grayscale.hsl        = (data) => { return colorMixer(data)('grayscale','rgb','hsl')}
+colorConvertor.grayscale.html       = (data) => { return colorMixer(data)('grayscale','rgb','html')}
+colorConvertor.grayscale.lab        = (data) => { return colorMixer(data)('grayscale','rgb','lab')}
+colorConvertor.grayscale.pantone    = (data) => { return colorMixer(data)('grayscale','lab','pantone')}
+colorConvertor.grayscale.ral        = (data) => { return colorMixer(data)('grayscale','lab','ral')}
+colorConvertor.grayscale.xyz        = (data) => { return colorMixer(data)('grayscale','rgb','xyz')}
 
 // 3 | --- hex 3
 colorConvertor.hex3.hex6 = function (hex3) {
     return [hex3[0],hex3[0],hex3[1],hex3[1],hex3[2],hex3[2]].join('').toUpperCase()
 }
 
-colorConvertor.hex3.cmyk      = function (data) { return colorMixer(data)('hex3','rgb','cmyk')}
-colorConvertor.hex3.grayscale = function (data) { return colorMixer(data)('hex3','rgb','grayscale')}
-colorConvertor.hex3.hsl       = function (data) { return colorMixer(data)('hex3','rgb','hsl')}
-colorConvertor.hex3.html      = function (data) { return colorMixer(data)('hex3','rgb','html')}
-colorConvertor.hex3.lab       = function (data) { return colorMixer(data)('hex3','rgb','lab')}
-colorConvertor.hex3.pantone   = function (data) { return colorMixer(data)('hex3','lab','pantone')}
-colorConvertor.hex3.ral       = function (data) { return colorMixer(data)('hex3','rgb','ral')}
-colorConvertor.hex3.rgb       = function (data) { return colorMixer(data)('hex3','hex6','rgb')}
-colorConvertor.hex3.w         = function (data) { return colorMixer(data)('hex3','hsl','w')}
-colorConvertor.hex3.xyz       = function (data) { return colorMixer(data)('hex3','rgb','xyz')}
+colorConvertor.hex3.cmyk      = (data) => { return colorMixer(data)('hex3','rgb','cmyk')}
+colorConvertor.hex3.grayscale = (data) => { return colorMixer(data)('hex3','rgb','grayscale')}
+colorConvertor.hex3.hsl       = (data) => { return colorMixer(data)('hex3','rgb','hsl')}
+colorConvertor.hex3.html      = (data) => { return colorMixer(data)('hex3','rgb','html')}
+colorConvertor.hex3.lab       = (data) => { return colorMixer(data)('hex3','rgb','lab')}
+colorConvertor.hex3.pantone   = (data) => { return colorMixer(data)('hex3','lab','pantone')}
+colorConvertor.hex3.ral       = (data) => { return colorMixer(data)('hex3','lab','ral')}
+colorConvertor.hex3.rgb       = (data) => { return colorMixer(data)('hex3','hex6','rgb')}
+colorConvertor.hex3.w         = (data) => { return colorMixer(data)('hex3','hsl','w')}
+colorConvertor.hex3.xyz       = (data) => { return colorMixer(data)('hex3','rgb','xyz')}
 
 // 4 | --- hex 6
 
@@ -122,15 +124,15 @@ colorConvertor.hex6.rgb = function (hex6) {
     return temp 
 }
 
-colorConvertor.hex6.cmyk            = function (data) { return colorMixer(data)('hex6','rgb','cmyk')}
-colorConvertor.hex6.grayscale       = function (data) { return colorMixer(data)('hex6','rgb','grayscale')}
-colorConvertor.hex6.hsl             = function (data) { return colorMixer(data)('hex6','rgb','hsl')}
-colorConvertor.hex6.html            = function (data) { return colorMixer(data)('hex6','rgb','html')}
-colorConvertor.hex6.lab             = function (data) { return colorMixer(data)('hex6','rgb','lab')}
-colorConvertor.hex6.pantone         = function (data) { return colorMixer(data)('hex6','lab','pantone')}
-colorConvertor.hex6.ral             = function (data) { return colorMixer(data)('hex6','rgb','ral')}
-colorConvertor.hex6.w               = function (data) { return colorMixer(data)('hex6','hsl','w')}
-colorConvertor.hex6.xyz             = function (data) { return colorMixer(data)('hex6','rgb','xyz')}
+colorConvertor.hex6.cmyk            = (data) => { return colorMixer(data)('hex6','rgb','cmyk')}
+colorConvertor.hex6.grayscale       = (data) => { return colorMixer(data)('hex6','rgb','grayscale')}
+colorConvertor.hex6.hsl             = (data) => { return colorMixer(data)('hex6','rgb','hsl')}
+colorConvertor.hex6.html            = (data) => { return colorMixer(data)('hex6','rgb','html')}
+colorConvertor.hex6.lab             = (data) => { return colorMixer(data)('hex6','rgb','lab')}
+colorConvertor.hex6.pantone         = (data) => { return colorMixer(data)('hex6','lab','pantone')}
+colorConvertor.hex6.ral             = (data) => { return colorMixer(data)('hex6','lab','ral')}
+colorConvertor.hex6.w               = (data) => { return colorMixer(data)('hex6','hsl','w')}
+colorConvertor.hex6.xyz             = (data) => { return colorMixer(data)('hex6','rgb','xyz')}
 
 
 colorConvertor.hex6.hex6Grayscale = function (hex6) {
@@ -143,17 +145,18 @@ colorConvertor.hex6.hex6Grayscale = function (hex6) {
 
 // 5 | --- hsl
 
-colorConvertor.hsl.cmyk        = function (data) { return colorMixer(data)('hsl','rgb','cmyk')}
-colorConvertor.hsl.grayscale   = function (data) { return colorMixer(data)('hsl','rgb','grayscale')}
-colorConvertor.hsl.hex3        = function (data) { return colorMixer(data)('hsl','rgb','hex3')}
-colorConvertor.hsl.hex6        = function (data) { return colorMixer(data)('hsl','rgb','hex6')}
-colorConvertor.hsl.html        = function (data) { return colorMixer(data)('hsl','rgb','html')}
-colorConvertor.hsl.lab         = function (data) { return colorMixer(data)('hsl','rgb','lab')}
-colorConvertor.hsl.pantone     = function (data) { return colorMixer(data)('hsl','lab','pantone')}
-colorConvertor.hsl.ral         = function (data) { return colorMixer(data)('hsl','rgb','ral')}
-colorConvertor.hsl.xyz         = function (data) { return colorMixer(data)('hsl','rgb','xyz')}
+colorConvertor.hsl.cmyk        = (data) => { return colorMixer(data)('hsl','rgb','cmyk')}
+colorConvertor.hsl.grayscale   = (data) => { return colorMixer(data)('hsl','rgb','grayscale')}
+colorConvertor.hsl.hex3        = (data) => { return colorMixer(data)('hsl','rgb','hex3')}
+colorConvertor.hsl.hex6        = (data) => { return colorMixer(data)('hsl','rgb','hex6')}
+colorConvertor.hsl.html        = (data) => { return colorMixer(data)('hsl','rgb','html')}
+colorConvertor.hsl.lab         = (data) => { return colorMixer(data)('hsl','rgb','lab')}
+colorConvertor.hsl.pantone     = (data) => { return colorMixer(data)('hsl','lab','pantone')}
+colorConvertor.hsl.ral         = (data) => { return colorMixer(data)('hsl','lab','ral')}
+colorConvertor.hsl.xyz         = (data) => { return colorMixer(data)('hsl','rgb','xyz')}
 
-colorConvertor.hsl.rgb = function (hsl) {
+colorConvertor.hsl.rgb = function (hslOrigin) {
+    var hsl = Object.create(hslOrigin)
     const rgb = {
         r: 0,
         g: 0,
@@ -206,7 +209,8 @@ colorConvertor.hsl.rgb = function (hsl) {
     return rgb
 }
 
-colorConvertor.hsl.w = function (hsl) {
+colorConvertor.hsl.w = function (hslOrigin) {
+    let hsl = Object.create(hslOrigin)
     let temp = Math.round(620 - 170 / 270 * hsl.h)
     
     return temp
@@ -216,7 +220,8 @@ colorConvertor.hsl.w = function (hsl) {
 
 // 7 | --- Lab
 
-colorConvertor.lab.pantone = function(lab){
+colorConvertor.lab.pantone = function(labOrigin){
+    let lab = Object.create(labOrigin)
     let temp = {
         index: 768,
         name: '',
@@ -225,7 +230,6 @@ colorConvertor.lab.pantone = function(lab){
     for(let pantone in pantonePattern){
        
         let t = deltaE(pantonePattern[pantone].lab, lab)
-        console.log(t)
         if(t < temp.index){
             temp.index = t
             temp.name = pantonePattern[pantone].name
@@ -238,6 +242,25 @@ colorConvertor.lab.pantone = function(lab){
     return temp.name
 }
 
+colorConvertor.lab.ral = function (lab){
+    let temp = {
+        index: 768,
+        position: 9999
+    }
+   
+    for(let ral in ralPattern){
+        let t = deltaE(ralPattern[ral].lab, lab)
+        if(t < temp.index){
+            temp.index = t
+            temp.position = ral
+            if(temp.index === 0) {
+                return { name: ralPattern[temp.position].name }
+            }
+        }
+    }
+
+    return { name: ralPattern[temp.position].name }
+}
 
 colorConvertor.lab.rgb = function (lab) {
     let xyz = {
@@ -268,21 +291,19 @@ colorConvertor.lab.rgb = function (lab) {
     return rgb
 }
 
-colorConvertor.lab.cmyk        = function (data) { return colorMixer(data)('lab','rgb','cmyk')}
-colorConvertor.lab.grayscale   = function (data) { return colorMixer(data)('lab','rgb','grayscale')}
-colorConvertor.lab.hex3        = function (data) { return colorMixer(data)('lab','rgb','hex3')}
-colorConvertor.lab.hex6        = function (data) { return colorMixer(data)('lab','rgb','hex6')}
-colorConvertor.lab.hsl         = function (data) { return colorMixer(data)('lab','rgb','hsl')}
-colorConvertor.lab.html        = function (data) { return colorMixer(data)('lab','rgb','html')}
-
-colorConvertor.lab.ral         = function (data) { return colorMixer(data)('lab','rgb','ral')}
-colorConvertor.lab.w           = function (data) { return colorMixer(data)('lab','rgb','w')}
-colorConvertor.lab.xyz         = function (data) { return colorMixer(data)('lab','rgb','xyz')}
+colorConvertor.lab.cmyk        = (data) => { return colorMixer(data)('lab','rgb','cmyk')}
+colorConvertor.lab.grayscale   = (data) => { return colorMixer(data)('lab','rgb','grayscale')}
+colorConvertor.lab.hex3        = (data) => { return colorMixer(data)('lab','rgb','hex3')}
+colorConvertor.lab.hex6        = (data) => { return colorMixer(data)('lab','rgb','hex6')}
+colorConvertor.lab.hsl         = (data) => { return colorMixer(data)('lab','rgb','hsl')}
+colorConvertor.lab.html        = (data) => { return colorMixer(data)('lab','rgb','html')}
+colorConvertor.lab.w           = (data) => { return colorMixer(data)('lab','rgb','w')}
+colorConvertor.lab.xyz         = (data) => { return colorMixer(data)('lab','rgb','xyz')}
 
 // 8 | --- ral
 
 // 9 | --- rgb
-colorConvertor.rgb.hex3 = function (data) { return colorMixer(data)('rgb','hex6','hex3')}
+colorConvertor.rgb.hex3 = (data) => { return colorMixer(data)('rgb','hex6','hex3')}
 
 colorConvertor.rgb.hex6 = function (rgb) {
     return [rgb.r.toString(16), rgb.g.toString(16), rgb.b.toString(16)].join('').toUpperCase()
@@ -338,7 +359,8 @@ colorConvertor.rgb.grayscale = function (rgb) {
     return Math.round(((0.3 * rgb.r) + (0.59 * rgb.g) + (0.11 * rgb.b))/ 2.56)
 }
 
-colorConvertor.rgb.lab = function (rgb) {
+colorConvertor.rgb.lab = function (rgbX) {
+    var rgb = Object.create(rgbX)
     rgb.r = rgb.r/255
     rgb.g = rgb.g/255
     rgb.b = rgb.b/255
@@ -403,48 +425,6 @@ colorConvertor.rgb.cmyk = function (rgb){
     return cmyk
 }
 
-colorConvertor.rgb.ral = function (rgb){
-    let temp = {
-        index: 768,
-        ral: '',
-        name: '',
-    }
-
-    for(let ral in ralPattern){
-        let t = compareRGB(ralPattern[ral].rgb, rgb)
-        if(t < temp.index){
-            temp.index = t
-            temp.ral = ralPattern[ral].ral
-            temp.name = ralPattern[ral].name
-            if(temp.index === 0) {
-                return {ral: temp.ral,  name: temp.name,}
-            }
-        }
-    }
-
-    return {ral: temp.ral,  name: temp.name,}
-}
-
-colorConvertor.rgb.pantone = function(rgb){
-    let temp = {
-        index: 768,
-        pantone: '',
-    }
-
-    for(let pantone in pantonePattern){
-        let t = compareRGB(pantonePattern[pantone].rgb, rgb)
-        if(t < temp.index){
-            temp.index = t
-            temp.pantone = pantonePattern[pantone].pantone
-            if(temp.index === 0) {
-                return temp
-            }
-        }
-    }
-
-    return temp.pantone
-}
-
 colorConvertor.rgb.html = function(rgb){
     let temp = {
         index: 768,
@@ -465,7 +445,7 @@ colorConvertor.rgb.html = function(rgb){
     return temp.html
 }
 
-colorConvertor.rgb.w = function (data) { return colorMixer(data)('rgb','hsl','w')}
+colorConvertor.rgb.w = (data) => { return colorMixer(data)('rgb','hsl','w')}
 
 colorConvertor.rgb.xyz = function(rgb) {
     let xyz = {}
@@ -487,6 +467,10 @@ colorConvertor.rgb.xyz = function(rgb) {
     xyz.z = xyz.z * 122.638
 	return xyz
 }
+
+
+colorConvertor.rgb.ral         = (data) => { return colorMixer(data)('rgb','lab','ral')}
+colorConvertor.rgb.pantone     = (data) => { return colorMixer(data)('rgb','lab','pantone')}
 
 // 10 | --- w
 
@@ -533,16 +517,12 @@ factoryCleanar.to = function (to, from) {
     return false
 }
 
+
+
 // factory
 const colorFactory = function (settings) {
     error = ''
-    // if (settings.hasOwnProperty('from')){
-    //     color_identifier(settings.from)
 
-    //     return true
-    // } else {
-    //     settings.from = factoryCleanar.from(settings)
-    // }
     settings.from = factoryCleanar.from(settings)
     settings.to =  factoryCleanar.to(settings.to, settings.from)
 

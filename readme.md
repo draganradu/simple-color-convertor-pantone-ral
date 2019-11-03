@@ -35,6 +35,7 @@ console.log(color) // { ral: 'RAL 9010', name: 'Pure white' }
 | hex3      | '#4ff'                                    | string [4]        |       |
 | hex6      | '44FFFF'                                  | string [6]        | hex   |
 | hsl       | { h: 140, s: 39.7, l: 55.1 }              | object / numbers  |       |
+| lab       | { l: 91, a: -44, b: -13 }                 | object [3]        |       | 
 | rgb       | { r: 68, g: 255, b: 255 }                 | object / numbers  |       |
 
 
