@@ -13,6 +13,9 @@
     "hsl",
     "grayscale"
   ],
+  "engines": {
+    "node": ">= 0.6"
+  },
   "main": "simple_color_converter.js",
   "repository": "draganradu/simple-color-convertor-pantone-ral",
   "scripts": {

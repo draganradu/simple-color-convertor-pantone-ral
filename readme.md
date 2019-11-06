@@ -86,6 +86,24 @@ The *from* value is not in the accepted to, most of the times it is a misspelled
 #####'You can't get the wavelength of no color'
 The color you want to convert is grayscale, logically there is no answer to what you want to do 
 
+## Badges
+When i look at this mountain of badges i remember that NPM is the closest thing to the boy scouts if none of the members went outside.
+
+![License](https://img.shields.io/npm/l/simple-color-converter)
+
+![build passing](https://travis-ci.org/draganradu/simple-color-convertor-pantone-ral.svg?branch=master) ![maintained](https://img.shields.io/maintenance/yes/2019) ![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/simple-color-converter) 
+
+![Node Version](https://img.shields.io/node/v/simple-color-converter) ![NPM](https://img.shields.io/npm/v/simple-color-converter) 
+
+![size NPM](https://img.shields.io/bundlephobia/min/simple-color-converter)  ![size Git](https://img.shields.io/github/languages/code-size/draganradu/simple-color-convertor-pantone-ral) 
+
+
+![Release](https://img.shields.io/github/release-date/draganradu/simple-color-convertor-pantone-ral)  ![Commit](https://img.shields.io/github/last-commit/draganradu/simple-color-convertor-pantone-ral) 
+
+![Total downloads](https://img.shields.io/npm/dt/simple-color-converter) 
+
+![Issues](https://img.shields.io/github/issues/draganradu/simple-color-convertor-pantone-ral) 
+
 
 ## Issues
 1 | **grayscale** there are some issues when outputting ral/pantone colors, they output colors that are not completely monochrome. Because the closest color may be a colored gray. Will be fixed when we start using HSL compare algorithm in 1.2.0
