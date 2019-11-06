@@ -306,7 +306,16 @@ colorConvertor.lab.xyz         = (data) => { return colorMixer(data)('lab','rgb'
 colorConvertor.rgb.hex3 = (data) => { return colorMixer(data)('rgb','hex6','hex3')}
 
 colorConvertor.rgb.hex6 = function (rgb) {
-    return [rgb.r.toString(16), rgb.g.toString(16), rgb.b.toString(16)].join('').toUpperCase()
+    function rgbNormalize (color) {
+        if (color < 16) {
+            color = '0' + color.toString(16)
+        } else {
+            color = color.toString(16)
+        }
+
+        return color
+    }
+    return [rgbNormalize(rgb.r), rgbNormalize(rgb.g), rgbNormalize(rgb.b)].join('').toUpperCase()
 }
 
 colorConvertor.rgb.hsl = function (rgb) {

@@ -1,4 +1,9 @@
-![build passing](https://travis-ci.org/draganradu/simple-color-convertor-pantone-ral.svg?branch=master)
+![build passing](https://travis-ci.org/draganradu/simple-color-convertor-pantone-ral.svg?branch=master) ![License](https://img.shields.io/npm/l/simple-color-converter) ![maintained](https://img.shields.io/maintenance/yes/2019) ![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/simple-color-converter) 
+![Node Version](https://img.shields.io/node/v/simple-color-converter) ![NPM](https://img.shields.io/npm/v/simple-color-converter) 
+![size NPM](https://img.shields.io/bundlephobia/min/simple-color-converter)  ![size Git](https://img.shields.io/github/languages/code-size/draganradu/simple-color-convertor-pantone-ral) 
+![Release](https://img.shields.io/github/release-date/draganradu/simple-color-convertor-pantone-ral)  ![Commit](https://img.shields.io/github/last-commit/draganradu/simple-color-convertor-pantone-ral) 
+![Issues](https://img.shields.io/github/issues/draganradu/simple-color-convertor-pantone-ral) 
+![Total downloads](https://img.shields.io/npm/dt/simple-color-converter) 
 
 
 # Simple color converter Pantone Ral

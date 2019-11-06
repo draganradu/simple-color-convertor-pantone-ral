@@ -88,6 +88,8 @@ const testData = [
     [{hex: '#e30e3f', to: 'html' }, 'Crimson' ],
     [{hex: '#51e30e', to: 'html' }, 'LawnGreen' ],
     [{hex: '#51e30e', to: 'ral' }, 'LawnGreen' ],
+    [{rgb: {r: 10, g: 10, b: 128}, to: 'hex' }, '0A0A80' ],
+    [{hex6: '#0A0A80', to: 'rgb' }, {r: 10, g: 10, b: 128} ],
 ]
 
 module.exports = testData;
