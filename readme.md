@@ -35,10 +35,10 @@ console.log(color) // { ral: 'RAL 9010', name: 'Pure white' }
 | ---       | ---                                       | ---               | ---   |
 | cmyk      | { c: 0, m: 13, y: 77, k: 24 }             | object / numbers  |       |
 | grayscale | 78                                        | integer           |       |
-| hex       | '44FFFF'                                  | string [6]        | hex6  |
+| hex       | '44FFFF'                                  | string [6]        | auto detect if hex3 or hex6  |
 | hex3      | '4ff'                                     | string [3]        |       |
 | hex3      | '#4ff'                                    | string [4]        |       |
-| hex6      | '44FFFF'                                  | string [6]        | hex   |
+| hex6      | '44FFFF'                                  | string [6]        |       |
 | hsl       | { h: 140, s: 39.7, l: 55.1 }              | object / numbers  |       |
 | lab       | { l: 91, a: -44, b: -13 }                 | object [3]        |       | 
 | rgb       | { r: 68, g: 255, b: 255 }                 | object / numbers  |       |

@@ -495,8 +495,12 @@ factoryCleanar.from = function (objectData) {
     }
 
     if(parameters.indexOf('hex') > -1) {
-        parameters.splice(parameters.indexOf('hex'), 1) 
-        parameters.push('hex6')
+        parameters.splice(parameters.indexOf('hex'), 1)
+        if(objectData.hex.length < 6){
+            parameters.push('hex3')
+        } else {
+            parameters.push('hex6')
+        }
     }
 
     if(parameters.length === 1 && _this.hasOwnProperty(parameters[0])){
@@ -548,10 +552,7 @@ const colorFactory = function (settings) {
 
     // I need to add a normalizer for every tipe of data not only for hex
     if(settings.from === 'hex6' || settings.from === 'hex3'){
-        if (settings.hasOwnProperty('hex')){
-            settings.hex6 = settings.hex
-        }
-        settings[settings.from] = factoryCleanar.hex(settings[settings.from])
+        settings[settings.from] = factoryCleanar.hex(settings[settings.from] || settings.hex)
     }
     
     // convert to grayscale
