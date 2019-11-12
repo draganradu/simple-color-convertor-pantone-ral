@@ -15,6 +15,7 @@ const colorConvertor = {
     lab: {},
     hsl: {},
     rgb: {},
+    w: {},
     xyz: {},
 }
 
@@ -254,12 +255,20 @@ colorConvertor.lab.ral = function (lab){
             temp.index = t
             temp.position = ral
             if(temp.index === 0) {
-                return { name: ralPattern[temp.position].name }
+                return { 
+                    ral: ralPattern[temp.position].ral,
+                    name: ralPattern[temp.position].name, 
+                    lrv: ralPattern[temp.position].LRV,
+                }
             }
         }
     }
 
-    return { name: ralPattern[temp.position].name }
+    return { 
+        ral: ralPattern[temp.position].ral,
+        name: ralPattern[temp.position].name, 
+        lrv: ralPattern[temp.position].LRV,
+    }
 }
 
 colorConvertor.lab.rgb = function (lab) {
@@ -483,13 +492,54 @@ colorConvertor.rgb.pantone     = (data) => { return colorMixer(data)('rgb','lab'
 
 // 10 | --- w
 
+
+colorConvertor.w.rgb = function(w) {
+    let rgb = {
+        r: 0,
+        g: 0,
+        b: 0,
+    }
+
+     if (w >= 380 && w < 440) {
+         rgb.r = -1 * (w - 440) / (440 - 380)
+         rgb.b = 1
+    } else if (w >= 440 && w < 490) {
+        rgb.g = (w - 440) / (490 - 440)
+        rgb.b = 1
+     } else if (w >= 490 && w < 510) {
+         rgb.g  = 1
+         rgb.b = -1 * (w - 510) / (510 - 490)
+     } else if (w >= 510 && w < 580) {
+         rgb.r = (w - 510) / (580 - 510)
+         rgb.g = 1
+     } else if (w >= 580 && w < 645) {
+         rgb.r = 1
+         rgb.g = -1 * (w - 645) / (645 - 580)
+     } else if (w >= 645 && w <= 780) {
+         rgb.r = 1
+     } 
+
+     rgb.r = Math.round(rgb.r * 255)
+     rgb.g = Math.round(rgb.g * 255)
+     rgb.b = Math.round(rgb.b * 255)
+
+     return rgb;
+}
+
+colorConvertor.w.cmyk       = (data) => { return colorMixer(data)('w','rgb','cmyk')}
+colorConvertor.w.grayscale  = (data) => { return colorMixer(data)('w','rgb','grayscale')}
+colorConvertor.w.hex3       = (data) => { return colorMixer(data)('w','rgb','hex3')}
+colorConvertor.w.hex6       = (data) => { return colorMixer(data)('w','rgb','hex6')}
+colorConvertor.w.hsl        = (data) => { return colorMixer(data)('w','rgb','hsl')}
+colorConvertor.w.html       = (data) => { return colorMixer(data)('w','rgb','html')}
+colorConvertor.w.xyz        = (data) => { return colorMixer(data)('w','rgb','xyz')}
+
 // 11 | --- xyz
 
 // --- factory cleaning squad
 const factoryCleanar = {}
 factoryCleanar.from = function (objectData) {
-    let parameters = Object.keys(objectData).filter(from => ( from !== 'to'))
-    
+    let parameters = Object.keys(objectData).filter(from => ( ['to','hexref'].indexOf(from) === -1 ))
     if(parameters.indexOf('grayscale') > -1 && typeof objectData.grayscale === 'boolean') {
         parameters.splice(parameters.indexOf('grayscale'), 1) 
     }
@@ -562,6 +612,48 @@ const colorFactory = function (settings) {
 
     // Actual color convertor
     settings.output = colorConvertor[settings.from][settings.to](settings[settings.from])
+
+    // hexref | Hex ref flag
+    if(settings.hexref){
+        if (settings.to === 'hex6') {
+            settings.output = {
+                [settings.to]: settings.output,
+                hexref: '#' + settings.output
+            }
+        } else if ((typeof settings.output === 'string' || typeof settings.output === 'number') && ['html','pantone','w'].indexOf(settings.to) === -1 ){
+            settings.output = {
+                [settings.to]: settings.output,
+                hexref: '#' + colorConvertor[settings.to]['hex6'](settings.output)
+            }
+        } else {
+            if(settings.to === 'html'){
+                settings.output = {
+                    [settings.to]: settings.output,
+                    hexref: '#' + colorConvertor['rgb']['hex6'](htmlPattern.filter(data => data.name === settings.output )[0].rgb)
+                }
+            } else if(settings.to === 'pantone'){
+                settings.output = {
+                    [settings.to]: settings.output,
+                    hexref: '#' + colorConvertor['rgb']['hex6'](pantonePattern.filter(data => data.name === settings.output )[0].rgb)
+                }
+            } else if(settings.to === 'ral'){
+                settings.output.hexref = '#' + colorConvertor['rgb']['hex6'](ralPattern.filter(data => data.name === settings.output.name )[0].rgb)
+            } else if(settings.to === 'w'){
+                settings.output = {
+                    [settings.to]: settings.output,
+                    hexref: false
+                }
+                //needs to be implemented
+                //colorConvertor['w']['hex6'](settings.output)
+            } else if(settings.to === 'xyz'){
+                settings.output.hexref = false 
+                //needs to be implemented
+                //colorConvertor['w']['hex6'](settings.output)    
+            } else {
+                settings.output.hexref = '#' + colorConvertor[settings.to]['hex6'](settings.output)
+            }
+        }
+    }
     return settings.output 
 }
 

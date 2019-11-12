@@ -42,7 +42,7 @@ console.log(color) // { ral: 'RAL 9010', name: 'Pure white' }
 | hsl       | { h: 140, s: 39.7, l: 55.1 }              | object / numbers  |       |
 | lab       | { l: 91, a: -44, b: -13 }                 | object [3]        |       | 
 | rgb       | { r: 68, g: 255, b: 255 }                 | object / numbers  |       |
-
+| w         | 480                                       | integer           | (experimental)|
 
 #To 
 **to** is the argument used to generate the correct outptut, all posible inputs are strings 
@@ -77,9 +77,10 @@ var color = simpleColorConverter({
 console.log(color) // { c: 0, m: 0, y: 0, k: 87 }
 ```
 
-| flag      | output            | data type     | note  |
-| ---       | ---               | ---           | ---   |
-| grayscale | grayscale value in the from format  | boolean       |       |
+| flag      | output                                | data type     | default   | note  |
+| ---       | ---                                   | ---           | ---       | ---   |
+| grayscale | grayscale value in the from format    | boolean       | false          |       |
+| hexref    | Reference value in hex format         | boolean       | false          | For Hex it equels Hex |
 
 #Error logs
 #####'The value you want to convert to is not acceptable' 
