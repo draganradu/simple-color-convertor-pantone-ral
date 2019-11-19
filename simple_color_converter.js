@@ -1,11 +1,10 @@
-
+'use strict';
 const ralPattern = require('./color_list/ral.json')
 const pantonePattern = require('./color_list/pantone.json')
 const htmlPattern = require('./color_list/html.json')
 const compareRGB = require('./compare_colors/rgb_liniar')
 // const deltaE = require('./compare_colors/deltaE_CIE76')
 const deltaE = require('./compare_colors/deltaE_CIEDE2000.js')
-// const color_identifier = require('./color_identifier.js')
 
 const colorConvertor = {
     cmyk: {},
@@ -20,7 +19,7 @@ const colorConvertor = {
 }
 
 const _this = colorConvertor
-let error = ''
+var errorMessage = ''
 
 // 0 | ColorMixer
 
@@ -134,15 +133,6 @@ colorConvertor.hex6.pantone         = (data) => { return colorMixer(data)('hex6'
 colorConvertor.hex6.ral             = (data) => { return colorMixer(data)('hex6','lab','ral')}
 colorConvertor.hex6.w               = (data) => { return colorMixer(data)('hex6','hsl','w')}
 colorConvertor.hex6.xyz             = (data) => { return colorMixer(data)('hex6','rgb','xyz')}
-
-
-colorConvertor.hex6.hex6Grayscale = function (hex6) {
-    let temp = hex6
-    temp = _this.hex6.rgb(temp)
-    temp = _this.rgb.rgbGrayscale(temp)
-    temp = _this.rgb.hex6(temp)
-    return temp
-}
 
 // 5 | --- hsl
 
@@ -400,11 +390,6 @@ colorConvertor.rgb.lab = function (rgbX) {
   return {l:((116 * xyz.y) - 16), a: (500 * (xyz.x - xyz.y)), b: (200 * (xyz.y - xyz.z))}
 }
 
-colorConvertor.rgb.rgbGrayscale = function (rgb) {
-    const temp = Math.round((0.3 * rgb.r) + (0.59 * rgb.g) + (0.11 * rgb.b))
-    return {r: temp, g: temp, b: temp}
-}
-
 colorConvertor.rgb.compare = compareRGB;
 
 colorConvertor.rgb.cmyk = function (rgb){
@@ -556,42 +541,39 @@ factoryCleanar.from = function (objectData) {
     if(parameters.length === 1 && _this.hasOwnProperty(parameters[0])){
         return parameters[0]
     } else {
-        error = {error: 'The color specified in from is not an accepted input'}
+        errorMessage = {error: 'The color specified in from is not an accepted input'}
         return false
     }
 } 
 
 factoryCleanar.hex = function (hex) {
-    return hex.toLowerCase().replace(/[^a-f,^0-9]/g,'')
+    return hex.replace(/[^a-f,^0-9]/g,'')
 }
 
 factoryCleanar.to = function (to, from) {
-    if (!error){
-        to = to.toLowerCase()
+    if (!errorMessage){
         if(_this[from].hasOwnProperty(to)){
             return to
         } else if (to === 'hex') {
             return 'hex6'
         } 
-        error = {error: 'The value you want to convert to is not acceptable'}
+        errorMessage = {error: 'The value you want to convert to is not acceptable'}
         return false
     }
 
     return false
 }
 
-
-
-// factory
-const colorFactory = function (settings) {
-    error = ''
+module.exports = function (settingsArg) {
+    var settings = JSON.parse(JSON.stringify(settingsArg).toLowerCase())
+    errorMessage = ''
 
     settings.from = factoryCleanar.from(settings)
     settings.to =  factoryCleanar.to(settings.to, settings.from)
 
     // Not so happy path :(
-    if(error){
-        return error
+    if(errorMessage){
+        return errorMessage
     }
     
     // From and to are identical
@@ -607,12 +589,16 @@ const colorFactory = function (settings) {
     
     // convert to grayscale
     if(settings.grayscale === true){
-        settings[settings.from] = colorConvertor[settings.from][settings.from + 'Grayscale']((settings[settings.from]))
-    }
+        settings.grayscale = colorConvertor[settings.from].grayscale(settings[settings.from])
+        delete(settings[settings.from])
+        settings.from = 'grayscale'
+    } 
 
-    // Actual color convertor
     settings.output = colorConvertor[settings.from][settings.to](settings[settings.from])
 
+    // Actual color convertor
+    
+    
     // hexref | Hex ref flag
     if(settings.hexref){
         if (settings.to === 'hex6') {
@@ -656,5 +642,3 @@ const colorFactory = function (settings) {
     }
     return settings.output 
 }
-
-module.exports = colorFactory
