@@ -4,12 +4,12 @@ let stampTime = new Date()
 let testData = require('./data.test.js');
 const colorConvertor = require('./../simple_color_converter.js');
 const tester = function (input, output) {
-    const color = colorConvertor(input)
-    const temp = JSON.stringify(color) === JSON.stringify(output)
+    const instanceOfConvert = new colorConvertor(input)
+    const temp = JSON.stringify(instanceOfConvert.color) === JSON.stringify(output)
     if (temp) {
-        console.log(temp, color)
+        console.log(temp, instanceOfConvert.color)
     } else {
-        console.log('\x1b[36m', temp, '\x1b[0m', color);
+        console.log('\x1b[36m', temp, '\x1b[0m', instanceOfConvert.color);
     }
 
     if (temp === true) {

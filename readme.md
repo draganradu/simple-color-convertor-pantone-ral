@@ -9,7 +9,7 @@
 # Simple color converter Pantone Ral
 It's as simple as install and use. Add the input to the correct data passed and the to the desired output and that is it.
 
-![simple color convertor logo](/assets/simple-color-convertor-pantone-ral.jpg)
+![simple color convertor logo](https://raw.githubusercontent.com/draganradu/simple-color-convertor-pantone-ral/master/assets/simple-color-convertor-pantone-ral.jpg)
 
 ## Install
 ```
@@ -21,7 +21,7 @@ $ npm install simple-color-converter
 const simpleColorConverter = require('simple-color-converter');
 
 var color = simpleColorConverter({
-    hex3: '#407ac2',
+    hex: '#407ac2',
     to: 'ral'
 })
 
@@ -29,7 +29,7 @@ console.log(color) // { ral: 5015, name: 'Sky blue', lrv: 17 }
 ```
 
 #From
-**input** is the argument used for the color you want to convert from.
+**input** is the argument used for the color you want to convert from. See altValues tab.
 
 | input     | output                                    | type              | alt   |
 | ---       | ---                                       | ---               | ---   |
@@ -81,6 +81,14 @@ console.log(color) // { c: 0, m: 0, y: 0, k: 87 }
 | ---       | ---                                   | ---           | ---       | ---   |
 | grayscale | grayscale value in the from format    | boolean       | false          |       |
 | hexref    | Reference value in hex format         | boolean       | false          | For Hex it equels Hex |
+
+#Alt Values
+After implementing the sanitzation function in 1.1.10 we have extended the accepted values. To help users that use this package on the frontend in conjuction with a input field. You can pass malformed data (lovely user inputed data as we call it) and we will sanitize it
+
+##CMYK
+We recomand passing an object containing 4 keys and the values are numbers.
+	{ c: 0, m: 13, y: 77, k: 24 }
+We can handle Arrays [0,'13',77,'24%'] ass well as String 'c: 0, m: 13, y: 77, k: 24' and '0, 13, 77, 24'    
 
 #Error logs
 #####'The value you want to convert to is not acceptable' 
