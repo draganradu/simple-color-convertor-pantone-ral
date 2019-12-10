@@ -7,7 +7,7 @@
 
 
 # Simple color converter Pantone Ral
-It's as simple as install and use. Add the input to the correct data passed and the to the desired output and that is it.
+ v 1.1.11 | It's as simple as install and use. Add the input to the correct data passed and the to the desired output and that is it.
 
 ![simple color convertor logo](/assets/simple-color-convertor-pantone-ral.jpg)
 
