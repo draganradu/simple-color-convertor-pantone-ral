@@ -10,5 +10,8 @@ const colorConvertor = require("../simple_color_converter")
 // });
 
 
-const colorTest = new colorConvertor({hex3: '#228', to: 'rgb', grayscale: true, debug: true})
+var list = {from: 50 , to: 'html'}
+list.debug = true
+
+const colorTest = new colorConvertor(list)
 console.log(colorTest);

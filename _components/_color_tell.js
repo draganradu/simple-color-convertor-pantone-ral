@@ -1,3 +1,5 @@
+const colorSanitizer = require('../_components/_color_sanitizer')
+
 module.exports = function(data) {
   function sortString(string){
       return string.split('').sort().join('')
@@ -12,7 +14,7 @@ module.exports = function(data) {
     return true;
   }
 
-  const colorTest = ["rgb", "cmyk", "hsl", "lab"];
+  const colorTest = Object.keys(colorSanitizer).filter(i => ['isHex','hex', 'isHexVerbos'].indexOf(i) === -1);
 
   if (typeof data === "object") {
     for (let i of colorTest.concat("w")) {
@@ -21,19 +23,21 @@ module.exports = function(data) {
       }
     }
   } else if (typeof data === "string") {
-    for (let i of colorTest.concat(["pantone", "ral", "#"])) {
-      if (data.indexOf(i) > -1) {
-        return i === "#" ? "hex" : i;
-      }
+    // this works the others not so much
+    // ------------------------------------------------------------------------
+    // 1 | run index of if value is found in color it is probably that
+    for (let i of colorTest) {
+      if(data.indexOf(i) !== -1 && colorSanitizer[i](data)){ return i }
     }
 
-    for (let i of colorTest){
-        let regex = new RegExp(`[^${i}]`,'g')
-        let temp = data.replace(regex,'')
-        if(sortString(temp) === sortString(i)){
-            return i
-        }
+    // 2| run sanitizer if value is acceptable it is returned
+    for (let i of colorTest) {
+      let tempSanitized = colorSanitizer[i](data)
+
+      // console.log(i, '|' ,tempSanitized) // sanitization work
+      if (tempSanitized) { return i }
     }
+    return false;
   }
   
   return false;

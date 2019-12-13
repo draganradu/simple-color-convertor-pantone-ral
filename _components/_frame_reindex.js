@@ -1,17 +1,18 @@
-module.exports = function (colorString, indexColor, regexColorMatch){
-    regexColorMatch = new RegExp(regexColorMatch) || new RegExp('-?\d+', 'g')
-    let regex = new RegExp(`[^${indexColor}]`, 'g')
-    let tempColor = colorString.replace(regex,'')
+module.exports = function (settingsColorString, settingsIndexColor, settingsRegexColorMatch){
+    var tempColor = {}
+    // full digit regex
+    regexColorMatch = new RegExp(settingsRegexColorMatch, 'g') || new RegExp('/(\d+)/', 'g')
 
-    if(tempColor.split('').sort().join('') === indexColor.split('').sort().join('')){
-        let colorArray = colorString.match(regexColorMatch)  
-        let tempArray = []
-        for (let letter of indexColor){
-            tempArray.push(colorArray[tempColor.indexOf(letter)])
+    // math regex
+    let colorArray = settingsColorString.match(regexColorMatch) 
+    
+    // see / set if mathes lenght of color
+    if (colorArray.length === settingsIndexColor.length ) {
+        for(let i in colorArray){
+            tempColor[settingsIndexColor[i]] = Number(colorArray[i])
         }
-        
-        return tempArray
-    } else {
-        return colorString.match(regexColorMatch) 
+        return tempColor
     }
+    
+    return true
 }

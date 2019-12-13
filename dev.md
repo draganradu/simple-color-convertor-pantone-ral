@@ -20,7 +20,7 @@ npm run arhitecture
 
 run dev test
 ```
-run dev test
+npm run dev test
 ```
 
 Issues

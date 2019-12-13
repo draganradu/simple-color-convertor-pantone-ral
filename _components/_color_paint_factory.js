@@ -1,17 +1,31 @@
-const ralPattern = require('../color_list/ral.json')
-const deltaE = require('../compare_colors/deltaE_CIEDE2000.js')
+const deltaE        = require('../compare_colors/deltaE_CIEDE2000.js')
+const htmlPattern   = require('../color_list/html.json')
+const pantonePattern= require('../color_list/pantone.json')
+const ralPattern    = require('../color_list/ral.json')
 
 const colorConvertor = {
     cmyk: {},
     grayscale: {},
     hex3: {},
     hex6: {},
+    html: {},
     lab: {},
     hsl: {},
+    pantone: {},
     ral: {},
     rgb: {},
     w: {},
     xyz: {},
+}
+
+// 0 | --- factory worker
+
+function PullDataFromList(listName, coloType, refeance){
+    var temp = listName.filter(a => a.name === refeance )
+    if(temp.length > 0) {
+        return temp[0][coloType]
+    }
+    return false 
 }
 
 // 1 | --- CMYK
@@ -134,6 +148,22 @@ colorConvertor.hsl.w = function (hsl) {
 }
 
 // 6 | --- html
+colorConvertor.html.rgb = function(html){
+    return PullDataFromList(htmlPattern, 'rgb', html )
+}
+
+colorConvertor.pantone.rgb = function (pantone) {
+    return PullDataFromList(pantonePattern, 'rgb', pantone )
+}
+
+colorConvertor.pantone.cmyk = function (pantone) {
+    return PullDataFromList(pantonePattern, 'cmyk', pantone )
+}
+
+colorConvertor.pantone.lab = function (pantone) {
+    return PullDataFromList(pantonePattern, 'lab', pantone )
+}
+
 
 // 7 | --- Lab
 

@@ -1,3 +1,7 @@
+const ReindexColor = require('../_components/_frame_reindex')
+const htmlPattern = require('../color_list/html.json')
+const ralPattern = require('../color_list/ral.json')
+
 var colorSanitizer = {}
 
 // 1 | --- CMYK
@@ -37,10 +41,13 @@ colorSanitizer.cmyk = function (cmyk) {
 // 2 | --- grayscale
 colorSanitizer.grayscale = function (grayscale) {
     if (typeof grayscale === 'string'){
-        return grayscale.replace(/[^0-9]/g,'')
-    } else if (typeof grayscale === 'number' && grayscale >= 0 && grayscale <= 100 ){
+        grayscale = parseInt(grayscale.replace(/[^0-9]/g,''))
+    }
+    
+    if (typeof grayscale === 'number' && grayscale >= 0 && grayscale <= 100 ){
         return grayscale
     }
+    
     return false
 }
 
@@ -105,7 +112,11 @@ colorSanitizer.hsl = function (hsl) {
 
 // 6 | --- html
 colorSanitizer.html = function (html) {
-    return html
+    var temp = htmlPattern.filter(a => a.name.toLowerCase() === html.toLowerCase() )
+    if(temp.length > 0) {
+        return temp[0].name
+    }
+    return false
 }
 
 // 7 | --- Lab
@@ -137,7 +148,8 @@ colorSanitizer.lab = function (lab) {
 
 // 8 | --- ral
 colorSanitizer.ral = function (ral) {
-    return ral
+    let temp = ralPattern.filter( a => a.ral === ral.ral )
+    return temp.length ? temp[0].ral : false
 }
 
 // 9 | --- rgb
