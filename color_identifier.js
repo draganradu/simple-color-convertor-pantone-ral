@@ -1,6 +1,6 @@
 const cleaner = {
     hex: function(dirtyHex) {
-        return dirtyHex.toLowerCase().replace(/[^a-f,^0-9]/g,'')
+        return dirtyHex.toLowerCase().replace(/[^a-f^0-9]/g,'')
     }
 }
 const identifier = {

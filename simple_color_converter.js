@@ -6,8 +6,8 @@ const _permutation    = require("./_components/_frame_permutation")
 const _clone          = require("./_components/_frame_clone")
 
 class color {
-  constructor (settingsArg) {
-    this.settings = _clone(settingsArg) || {}
+  constructor (settingsArg = {}) {
+    this.settings = _clone(settingsArg)
     this.debug    = this.settings.debug || false 
     this.error    = ""
     
@@ -16,14 +16,17 @@ class color {
 
     this.from = this.sanitizeFrom(this.settings) || false
     this.to   = this.sanitizeTo(this.from, this.settings.to) || false
-
+    
     this.extraStepsForGrayscale()
  
     this.color = (this.from && this.to) ? _colorSanitizer[this.from](this.settings[this.from]) : false
 
+    // console.log(this) // ---------------------------------------------------------------------------------------- dev
+
     this.color = this.ColorConvert(this.color, this.to)
     this.hexRefBuild()
     this.cleanUp()
+    
   }
 
   extraStepsForGrayscale () {
@@ -44,8 +47,15 @@ class color {
 
   hexRefBuild () {
       if (this.settings.hexref) { 
-        const stepsTemp = this.sanitizeTo(this.to[this.to.length - 1],'hex6') 
-        this.hexref = this.ColorConvert(this.color, stepsTemp)
+        const lastElement = this.to[this.to.length - 1]
+        const stepsTemp = this.sanitizeTo(lastElement,'hex6') 
+
+        if(lastElement === 'ral') {
+          this.hexref = this.ColorConvert(_colorSanitizer[lastElement](this.color), stepsTemp)
+        } else {
+          this.hexref = this.ColorConvert(this.color, stepsTemp)
+        }
+        
         return true
       } 
       return false
@@ -63,7 +73,6 @@ class color {
     // remove the elements that are not colors
     parameters = parameters.filter( from => ["to", "hexref", "debug" ].indexOf(from) === -1 )
 
-    console.log('X',parameters)
     // Figure out wildcard colors
     const parametersException = parameters.filter( from => ['color','from'].indexOf(from) !== -1 )
 
@@ -89,7 +98,7 @@ class color {
       parameters.splice(parameters.indexOf("grayscale"), 1);
     }
 
-    if ( parameters.length === 1 && _colorFactory.hasOwnProperty(parameters[0]) ) {
+    if ( parameters.length === 1 &&  _colorFactory.keys.indexOf(parameters[0]) > -1 ) {
       return parameters[0];
     } else if (parameters[0] === "color") {
       let objectData = {}
@@ -156,15 +165,11 @@ class color {
       if (_colorFactory[from].hasOwnProperty(to) || to === from) {
         return [from, to];
       }
-      // steps conversion
-      let tempPosibleColorMutations = Object.keys(_colorFactory)
-      tempPosibleColorMutations = tempPosibleColorMutations.filter( keys => ['ral','pantone','grayscale'].indexOf(keys) === -1 )
-      tempPosibleColorMutations = tempPosibleColorMutations.sort(function( x, y ) {  return x == "lab" ? -1 : y == "lab" ? 1 : 0; })
 
       // actual color steps 
-      if (Object.keys(_colorFactory).indexOf(to) !== -1) {
-        for(let i = 1; i < tempPosibleColorMutations.length; i++){
-          let stepsTable = _permutation(tempPosibleColorMutations, from, to, i )
+      if ( _colorFactory.keys.indexOf(to) !== -1) {
+        for(let i = 1; i < _colorFactory.keysFilterd.length; i++){
+          let stepsTable = _permutation(_colorFactory.keysFilterd, from, to, i )
           for (let a = 0; a < stepsTable.length; a++){
             if( this.validateLine(stepsTable[a]) ){
               return stepsTable[a]

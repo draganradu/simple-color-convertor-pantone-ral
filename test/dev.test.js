@@ -10,8 +10,9 @@ const colorConvertor = require("../simple_color_converter")
 // });
 
 
-var list = {from: 50 , to: 'html'}
+var list = {ral: { ral: 3009, name: 'Oxide red', lrv: 5 }, to: 'cmyk'}
+
 list.debug = true
 
 const colorTest = new colorConvertor(list)
-console.log(colorTest);
+// console.log(colorTest);

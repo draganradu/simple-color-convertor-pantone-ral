@@ -18,10 +18,17 @@ const colorConvertor = {
     xyz: {},
 }
 
+console.log(colorConvertor)
+
 // 0 | --- factory worker
 
-function PullDataFromList(listName, coloType, refeance){
-    var temp = listName.filter(a => a.name === refeance )
+colorConvertor.keys = Object.keys(colorConvertor)
+
+colorConvertor.keysFilterd = colorConvertor.keys.filter( keys => ['ral','pantone','grayscale'].indexOf(keys) === -1 ).sort(function( x, y ) {  return x == "lab" ? -1 : y == "lab" ? 1 : 0; })
+
+function PullDataFromList(listName, coloType, refeance, query = 'name'){
+    
+    var temp = listName.filter(a => a[query] === refeance )
     if(temp.length > 0) {
         return temp[0][coloType]
     }
@@ -248,18 +255,15 @@ colorConvertor.lab.rgb = function (lab) {
 
 // 8 | --- ral
 colorConvertor.ral.rgb = function (ral) {
-    let temp = ralPattern.filter( a => a.ral === ral.ral )
-    return temp.length ? temp[0].rgb : false
+    return PullDataFromList(ralPattern, 'rgb', ral, 'ral')
 }
 
 colorConvertor.ral.cmyk = function (ral) {
-    let temp = ralPattern.filter( a => a.ral === ral.ral )
-    return temp.length ? temp[0].cmyk : false
+    return PullDataFromList(ralPattern, 'cmyk', ral, 'ral')
 }
 
 colorConvertor.ral.lab = function (ral) {
-    let temp = ralPattern.filter( a => a.ral === ral.ral )
-    return temp.length ? temp[0].lab : false
+    return PullDataFromList(ralPattern, 'lab', ral, 'ral')
 }
 
 // 9 | --- rgb

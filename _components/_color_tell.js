@@ -1,4 +1,4 @@
-const colorSanitizer = require('../_components/_color_sanitizer')
+const _colorSanitizer = require('../_components/_color_sanitizer')
 
 module.exports = function(data) {
   function sortString(string){
@@ -13,11 +13,15 @@ module.exports = function(data) {
     }
     return true;
   }
-
-  const colorTest = Object.keys(colorSanitizer).filter(i => ['isHex','hex', 'isHexVerbos'].indexOf(i) === -1);
-
-  if (typeof data === "object") {
-    for (let i of colorTest.concat("w")) {
+  
+  if (typeof data === "number") {
+    for (let i of ['grayscale', 'w', 'ral'] ) {
+      if(_colorSanitizer[i](data)){ 
+        return i 
+      }
+    }
+  } else if (typeof data === "object") {
+    for (let i of _colorSanitizer.keys) {
       if (ColorHasKeys(i, data)) {
         return i;
       }
@@ -26,16 +30,22 @@ module.exports = function(data) {
     // this works the others not so much
     // ------------------------------------------------------------------------
     // 1 | run index of if value is found in color it is probably that
-    for (let i of colorTest) {
-      if(data.indexOf(i) !== -1 && colorSanitizer[i](data)){ return i }
+    for (let i of _colorSanitizer.keys) {
+      if(data.indexOf(i) !== -1 && _colorSanitizer[i](data)){ 
+        
+        return i 
+      }
     }
 
     // 2| run sanitizer if value is acceptable it is returned
-    for (let i of colorTest) {
-      let tempSanitized = colorSanitizer[i](data)
+    for (let i of _colorSanitizer.keys) {
+      let tempSanitized = _colorSanitizer[i](data)
 
       // console.log(i, '|' ,tempSanitized) // sanitization work
-      if (tempSanitized) { return i }
+      if (tempSanitized) { 
+        // console.log('--------------------------------',i,tempSanitized,data)
+        return i 
+      }
     }
     return false;
   }

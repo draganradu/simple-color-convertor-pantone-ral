@@ -53,21 +53,23 @@ colorSanitizer.grayscale = function (grayscale) {
 
 // 3 | --- hex 3
 colorSanitizer.hex = function (hex) {
-    return hex.replace(/[^a-f,^0-9]/g,'')
+    return hex.replace(/[^a-f^0-9]/g,'')
 }
 
 colorSanitizer.isHex = function (hex) {
     let temp = colorSanitizer.hex(hex)
     if(temp.length === 6){
         return 6
-    } else {
+    } else if (temp.length === 3){
         return 3
+    } else {
+        return false
     }
 }
 
 colorSanitizer.hex3 = function (hex) {
     if (colorSanitizer.isHex(hex) === 3){
-        return hex.replace(/[^a-f,^0-9]/g,'')
+        return hex.replace(/[^a-f^0-9]/g,'')
     } else {
         return false
     }
@@ -76,7 +78,7 @@ colorSanitizer.hex3 = function (hex) {
 // 4 | --- hex 6
 colorSanitizer.hex6 = function (hex) {
     if (colorSanitizer.isHex(hex) === 6){
-        return hex.replace(/[^a-f,^0-9]/g,'')
+        return hex.replace(/[^a-f^0-9]/g,'')
     } else {
         return false
     }
@@ -148,7 +150,24 @@ colorSanitizer.lab = function (lab) {
 
 // 8 | --- ral
 colorSanitizer.ral = function (ral) {
-    let temp = ralPattern.filter( a => a.ral === ral.ral )
+
+    let temp = ''
+    if(typeof ral === "number") {
+        // pass ral as numeric value ral {3009}
+        ral = {
+            ral: `${ral}`
+        }
+    } else if (typeof ral === "string") {
+        // pass ral as name value ral
+        temp = ralPattern.filter( a => a.name === ral )
+    } else if(typeof ral === "object" && !ral.ral && ral.name && typeof ral.name === 'string'){
+        // pass ral as name value ral { ral: { name: 'oxide red', lrv: 5 }, 
+        temp = ralPattern.filter( a => a.name === ral.name )
+    } else  {
+        // default normal value { ral: { ral: 3009, name: 'oxide red', lrv: 5 }, 
+        temp = ralPattern.filter( a => a.ral === ral.ral )
+    }
+
     return temp.length ? temp[0].ral : false
 }
 
@@ -156,7 +175,7 @@ colorSanitizer.ral = function (ral) {
 colorSanitizer.rgb = function (rgb) {
     // if string convert to an Array
     if(typeof rgb === 'string'){ 
-        rgb = ReindexColor(rgb,'rgb')
+        rgb = ReindexColor(rgb,'rgb',/(\d+)/)
     }
     // if Array  convert to object is
     if(Array.isArray(rgb) && rgb.length == 3){
@@ -173,9 +192,9 @@ colorSanitizer.rgb = function (rgb) {
         }
     }
     // check if the object is ok
-
     return false
 }
+
 
 // 10 | --- w
 colorSanitizer.w = function (w) {
@@ -192,5 +211,7 @@ colorSanitizer.w = function (w) {
  colorSanitizer.xyz = function (xyz) {
     return xyz
 }
+
+colorSanitizer.keys = Object.keys(colorSanitizer).filter(i => ['isHex','hex', 'isHexVerbos'].indexOf(i) === -1);
 
  module.exports = colorSanitizer
