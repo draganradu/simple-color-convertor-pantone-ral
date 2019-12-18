@@ -18,8 +18,6 @@ const colorConvertor = {
     xyz: {},
 }
 
-console.log(colorConvertor)
-
 // 0 | --- factory worker
 
 colorConvertor.keys = Object.keys(colorConvertor)

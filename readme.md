@@ -21,18 +21,19 @@ $ npm install simple-color-converter
 const simpleColorConverter = require('simple-color-converter');
 
 var color = simpleColorConverter({
-    hex: '#407ac2',
-    to: 'ral'
+    ral: { ral: 3009, name: 'Oxide red', lrv: 5 }, 
+    to: 'cmyk'
 })
 
-console.log(color) // { ral: 5015, name: 'Sky blue', lrv: 17 }
+console.log(color) // { c: 0, m: 53, y: 60, k: 60 } 
 ```
 
-#From
-**input** is the argument used for the color you want to convert from. See altValues tab.
+# From
+**input** is the argument used for the color you want to convert from. It supports a color key if you want to pass values directly from an input field, and i have a **tell** function that guesses the format.
 
 | input     | output                                    | type              | alt   |
 | ---       | ---                                       | ---               | ---   |
+| **color** | 'FFF'                                     | string            | [see exemple plage](exemple_color.md)   |
 | cmyk      | { c: 0, m: 13, y: 77, k: 24 }             | object / numbers  |       |
 | grayscale | 78                                        | integer           |       |
 | hex       | '44FFFF'                                  | string [6]        | auto detect if hex3 or hex6  |
@@ -41,10 +42,12 @@ console.log(color) // { ral: 5015, name: 'Sky blue', lrv: 17 }
 | hex6      | '44FFFF'                                  | string [6]        |       |
 | hsl       | { h: 140, s: 39.7, l: 55.1 }              | object / numbers  |       |
 | lab       | { l: 91, a: -44, b: -13 }                 | object [3]        |       | 
+| ral       | {ral: { ral: 6004 }}
 | rgb       | { r: 68, g: 255, b: 255 }                 | object / numbers  |       |
 | w         | 480                                       | integer           | (experimental)|
 
-#To 
+
+# To 
 **to** is the argument used to generate the correct outptut, all posible inputs are strings 
 
 | to        | output                                    | data type     | alt   |
@@ -56,14 +59,14 @@ console.log(color) // { ral: 5015, name: 'Sky blue', lrv: 17 }
 | hsl       | { h: 140, s: 39.7, l: 55.1 }              | object [3]    |       |
 | html      | 'DarkSlateGray'                           | string        |       | 
 | lab       | { l: 91, a: -44, b: -13 }                 | object [3]    |       | 
-| pantone   | '305-c'                                   | string [5]    |       |
-| ral       | { ral: 'RAL 9010', name: 'Pure white' }   | object [2]    |       |
+| pantone   | '5477C'                                   | string [5]    |       |
+| ral       | { ral: 9016, name: 'Traffic white', lrv: 87 }   | object [2]    |       |
 | rgb       | { r: 68, g: 255, b: 255 }                 | object [3]    |       |
 | w         | 580                                       | integer       | wavelength is experimental |
 | xyz       | { x: 68, y: 255, z: 255 }                 | object [3]    |       |
 
-#Flags
-**flags** ar the arguments used for special modifiers.
+# Flags
+**flags** are the arguments used for special modifiers. The most useful one is rendering grayscale color, but there is a debugger and a hexref flag created if you need to convert a color but also output a close hex similar color(in case of online color convertors).
 
 ```javascript
 const simpleColorConverter = require('simple-color-converter');
@@ -80,27 +83,10 @@ console.log(color) // { c: 0, m: 0, y: 0, k: 87 }
 | flag      | output                                | data type     | default   | note  |
 | ---       | ---                                   | ---           | ---       | ---   |
 | grayscale | grayscale value in the from format    | boolean       | false          |       |
-| hexref    | Reference value in hex format         | boolean       | false          | For Hex it equels Hex |
+| hexref    | Reference value in hex format         | boolean       | false          | For Hex it equels Hex6 |
+| debug     | this prevents the object cleanup      | boolean       | false          |       |
 
-#Alt Values
-After implementing the sanitzation function in 1.1.10 we have extended the accepted values. To help users that use this package on the frontend in conjuction with a input field. You can pass malformed data (lovely user inputed data as we call it) and we will sanitize it
 
-##CMYK
-We recomand passing an object containing 4 keys and the values are numbers.
-	{ c: 0, m: 13, y: 77, k: 24 }
-We can handle Arrays [0,'13',77,'24%'] ass well as String 'c: 0, m: 13, y: 77, k: 24' and '0, 13, 77, 24'    
+## Thank you
 
-#Error logs
-#####'The value you want to convert to is not acceptable' 
-The *to* value is not in the accepted to, most of the times it is a misspelled value.
-
-#####'The color specified in from is not an accepted input'
-The *from* value is not in the accepted to, most of the times it is a misspelled value.
-
-#####'You can't get the wavelength of no color'
-The color you want to convert is grayscale, logically there is no answer to what you want to do 
-
-## Issues
-1 | **grayscale** there are some issues when outputting ral/pantone colors, they output colors that are not completely monochrome. Because the closest color may be a colored gray. Will be fixed when we start using HSL compare algorithm in 1.2.0
-
-2 | **wavelength** is experimental, it kind of works and i like the idea but the algorithm used is definitely not the correct one.
+I`m Radu Thank you for using my color convertor, I hope it is useful for you. I genuinely excited to build this kind of solutions.

@@ -21,7 +21,8 @@
   "scripts": {
     "arhitecture": "node test/arhitecure.test.js",
     "dev": "node test/dev.test.js",
-    "test": "node test/index.test.js last"
+    "test": "node test/index.test.js last",
+    "table": "node test/build_table.js"
   },
   "author": "Radu Dragan <draganaurelradu@gmail.com>",
   "license": "MIT"

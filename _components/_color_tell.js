@@ -5,6 +5,16 @@ module.exports = function(data) {
       return string.split('').sort().join('')
   }  
 
+  function everyKeyIndexOf(keys, string){
+    for (let i of keys){
+      if(string.indexOf(i) === -1 ){
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   function ColorHasKeys(color, data) {
     for (let i = 0; i < color.length; i++) {
       if (!data.hasOwnProperty(color[i])) {
@@ -30,9 +40,9 @@ module.exports = function(data) {
     // this works the others not so much
     // ------------------------------------------------------------------------
     // 1 | run index of if value is found in color it is probably that
+   
     for (let i of _colorSanitizer.keys) {
-      if(data.indexOf(i) !== -1 && _colorSanitizer[i](data)){ 
-        
+      if((data.indexOf(i) !== -1 || everyKeyIndexOf(i,data)) && _colorSanitizer[i](data)){
         return i 
       }
     }
@@ -43,7 +53,6 @@ module.exports = function(data) {
 
       // console.log(i, '|' ,tempSanitized) // sanitization work
       if (tempSanitized) { 
-        // console.log('--------------------------------',i,tempSanitized,data)
         return i 
       }
     }

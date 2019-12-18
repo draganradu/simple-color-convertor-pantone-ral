@@ -7,7 +7,7 @@ module.exports = function (settingsColorString, settingsIndexColor, settingsRege
     let colorArray = settingsColorString.match(regexColorMatch) 
     
     // see / set if mathes lenght of color
-    if (colorArray.length === settingsIndexColor.length ) {
+    if (colorArray && settingsIndexColor &&  colorArray.length === settingsIndexColor.length ) {
         for(let i in colorArray){
             tempColor[settingsIndexColor[i]] = Number(colorArray[i])
         }

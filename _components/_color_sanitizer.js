@@ -53,6 +53,7 @@ colorSanitizer.grayscale = function (grayscale) {
 
 // 3 | --- hex 3
 colorSanitizer.hex = function (hex) {
+    hex = hex.replace(/hex6|hex3|hex|/g,'')
     return hex.replace(/[^a-f^0-9]/g,'')
 }
 
@@ -114,7 +115,8 @@ colorSanitizer.hsl = function (hsl) {
 
 // 6 | --- html
 colorSanitizer.html = function (html) {
-    var temp = htmlPattern.filter(a => a.name.toLowerCase() === html.toLowerCase() )
+    html = html.toLowerCase().replace(/[^a-z]/g,'')
+    var temp = htmlPattern.filter(a => a.name.toLowerCase() === html )
     if(temp.length > 0) {
         return temp[0].name
     }
