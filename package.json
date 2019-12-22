@@ -1,6 +1,6 @@
 {
   "name": "simple-color-converter",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "This is a simple colors converter packaged as an npm package",
   "keywords": [
     "simple-color-converter",
@@ -11,7 +11,9 @@
     "hex color",
     "rgb",
     "hsl",
-    "grayscale"
+    "grayscale",
+    "rgba",
+    "hex8"
   ],
   "engines": {
     "node": ">= 0.6"
