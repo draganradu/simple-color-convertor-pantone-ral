@@ -40,7 +40,7 @@ colorSanitizer.cmyk = function (cmyk) {
 
 // 2 | --- grayscale
 colorSanitizer.grayscale = function (grayscale) {
-    if (typeof grayscale === 'string'){
+    if (typeof grayscale === 'string' && colorSanitizer.isHex(grayscale) === false){
         grayscale = parseInt(grayscale.replace(/[^0-9]/g,''))
     }
     
@@ -59,7 +59,9 @@ colorSanitizer.hex = function (hex) {
 
 colorSanitizer.isHex = function (hex) {
     let temp = colorSanitizer.hex(hex)
-    if(temp.length === 6){
+    if(temp.length === 8){
+        return 8
+    } else if(temp.length === 6){
         return 6
     } else if (temp.length === 3){
         return 3
@@ -70,7 +72,7 @@ colorSanitizer.isHex = function (hex) {
 
 colorSanitizer.hex3 = function (hex) {
     if (colorSanitizer.isHex(hex) === 3){
-        return hex.replace(/[^a-f^0-9]/g,'')
+        return colorSanitizer.hex(hex)
     } else {
         return false
     }
@@ -79,13 +81,22 @@ colorSanitizer.hex3 = function (hex) {
 // 4 | --- hex 6
 colorSanitizer.hex6 = function (hex) {
     if (colorSanitizer.isHex(hex) === 6){
-        return hex.replace(/[^a-f^0-9]/g,'')
+        return colorSanitizer.hex(hex)
     } else {
         return false
     }
 }
 
-// 5 | --- hsl
+// 5 | --- hex 8
+colorSanitizer.hex8 = function (hex) {
+    if (colorSanitizer.isHex(hex) === 8){
+        return colorSanitizer.hex(hex)
+    } else {
+        return false
+    }
+}
+
+// 6 | --- hsl
 colorSanitizer.hsl = function (hsl) {
     // if string convert to an Array
     if(typeof hsl === 'string'){ 
@@ -113,7 +124,7 @@ colorSanitizer.hsl = function (hsl) {
     return false
 }
 
-// 6 | --- html
+// 7 | --- html
 colorSanitizer.html = function (html) {
     html = html.toLowerCase().replace(/[^a-z]/g,'')
     var temp = htmlPattern.filter(a => a.name.toLowerCase() === html )
@@ -123,7 +134,7 @@ colorSanitizer.html = function (html) {
     return false
 }
 
-// 7 | --- Lab
+// 8 | --- Lab
 colorSanitizer.lab = function (lab) {
     // if string convert to an Array
     if(typeof lab === 'string'){ 
@@ -150,7 +161,7 @@ colorSanitizer.lab = function (lab) {
     return false
 }
 
-// 8 | --- ral
+// 9 | --- ral
 colorSanitizer.ral = function (ral) {
 
     let temp = ''
@@ -173,7 +184,7 @@ colorSanitizer.ral = function (ral) {
     return temp.length ? temp[0].ral : false
 }
 
-// 9 | --- rgb
+// 10 | --- rgb
 colorSanitizer.rgb = function (rgb) {
     // if string convert to an Array
     if(typeof rgb === 'string'){ 
@@ -197,8 +208,33 @@ colorSanitizer.rgb = function (rgb) {
     return false
 }
 
+// 10 | --- rgba 
+colorSanitizer.rgba = function (rgba) {
+    
+    // if string convert to an Array
+    if(typeof rgba === 'string'){ 
+        rgba = ReindexColor(rgba,'rgba','[+-]?([0-9]*[.])?[0-9]+')
+    }
+    // if Array  convert to object is
+    if(Array.isArray(rgba) && rgba.length == 4){
+        rgba = {r: rgba[0], g: rgba[1], b: rgba[2], a:rgba[3]}
+    } 
+    if (typeof rgba == 'object') {
+        rgba = {
+            r: parseInt(rgba.r),
+            g: parseInt(rgba.g),
+            b: parseInt(rgba.b),
+            a: parseFloat(rgba.a)
+        }
+        if (rgba.r >= 0 && rgba.r <= 255 && rgba.g >= 0 && rgba.g <= 255 && rgba.b >= 0 && rgba.b <= 255 && rgba.a >=0 && rgba.a <= 1){
+            return rgba
+        }
+    }
+    // check if the object is ok
+    return false
+}
 
-// 10 | --- w
+// 11 | --- w
 colorSanitizer.w = function (w) {
     if (typeof w !== 'number'){
         w = parseInt(w)
@@ -209,9 +245,18 @@ colorSanitizer.w = function (w) {
     return false
  }
 
- // 11 | --- xyz
+ // 12 | --- xyz
  colorSanitizer.xyz = function (xyz) {
-    return xyz
+    if(typeof xyz === 'string'){ 
+        xyz = ReindexColor(xyz,'xyz',/(\d+)/)
+    }
+    if(Array.isArray(xyz) && xyz.length == 3){
+        xyz = {x: xyz[0], y: xyz[1], z: xyz[2]}
+    } 
+    if (typeof xyz == 'object') {
+        return xyz
+    }
+    return false
 }
 
 colorSanitizer.keys = Object.keys(colorSanitizer).filter(i => ['isHex','hex', 'isHexVerbos'].indexOf(i) === -1);

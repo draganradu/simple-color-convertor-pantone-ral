@@ -8,12 +8,14 @@ const colorConvertor = {
     grayscale: {},
     hex3: {},
     hex6: {},
+    hex8: {},
     html: {},
     lab: {},
     hsl: {},
     pantone: {},
     ral: {},
     rgb: {},
+    rgba: {},
     w: {},
     xyz: {},
 }
@@ -22,7 +24,7 @@ const colorConvertor = {
 
 colorConvertor.keys = Object.keys(colorConvertor)
 
-colorConvertor.keysFilterd = colorConvertor.keys.filter( keys => ['ral','pantone','grayscale'].indexOf(keys) === -1 ).sort(function( x, y ) {  return x == "lab" ? -1 : y == "lab" ? 1 : 0; })
+colorConvertor.keysFilterd = colorConvertor.keys.filter( keys => ['ral','pantone','grayscale','hex3','hex8','rgba'].indexOf(keys) === -1 ).sort(function( x, y ) {  return x == "lab" ? -1 : y == "lab" ? 1 : 0; })
 
 function PullDataFromList(listName, coloType, refeance, query = 'name'){
     
@@ -62,7 +64,7 @@ colorConvertor.grayscale.w = function (grayscale) {
 
 // 3 | --- hex 3
 colorConvertor.hex3.hex6 = function (hex3) {
-    return [hex3[0],hex3[0],hex3[1],hex3[1],hex3[2],hex3[2]].join('').toUpperCase()
+    return [hex3[0],hex3[0],hex3[1],hex3[1],hex3[2],hex3[2]].join('')
 }
 
 // 4 | --- hex 6
@@ -83,6 +85,10 @@ colorConvertor.hex6.hex3 = function (hex6) {
     return [temp.r, temp.g, temp.b].join('')
 }
 
+colorConvertor.hex6.hex8 = function (hex6) {
+    return hex6 + 'ff'
+}
+
 colorConvertor.hex6.rgb = function (hex6) {
     const temp = {
         r: parseInt(hex6.substring(0, 2), 16),
@@ -92,7 +98,29 @@ colorConvertor.hex6.rgb = function (hex6) {
     return temp 
 }
 
-// 5 | --- hsl
+// 5 | --- hex 8
+colorConvertor.hex8.rgb = function (hex8) {
+    let temp = {
+        color: colorConvertor.hex6.rgb(hex8.substring(0,6)),
+        opacity: parseInt(hex8.substring(6,8), 16) / 255,
+    } 
+
+    for(let i in temp.color){
+        temp.color[i] *= temp.opacity
+        temp.color[i] = Math.round(temp.color[i])
+    } 
+
+    return temp.color
+}
+
+colorConvertor.hex8.rgba = function (hex8) {
+    let temp = colorConvertor.hex6.rgb(hex8.substring(0,6))
+    temp.a = Number((parseInt(hex8.substring(6,8), 16) / 255).toFixed(2))
+
+    return temp
+}
+
+// 6 | --- hsl
 colorConvertor.hsl.rgb = function (hsl) {
     const rgb = {
         r: 0,
@@ -152,7 +180,7 @@ colorConvertor.hsl.w = function (hsl) {
     return temp
 }
 
-// 6 | --- html
+// 7 | --- html
 colorConvertor.html.rgb = function(html){
     return PullDataFromList(htmlPattern, 'rgb', html )
 }
@@ -170,7 +198,7 @@ colorConvertor.pantone.lab = function (pantone) {
 }
 
 
-// 7 | --- Lab
+// 8 | --- Lab
 
 colorConvertor.lab.pantone = function(labOrigin){
     let lab = Object.create(labOrigin)
@@ -251,7 +279,7 @@ colorConvertor.lab.rgb = function (lab) {
     return rgb
 }
 
-// 8 | --- ral
+// 9 | --- ral
 colorConvertor.ral.rgb = function (ral) {
     return PullDataFromList(ralPattern, 'rgb', ral, 'ral')
 }
@@ -264,7 +292,7 @@ colorConvertor.ral.lab = function (ral) {
     return PullDataFromList(ralPattern, 'lab', ral, 'ral')
 }
 
-// 9 | --- rgb
+// 10 | --- rgb
 colorConvertor.rgb.hex6 = function (rgb) {
     function rgbNormalize (color) {
         if (color < 16) {
@@ -276,6 +304,11 @@ colorConvertor.rgb.hex6 = function (rgb) {
         return color
     }
     return [rgbNormalize(rgb.r), rgbNormalize(rgb.g), rgbNormalize(rgb.b)].join('').toUpperCase()
+}
+
+colorConvertor.rgb.rgba = function (rgb) {
+    rgb.a = 1
+    return rgb
 }
 
 colorConvertor.rgb.hsl = function (rgb) {
@@ -426,8 +459,18 @@ colorConvertor.rgb.xyz = function(rgb) {
     xyz.z = xyz.z * 122.638
 	return xyz
 }
+// 11 | --- w
+colorConvertor.rgba.rgb = function(rgba){
+    let temp = {}
 
-// 10 | --- w
+    for(let i of ['r','g','b']){
+        temp[i] = Math.round(rgba[i] * rgba.a)
+    }
+
+    return temp
+}
+
+// 11 | --- w
 colorConvertor.w.rgb = function(w) {
     let rgb = {
         r: 0,
@@ -461,7 +504,7 @@ colorConvertor.w.rgb = function(w) {
      return rgb;
 }
 
-// 10 | --- XYZ
+// 12 | --- XYZ
 colorConvertor.xyz.rgb = function(xyz) {
     function sRGB(color) {
         if (Math.abs(color) < 0.0031308) {

@@ -40,10 +40,12 @@ console.log(color) // { c: 0, m: 53, y: 60, k: 60 }
 | hex3      | '4ff'                                     | string [3]        |       |
 | hex3      | '#4ff'                                    | string [4]        |       |
 | hex6      | '44FFFF'                                  | string [6]        |       |
+| hex8      | '44FFFF00'                                | string [8]        |       |
 | hsl       | { h: 140, s: 39.7, l: 55.1 }              | object / numbers  |       |
 | lab       | { l: 91, a: -44, b: -13 }                 | object [3]        |       | 
 | ral       | {ral: { ral: 6004 }}
 | rgb       | { r: 68, g: 255, b: 255 }                 | object / numbers  |       |
+| rgba      | { r: 68, g: 255, b: 255, a: 0.5 }         | object / numbers        |       |
 | w         | 480                                       | integer           | (experimental)|
 
 
@@ -56,12 +58,14 @@ console.log(color) // { c: 0, m: 53, y: 60, k: 60 }
 | grayscale | 78                                        | integer       |       |
 | hex       | '44FFFF'                                  | string [6]    | hex6  |
 | hex3      | '4FF'                                     | string [3]    |       |
+| hex8      | '44FFFF00'                                | string [8]    |       |
 | hsl       | { h: 140, s: 39.7, l: 55.1 }              | object [3]    |       |
 | html      | 'DarkSlateGray'                           | string        |       | 
 | lab       | { l: 91, a: -44, b: -13 }                 | object [3]    |       | 
 | pantone   | '5477C'                                   | string [5]    |       |
 | ral       | { ral: 9016, name: 'Traffic white', lrv: 87 }   | object [2]    |       |
 | rgb       | { r: 68, g: 255, b: 255 }                 | object [3]    |       |
+| rgba      | { r: 68, g: 255, b: 255, a: 0.5 }         | object [4]    |       |
 | w         | 580                                       | integer       | wavelength is experimental |
 | xyz       | { x: 68, y: 255, z: 255 }                 | object [3]    |       |
 

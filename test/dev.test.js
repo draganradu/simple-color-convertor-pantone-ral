@@ -10,7 +10,7 @@ const colorConvertor = require("../simple_color_converter")
 // });
 
 
-var list = {ral: { ral: 6004 } , to: 'rgba'}
+var list = {color: 'r: 12, g: 75, b: 175, a: 0.1', to: 'rgb'}
 
 list.debug = true
 

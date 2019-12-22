@@ -1,10 +1,6 @@
 const _colorSanitizer = require('../_components/_color_sanitizer')
 
 module.exports = function(data) {
-  function sortString(string){
-      return string.split('').sort().join('')
-  }  
-
   function everyKeyIndexOf(keys, string){
     for (let i of keys){
       if(string.indexOf(i) === -1 ){
@@ -24,6 +20,10 @@ module.exports = function(data) {
     return true;
   }
   
+  _colorSanitizer.keys.sort(function(a, b){
+    return b.length - a.length;
+  })
+
   if (typeof data === "number") {
     for (let i of ['grayscale', 'w', 'ral'] ) {
       if(_colorSanitizer[i](data)){ 
