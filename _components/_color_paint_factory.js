@@ -294,9 +294,15 @@ colorConvertor.ral.lab = function (ral) {
 
 // 10 | --- rgb
 colorConvertor.rgb.hex6 = function (rgb) {
+    function makeNumeric(inputNumber){
+        return isNaN(parseInt(inputNumber)) ? 0 : parseInt(inputNumber)
+    }
+
     function rgbNormalize (color) {
+        color = makeNumeric(color)
+
         if (color < 16) {
-            color = '0' + color.toString(16)
+            color = '0' + Number(color).toString(16)
         } else {
             color = color.toString(16)
         }

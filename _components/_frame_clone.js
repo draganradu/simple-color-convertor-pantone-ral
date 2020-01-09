@@ -1,5 +1,10 @@
 module.exports = function (ObjectToClone) {
-    let temp = JSON.stringify(ObjectToClone)
-    temp = temp.toLocaleLowerCase()
-    return JSON.parse(temp)
+    if(typeof ObjectToClone === "object"){
+        let temp = JSON.stringify(ObjectToClone)
+        temp = temp.toLocaleLowerCase()
+        return JSON.parse(temp)
+    } else {
+        return ObjectToClone
+    }
+
 }

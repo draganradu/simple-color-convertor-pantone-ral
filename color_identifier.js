@@ -47,5 +47,4 @@ module.exports = function (rowData){
     }
 
     // is it hex?
-    console.log(settings)
 }

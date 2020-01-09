@@ -8,7 +8,7 @@ const _clone          = require("./_components/_frame_clone")
 class color {
   constructor (settingsArg = {}) {
     this.settings = _clone(settingsArg)
-    this.debug    = this.settings.debug || false 
+    this.debug    = settingsArg.debug || false 
     this.error    = ""
     
     this.settings  = this.sanitizeForHex(this.settings)
@@ -22,11 +22,10 @@ class color {
     this.color = (this.from && this.to) ? _colorSanitizer[this.from](this.settings[this.from]) : false
 
     // console.log(this) // ---------------------------------------------------------------------------------------- dev
-
+    // console.log(this.color, this.to)
     this.color = this.ColorConvert(this.color, this.to)
     this.hexRefBuild()
-    this.cleanUp()
-    
+    // this.cleanUp()
   }
 
   extraStepsForGrayscale () {
@@ -201,14 +200,13 @@ class color {
   ColorConvert(tempColor, to) {
     if (!this.error && tempColor && to){
         if (to[0] !== to[1]){
-          for(let i=0;i< to.length-1; i++ ){
-              tempColor = _colorFactory[to[i]][to[i+1]](tempColor)
+          for(var i= 0; i< to.length-1; i++ ){
+              tempColor = _colorFactory[to[i]][to[i+1]](_clone(tempColor))
           }
         }
         return tempColor     
       }
-
-      this.error = 'Can`t convert color.'
+      this.error = this.error || 'Can`t convert color.'
       return {}
   }
 }

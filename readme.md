@@ -18,9 +18,9 @@ $ npm install simple-color-converter
 ## Usage
 
 ```javascript
-const simpleColorConverter = require('simple-color-converter');
+const SimpleColorConverter = require('simple-color-converter');
 
-var color = simpleColorConverter({
+var color = new SimpleColorConverter({
     ral: { ral: 3009, name: 'Oxide red', lrv: 5 }, 
     to: 'cmyk'
 })
