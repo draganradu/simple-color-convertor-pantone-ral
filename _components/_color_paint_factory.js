@@ -1,24 +1,13 @@
-const deltaE        = require('../compare_colors/deltaE_CIEDE2000.js')
+// const deltaE        = require('../compare_colors/deltaE_CIEDE2000.js')
+// const deltaE        = require('../compare_colors/deltaE_CIEDE2000A.js')
+const deltaE        = require('../compare_colors/deltaE_CIE76.js')
+
 const htmlPattern   = require('../color_list/html.json')
 const pantonePattern= require('../color_list/pantone.json')
 const ralPattern    = require('../color_list/ral.json')
+const AcceptedColors = require('./_accepted_colors')
 
-const colorConvertor = {
-    cmyk: {},
-    grayscale: {},
-    hex3: {},
-    hex6: {},
-    hex8: {},
-    html: {},
-    lab: {},
-    hsl: {},
-    pantone: {},
-    ral: {},
-    rgb: {},
-    rgba: {},
-    w: {},
-    xyz: {},
-}
+const colorConvertor = new AcceptedColors()
 
 // 0 | --- factory worker
 
@@ -225,7 +214,7 @@ colorConvertor.lab.pantone = function(labOrigin){
 colorConvertor.lab.ral = function (lab){
     let temp = {
         index: 768,
-        position: 9999
+        position: ralPattern.length - 1
     }
    
     for(let ral in ralPattern){
@@ -240,9 +229,11 @@ colorConvertor.lab.ral = function (lab){
                     lrv: ralPattern[temp.position].LRV,
                 }
             }
-        }
+        } 
     }
 
+    console.log(temp)
+    console.log(ralPattern[temp.position])
     return { 
         ral: ralPattern[temp.position].ral,
         name: ralPattern[temp.position].name, 
