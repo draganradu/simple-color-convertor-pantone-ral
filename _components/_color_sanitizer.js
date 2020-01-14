@@ -1,8 +1,11 @@
 const ReindexColor = require('../_components/_frame_reindex')
 const htmlPattern = require('../color_list/html.json')
 const ralPattern = require('../color_list/ral.json')
+const pantonePattern = require('../color_list/pantone.json')
+const AcceptedColors = require('./_accepted_colors')
 
-var colorSanitizer = {}
+var colorSanitizer = new AcceptedColors()
+colorSanitizer.keys = Object.keys(colorSanitizer).filter(i => ['isHex','hex', 'isHexVerbos'].indexOf(i) === -1);
 
 // 1 | --- CMYK
 colorSanitizer.cmyk = function (cmyk) {
@@ -53,6 +56,18 @@ colorSanitizer.grayscale = function (grayscale) {
 
 // 3 | --- hex 3
 colorSanitizer.hex = function (hex) {
+    // safe guard against mislabeling hex (ex: magenta)
+    if (hex.indexOf('#') === -1 || hex.indexOf('hex') === -1){
+        for(let indexColor of colorSanitizer.keys){
+            if (hex.indexOf(indexColor) > -1) {
+                return false
+            }
+        }
+        if(colorSanitizer.html(hex)) {
+            return false
+        }
+        
+    }
     hex = hex.replace(/hex6|hex3|hex|/g,'')
     return hex.replace(/[^a-f^0-9]/g,'')
 }
@@ -121,6 +136,35 @@ colorSanitizer.hsl = function (hsl) {
         }
     }
     
+    return false
+}
+
+colorSanitizer.pantone = function (pantone) {
+    function truePantone (pantone) {
+        pantone = pantone.toLowerCase()
+        const p_tempNumeric = Number(pantone.replace(/[^0-9]/g,''))
+        const p_isIndex = (pantone.indexOf('c') > -1 || pantone.indexOf('pantone') > -1)
+        const p_isNumeric = p_tempNumeric >= 100 && p_tempNumeric <= 5875;
+        return (p_isNumeric && p_isIndex)? `${p_tempNumeric}C` : false
+    }
+
+    // Check if variable is a numberic valid pantone
+    let tempPantoneNumber = ''
+    if(typeof pantone === "number") {
+        return false
+    } else if (typeof pantone === "string") {
+        tempPantoneNumber = truePantone(pantone)
+    } else if(typeof pantone === "object" && pantone.name && typeof pantone.name === 'string'){
+        tempPantoneNumber = truePantone(pantone.name)
+    } 
+
+    // Check if variable is a valid pantone list color
+    if (tempPantoneNumber) {
+        const tempPantoneArray = pantonePattern.filter(a => a.name === tempPantoneNumber)
+        if (tempPantoneArray.length === 1) {
+            return tempPantoneArray[0].name
+        }
+    }
     return false
 }
 
@@ -258,7 +302,5 @@ colorSanitizer.w = function (w) {
     }
     return false
 }
-
-colorSanitizer.keys = Object.keys(colorSanitizer).filter(i => ['isHex','hex', 'isHexVerbos'].indexOf(i) === -1);
 
  module.exports = colorSanitizer
