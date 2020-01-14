@@ -1,9 +1,9 @@
 {
   "name": "simple-color-converter",
-  "version": "2.0.2",
-  "description": "This is a simple colors converter packaged as an npm package",
+  "version": "2.0.3",
+  "description": "This is a simple colors converter as an npm package, works for almost any color.",
   "keywords": [
-    "simple-color-converter",
+    "simple color converter",
     "color",
     "pantone",
     "ral",
@@ -20,6 +20,7 @@
   },
   "main": "simple_color_converter.js",
   "repository": "draganradu/simple-color-convertor-pantone-ral",
+  "homepage": "https://draganradu.github.io/",
   "scripts": {
     "arhitecture": "node test/arhitecure.test.js",
     "dev": "node test/dev.test.js",

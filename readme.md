@@ -6,8 +6,9 @@
 ![Total downloads](https://img.shields.io/npm/dt/simple-color-converter) 
 
 
-# Simple color converter Pantone Ral
-V2 | It's as simple as install and use. Add the input to the correct data passed and the to the desired output and that is it.
+# Simple color converter for (almost) Any Color
+It covers most colors formats from Pantone, Ral, Hex 3/6/8, HTML, sRgb, Cmyk, etc for converting from -> and to -< from. 
+It's designed with simplicity in mind. you can pass data and specify the format or just let is guess what color is in the string.
 
 ![simple color convertor logo](https://raw.githubusercontent.com/draganradu/simple-color-convertor-pantone-ral/master/assets/simple-color-convertor-pantone-ral.jpg)
 
@@ -18,10 +19,10 @@ $ npm install simple-color-converter
 ## Usage
 
 ```javascript
-const SimpleColorConverter = require('simple-color-converter');
+const simpleColorConverter = require('simple-color-converter');
 
-var color = new SimpleColorConverter({
-    ral: { ral: 3009, name: 'Oxide red', lrv: 5 }, 
+var color = new simpleColorConverter({
+    ral: { ral: 3009 }, 
     to: 'cmyk'
 })
 

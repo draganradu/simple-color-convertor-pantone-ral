@@ -7,25 +7,31 @@ const _clone          = require("./_components/_frame_clone")
 
 class color {
   constructor (settingsArg = {}) {
-    this.settings = _clone(settingsArg)
+
+    // get settings
+    this.settings = this.sanitizeForHex(_clone(settingsArg))
     this.debug    = settingsArg.debug || false 
     this.error    = ""
-    
-    this.settings  = this.sanitizeForHex(this.settings)
     this.grayscale = this.settings.grayscale || false
 
+    // set from and to
     this.from = this.sanitizeFrom(this.settings) || false
     this.to   = this.sanitizeTo(this.from, this.settings.to) || false
     
+    // run extra work for flags
     this.extraStepsForGrayscale()
- 
+    
+    // sanitize colors
     this.color = (this.from && this.to) ? _colorSanitizer[this.from](this.settings[this.from]) : false
 
-    // console.log(this) // ---------------------------------------------------------------------------------------- dev
-    // console.log(this.color, this.to)
+    // convert
     this.color = this.ColorConvert(this.color, this.to)
+
+    // build extra hex3 for 
     this.hexRefBuild()
-    // this.cleanUp()
+
+    // build extra hex3 for 
+    this.cleanUp()
   }
 
   extraStepsForGrayscale () {
@@ -183,7 +189,7 @@ class color {
     return false;
   }
 
-  cleanUp() {
+  cleanUp () {
     let tempKeys = Object.keys(this).filter(exception => ['hexref','color'].indexOf(exception) === -1);
 
     if (this.error) {
@@ -197,7 +203,7 @@ class color {
     }
   }
 
-  ColorConvert(tempColor, to) {
+  ColorConvert (tempColor, to) {
     if (!this.error && tempColor && to){
         if (to[0] !== to[1]){
           for(var i= 0; i< to.length-1; i++ ){

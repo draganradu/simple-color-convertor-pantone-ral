@@ -191,7 +191,7 @@ const testData = [
     [{color: 'r: 12, g: 75, b: 175, a: 0.1', to: 'rgb'}, { r: 1, g: 8, b: 18 } ],
     [{color: 'rgba: 12, 75, 175, 0.1', to: 'rgb'}, { r: 1, g: 8, b: 18 } ],
     [{cmyk: { c: 0, m: 16, y: 26, k: 21 }, to: 'rgba'}, { r: 201, g: 169, b: 149, a:1 } ],
-    [{cmyk: { c: 0, m: 16, y: 26, k: 21 }, to: 'rgba', grayscale: true}, { r: 176, g: 176, b: 176 } ],
+    [{cmyk: { c: 0, m: 16, y: 26, k: 21 }, to: 'rgba', grayscale: true}, { r: 176, g: 176, b: 176, a:1 } ],
     [{cmyk: { c: 0, m: 16, y: 26, k: 21 }, to: 'rgba', hexref: true}, { r: 201, g: 169, b: 149, a:1 } ],
 ]
 
