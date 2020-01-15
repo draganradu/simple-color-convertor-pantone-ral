@@ -13,7 +13,7 @@ const colorConvertor = new AcceptedColors()
 
 colorConvertor.keys = Object.keys(colorConvertor)
 
-colorConvertor.keysFilterd = colorConvertor.keys.filter( keys => ['ral','pantone','grayscale','hex3','hex8','rgba'].indexOf(keys) === -1 ).sort(function( x, y ) {  return x == "lab" ? -1 : y == "lab" ? 1 : 0; })
+colorConvertor.keysFilterd = colorConvertor.keys.filter( keys => ['ral','pantone','grayscale','hex3','hex4','rgba'].indexOf(keys) === -1 ).sort(function( x, y ) {  return x == "lab" ? -1 : y == "lab" ? 1 : 0; })
 
 function PullDataFromList(listName, coloType, refeance, query = 'name'){
     
@@ -53,7 +53,11 @@ colorConvertor.grayscale.w = function (grayscale) {
 
 // 3 | --- hex 3
 colorConvertor.hex3.hex6 = function (hex3) {
-    return [hex3[0],hex3[0],hex3[1],hex3[1],hex3[2],hex3[2]].join('')
+    return [hex3[0],hex3[0],hex3[1],hex3[1],hex3[2],hex3[2]].join('').toUpperCase()
+}
+
+colorConvertor.hex4.hex8 = function (hex4) {
+    return [hex4[0],hex4[0],hex4[1],hex4[1],hex4[2],hex4[2],hex4[3],hex4[3]].join('').toUpperCase()
 }
 
 // 4 | --- hex 6
@@ -74,8 +78,12 @@ colorConvertor.hex6.hex3 = function (hex6) {
     return [temp.r, temp.g, temp.b].join('')
 }
 
+colorConvertor.hex6.hex4 = function (hex6){
+    return (colorConvertor.hex6.hex3(hex6) + 'f').toUpperCase()
+}
+
 colorConvertor.hex6.hex8 = function (hex6) {
-    return hex6 + 'ff'
+    return (hex6 + 'ff').toUpperCase()
 }
 
 colorConvertor.hex6.rgb = function (hex6) {
@@ -167,6 +175,32 @@ colorConvertor.hsl.w = function (hsl) {
     let temp = Math.round(620 - 170 / 270 * hsl.h)
     
     return temp
+}
+
+// 6 | --- hsv
+colorConvertor.hsv.rgb = function (hsv) {
+    var r, g, b, i, f, p, q, t;
+
+    i = Math.floor(hsv.h * 6);
+    f = hsv.h * 6 - i;
+    p = hsv.v * (1 - hsv.s);
+    q = hsv.v * (1 - f * hsv.s);
+    t = hsv.v * (1 - (1 - f) * hsv.s);
+    switch (i % 6) {
+        case 0: r = hsv.v, g = t, b = p; break;
+        case 1: r = q, g = hsv.v, b = p; break;
+        case 2: r = p, g = hsv.v, b = t; break;
+        case 3: r = p, g = q, b = hsv.v; break;
+        case 4: r = t, g = p, b = hsv.v; break;
+        case 5: r = hsv.v, g = p, b = q; break;
+    }
+    let rgb = {
+        r: Math.round(r * 255),
+        g: Math.round(g * 255),
+        b: Math.round(b * 255)
+    }
+
+    return rgb
 }
 
 // 7 | --- html
@@ -352,6 +386,37 @@ colorConvertor.rgb.hsl = function (rgb) {
         rgb.l = +(rgb.l * 100).toFixed(1)
         
         return {h: rgb.h ,s: rgb.s ,l: rgb.l }
+}
+
+colorConvertor.rgb.hsv = function (rgb) {
+
+    rgb.r /= 255
+    rgb.g /= 255
+    rgb.b /= 255
+    let minRGB = Math.min(rgb.r, Math.min(rgb.g, rgb.b))
+    let maxRGB = Math.max(rgb.r, Math.max(rgb.g, rgb.b))
+    let hsl = false
+
+    if (minRGB === maxRGB) {
+        // grayscale
+        hsv = {
+            h: 0,
+            s: 0,
+            v: minRGB
+        }
+    } else {
+        // color
+        let d = ( rgb.r === minRGB) ? rgb.g - rgb.b : ((rgb.b === minRGB) ? rgb.r - rgb.g : rgb.b - rgb.r)
+        let h = ( rgb.r === minRGB) ? 3 : (( rgb.b === minRGB) ? 1 : 5)
+        hsv = {
+            h: 60 * ( h - d / (maxRGB - minRGB)),
+            s: ( maxRGB - minRGB ) / maxRGB,
+            v: maxRGB
+        }
+    }
+
+    return hsv
+
 }
 
 colorConvertor.rgb.grayscale = function (rgb) {

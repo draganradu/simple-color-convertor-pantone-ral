@@ -7,8 +7,11 @@
 
 
 # Simple color converter for (almost) Any Color
-It covers most colors formats from Pantone, Ral, Hex 3/6/8, HTML, sRgb, Cmyk, etc for converting from -> and to -< from. 
-It's designed with simplicity in mind. you can pass data and specify the format or just let is guess what color is in the string.
+
+[DEMO](https://draganradu.github.io/#/)
+
+It covers most colors formats from Pantone, Ral, Hex 3/6/8, HTML, sRgb, Cmyk, etc for converting from -> and -< to. 
+It's designed with simplicity in mind. you can pass data and specify the format or just let is guess what color you are tring to pass as string.
 
 ![simple color convertor logo](https://raw.githubusercontent.com/draganradu/simple-color-convertor-pantone-ral/master/assets/simple-color-convertor-pantone-ral.jpg)
 
@@ -29,46 +32,46 @@ var color = new simpleColorConverter({
 console.log(color) // { c: 0, m: 53, y: 60, k: 60 } 
 ```
 
+# Supported colors
+
+| color system      |  object   | array     | string |
+| ---               |  ---      | ---       | ---    |
+| cmyk              | {c: 39, m: 0, y: 39, k: 7} | [39, 0, 39.7] | 'cmyk 39 0 39 7'
+| grayscale         |           |           | '78' |
+| hex3              |           |           | '#9E9' |
+| hex4              |           |           | '#9E9F' |
+| hex6              |           |           | '#90EE90' |
+| hex8              |           |           | '#90EE90FF' |
+| html              |           |           | 'Light Green' |
+| hsl               | { h: 120, s: 73.4, l: 74.9 } | [120, 73.4, 74.9] | 'hsl 120 73.4 74.9' |
+| hsv               | { h: 120, s: 39.4, l: 93.3 } | [120, 39.4, 93.3] | 'hsl 120 39.4 93.3' |
+| lab               |  {l: 86.5, a: -46.3, b: 36.9} | [86.5, -46.3, 36.9] | 'lab 86.5 -46.3 36.9' |
+| pantone           | {name: '358C'} | | 'pantone 358C' |
+| ral   | { ral : 6019 } | | 'ral 6019'|
+| rgb | { r: 144, g: 238, b: 144 } | [144, 238, 144] | 'rgb 144 238 144'|
+| rgba | { r: 144, g: 238, b: 144, a: 1 } | [144, 238, 144, 1] | 'rgba 144 238 144 1'|
+| w | { r: 144, g: 238, b: 144, a: 1 } | [144, 238, 144, 1] | 'w 544' |
+| xyz | { x: 44, g: 69, b: 45 } | [44, 69, 45] | 'xyz 44 69 45' |
+
 # From
-**input** is the argument used for the color you want to convert from. It supports a color key if you want to pass values directly from an input field, and i have a **tell** function that guesses the format.
+Any of the colors mentioned above. You can specify the color and it will be faster of just use the built in color detector.
 
-| input     | output                                    | type              | alt   |
-| ---       | ---                                       | ---               | ---   |
-| **color** | 'FFF'                                     | string            | [see exemple plage](exemple_color.md)   |
-| cmyk      | { c: 0, m: 13, y: 77, k: 24 }             | object / numbers  |       |
-| grayscale | 78                                        | integer           |       |
-| hex       | '44FFFF'                                  | string [6]        | auto detect if hex3 or hex6  |
-| hex3      | '4ff'                                     | string [3]        |       |
-| hex3      | '#4ff'                                    | string [4]        |       |
-| hex6      | '44FFFF'                                  | string [6]        |       |
-| hex8      | '44FFFF00'                                | string [8]        |       |
-| hsl       | { h: 140, s: 39.7, l: 55.1 }              | object / numbers  |       |
-| lab       | { l: 91, a: -44, b: -13 }                 | object [3]        |       | 
-| ral       | {ral: { ral: 6004 }}
-| rgb       | { r: 68, g: 255, b: 255 }                 | object / numbers  |       |
-| rgba      | { r: 68, g: 255, b: 255, a: 0.5 }         | object / numbers        |       |
-| w         | 480                                       | integer           | (experimental)|
+```javascript
 
+// faster
+var fasterColor = new simpleColorConverter({
+    rgb: {r: 10, g: 200, b: 50}, 
+    to: 'cmyk'
+})
 
-# To 
-**to** is the argument used to generate the correct outptut, all posible inputs are strings 
+// slower but more convenient
 
-| to        | output                                    | data type     | alt   |
-| ---       | ---                                       | ---           | ---   |
-| cmyk      | { c: 75, m: 75, y: 0, k: 47 }             | object [4]    |       |
-| grayscale | 78                                        | integer       |       |
-| hex       | '44FFFF'                                  | string [6]    | hex6  |
-| hex3      | '4FF'                                     | string [3]    |       |
-| hex8      | '44FFFF00'                                | string [8]    |       |
-| hsl       | { h: 140, s: 39.7, l: 55.1 }              | object [3]    |       |
-| html      | 'DarkSlateGray'                           | string        |       | 
-| lab       | { l: 91, a: -44, b: -13 }                 | object [3]    |       | 
-| pantone   | '5477C'                                   | string [5]    |       |
-| ral       | { ral: 9016, name: 'Traffic white', lrv: 87 }   | object [2]    |       |
-| rgb       | { r: 68, g: 255, b: 255 }                 | object [3]    |       |
-| rgba      | { r: 68, g: 255, b: 255, a: 0.5 }         | object [4]    |       |
-| w         | 580                                       | integer       | wavelength is experimental |
-| xyz       | { x: 68, y: 255, z: 255 }                 | object [3]    |       |
+var slowerColor = new simpleColorConverter({
+    color: 'rgb 10 200 50', 
+    to: 'cmyk'
+})
+
+```
 
 # Flags
 **flags** are the arguments used for special modifiers. The most useful one is rendering grayscale color, but there is a debugger and a hexref flag created if you need to convert a color but also output a close hex similar color(in case of online color convertors).
@@ -94,4 +97,4 @@ console.log(color) // { c: 0, m: 0, y: 0, k: 87 }
 
 ## Thank you
 
-I`m Radu Thank you for using my color convertor, I hope it is useful for you. I genuinely excited to build this kind of solutions.
+I`m Radu, Thank you for using my color convertor, I hope it is useful for you. I genuinely excited to build this kind of solutions.

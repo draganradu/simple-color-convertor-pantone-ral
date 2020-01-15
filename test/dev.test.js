@@ -10,7 +10,7 @@ const colorConvertor = require("../simple_color_converter")
 // });
 
 
-var list = {color: 'r: 12, g: 75, b: 175, a: 0.1', to: 'rgb'}
+var list = {color: { h: 120, s: 73.4, l: 74.9 }, to: 'xyz'}
 
 list.debug = true
 

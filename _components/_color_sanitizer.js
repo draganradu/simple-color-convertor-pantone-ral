@@ -3,6 +3,7 @@ const htmlPattern = require('../color_list/html.json')
 const ralPattern = require('../color_list/ral.json')
 const pantonePattern = require('../color_list/pantone.json')
 const AcceptedColors = require('./_accepted_colors')
+const procentFix = require('./procent_fix')
 
 var colorSanitizer = new AcceptedColors()
 colorSanitizer.keys = Object.keys(colorSanitizer).filter(i => ['isHex','hex', 'isHexVerbos'].indexOf(i) === -1);
@@ -12,9 +13,7 @@ colorSanitizer.cmyk = function (cmyk) {
     // if string convert to an Array
     if(typeof cmyk === 'string'){ 
         cmyk = ReindexColor(cmyk,'cmyk','[+-]?([0-9]*[.])?[0-9]+')
-        // cmyk = cmyk.match(/[+-]?([0-9]*[.])?[0-9]+/g)  
     }
-
     // if Array  convert to object is
     if(Array.isArray(cmyk) && cmyk.length == 4){
         cmyk = {
@@ -24,7 +23,7 @@ colorSanitizer.cmyk = function (cmyk) {
             k: cmyk[3]
         }
     } 
-    // check if the object is ok
+    // if the object is ok
     if (typeof cmyk == 'object') {
         cmyk = {
             c: parseFloat(cmyk.c),
@@ -32,30 +31,35 @@ colorSanitizer.cmyk = function (cmyk) {
             y: parseFloat(cmyk.y),
             k: parseFloat(cmyk.k),
         }
-        
+        // if values are in range
         if (cmyk.c >= 0 && cmyk.c <= 100 && cmyk.m >= 0 && cmyk.m <= 100 && cmyk.y >= 0 && cmyk.y <= 100 && cmyk.k >= 0 && cmyk.k <= 100){
             return cmyk
         }
     }
-    
+
     return false
 }
 
 // 2 | --- grayscale
 colorSanitizer.grayscale = function (grayscale) {
-    if (typeof grayscale === 'string' && colorSanitizer.isHex(grayscale) === false){
-        grayscale = parseInt(grayscale.replace(/[^0-9]/g,''))
+    // check if it is not a hex value
+    if(colorSanitizer.isHex(grayscale) === false){
+        // if string convert to number
+        if (typeof grayscale === 'string' && colorSanitizer.isHex(grayscale) === false){
+            grayscale = parseInt(grayscale.replace(/[^0-9]/g,''))
+        }
+        // if string convert to number
+        if (typeof grayscale === 'number' && grayscale >= 0 && grayscale <= 100 ){
+            return grayscale
+        }
     }
-    
-    if (typeof grayscale === 'number' && grayscale >= 0 && grayscale <= 100 ){
-        return grayscale
-    }
-    
+
     return false
 }
 
 // 3 | --- hex 3
 colorSanitizer.hex = function (hex) {
+    if( typeof hex === 'string') {
     // safe guard against mislabeling hex (ex: magenta)
     if (hex.indexOf('#') === -1 || hex.indexOf('hex') === -1){
         for(let indexColor of colorSanitizer.keys){
@@ -68,18 +72,16 @@ colorSanitizer.hex = function (hex) {
         }
         
     }
-    hex = hex.replace(/hex6|hex3|hex|/g,'')
-    return hex.replace(/[^a-f^0-9]/g,'')
+        hex = hex.replace(/hex|hex3|hex4|hex6|hex8|0x|ox/g,'')
+        return hex.replace(/[^a-f^0-9]/g,'')
+    }
+    return false
 }
 
 colorSanitizer.isHex = function (hex) {
     let temp = colorSanitizer.hex(hex)
-    if(temp.length === 8){
-        return 8
-    } else if(temp.length === 6){
-        return 6
-    } else if (temp.length === 3){
-        return 3
+    if(temp.length === 8 || temp.length === 6 || temp.length === 4 || temp.length === 3){
+        return temp.length
     } else {
         return false
     }
@@ -87,6 +89,14 @@ colorSanitizer.isHex = function (hex) {
 
 colorSanitizer.hex3 = function (hex) {
     if (colorSanitizer.isHex(hex) === 3){
+        return colorSanitizer.hex(hex)
+    } else {
+        return false
+    }
+}
+
+colorSanitizer.hex4 = function (hex) {
+    if (colorSanitizer.isHex(hex) === 4){
         return colorSanitizer.hex(hex)
     } else {
         return false
@@ -133,6 +143,32 @@ colorSanitizer.hsl = function (hsl) {
         
         if (hsl.h >= 0 && hsl.h <= 360 && hsl.s >= 0 && hsl.s <= 100 && hsl.l >= 0 && hsl.l <= 100){
             return hsl
+        }
+    }
+    
+    return false
+}
+
+colorSanitizer.hsv = function (hsv) {
+    // if string convert to an Array
+    if(typeof hsv === 'string'){ 
+        hsv = ReindexColor(hsv,'hsv',new RegExp('[+-]?([0-9]*[.])?[0-9]+'))
+    }
+
+    // if Array  convert to object is
+    if(Array.isArray(hsv) && hsv.length == 3){
+        hsv = {h: hsv[0], s: hsv[1], v: hsv[2]}
+    } 
+    // check if the object is ok
+    if (typeof hsv == 'object') {
+        hsv = {
+            h: parseFloat(hsv.h),
+            s: procentFix(parseFloat(hsv.s)),
+            v: procentFix(parseFloat(hsv.v)),
+        }
+        
+        if (hsv.h >= 0 && hsv.h <= 360 && hsv.s >= 0 && hsv.s <= 1 && hsv.v >= 0 && hsv.v <= 1){
+            return hsv
         }
     }
     
