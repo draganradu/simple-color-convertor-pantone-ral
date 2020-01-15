@@ -150,6 +150,7 @@ colorSanitizer.hsl = function (hsl) {
 }
 
 colorSanitizer.hsv = function (hsv) {
+    if (hsv.indexOf('ral') > -1) { return false }
     // if string convert to an Array
     if(typeof hsv === 'string'){ 
         hsv = ReindexColor(hsv,'hsv',new RegExp('[+-]?([0-9]*[.])?[0-9]+'))
@@ -163,11 +164,11 @@ colorSanitizer.hsv = function (hsv) {
     if (typeof hsv == 'object') {
         hsv = {
             h: parseFloat(hsv.h),
-            s: procentFix(parseFloat(hsv.s)),
-            v: procentFix(parseFloat(hsv.v)),
+            s: parseFloat(hsv.s),
+            v: parseFloat(hsv.v),
         }
         
-        if (hsv.h >= 0 && hsv.h <= 360 && hsv.s >= 0 && hsv.s <= 1 && hsv.v >= 0 && hsv.v <= 1){
+        if (hsv.h >= 0 && hsv.h <= 360 && hsv.s >= 0 && hsv.s <= 100 && hsv.v >= 0 && hsv.v <= 100){
             return hsv
         }
     }

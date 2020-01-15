@@ -179,28 +179,28 @@ colorConvertor.hsl.w = function (hsl) {
 
 // 6 | --- hsv
 colorConvertor.hsv.rgb = function (hsv) {
-    var r, g, b, i, f, p, q, t;
+    let h = hsv.h / 360
+    let s = hsv.s / 100
+    let v = hsv.v / 100
 
-    i = Math.floor(hsv.h * 6);
-    f = hsv.h * 6 - i;
-    p = hsv.v * (1 - hsv.s);
-    q = hsv.v * (1 - f * hsv.s);
-    t = hsv.v * (1 - (1 - f) * hsv.s);
+    let r, g, b;
+
+    let i = Math.floor(h * 6);
+    let f = h * 6 - i;
+    let p = v * (1 - s);
+    let q = v * (1 - f * s);
+    let t = v * (1 - (1 - f) * s);
+  
     switch (i % 6) {
-        case 0: r = hsv.v, g = t, b = p; break;
-        case 1: r = q, g = hsv.v, b = p; break;
-        case 2: r = p, g = hsv.v, b = t; break;
-        case 3: r = p, g = q, b = hsv.v; break;
-        case 4: r = t, g = p, b = hsv.v; break;
-        case 5: r = hsv.v, g = p, b = q; break;
+      case 0: r = v, g = t, b = p; break;
+      case 1: r = q, g = v, b = p; break;
+      case 2: r = p, g = v, b = t; break;
+      case 3: r = p, g = q, b = v; break;
+      case 4: r = t, g = p, b = v; break;
+      case 5: r = v, g = p, b = q; break;
     }
-    let rgb = {
-        r: Math.round(r * 255),
-        g: Math.round(g * 255),
-        b: Math.round(b * 255)
-    }
-
-    return rgb
+  
+    return { r: r * 255, g: g * 255, b: b * 255 };
 }
 
 // 7 | --- html
@@ -393,16 +393,17 @@ colorConvertor.rgb.hsv = function (rgb) {
     rgb.r /= 255
     rgb.g /= 255
     rgb.b /= 255
+
     let minRGB = Math.min(rgb.r, Math.min(rgb.g, rgb.b))
     let maxRGB = Math.max(rgb.r, Math.max(rgb.g, rgb.b))
-    let hsl = false
+    let hsv = false
 
     if (minRGB === maxRGB) {
         // grayscale
         hsv = {
             h: 0,
             s: 0,
-            v: minRGB
+            v: minRGB * 100
         }
     } else {
         // color
@@ -410,13 +411,12 @@ colorConvertor.rgb.hsv = function (rgb) {
         let h = ( rgb.r === minRGB) ? 3 : (( rgb.b === minRGB) ? 1 : 5)
         hsv = {
             h: 60 * ( h - d / (maxRGB - minRGB)),
-            s: ( maxRGB - minRGB ) / maxRGB,
-            v: maxRGB
+            s: (( maxRGB - minRGB ) / maxRGB ) * 100,
+            v: (maxRGB) * 100
         }
     }
 
     return hsv
-
 }
 
 colorConvertor.rgb.grayscale = function (rgb) {

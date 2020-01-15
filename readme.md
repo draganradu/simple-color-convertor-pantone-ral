@@ -10,7 +10,7 @@
 
 [DEMO](https://draganradu.github.io/#/)
 
-It covers most colors formats from Pantone, Ral, Hex 3/6/8, HTML, sRgb, Cmyk, etc for converting from -> and -< to. 
+It covers most colors formats from Pantone, Ral, Hex 3/4/6/8, HTML, sRgb, Cmyk, etc for converting from -> and -< to. 
 It's designed with simplicity in mind. you can pass data and specify the format or just let is guess what color you are tring to pass as string.
 
 ![simple color convertor logo](https://raw.githubusercontent.com/draganradu/simple-color-convertor-pantone-ral/master/assets/simple-color-convertor-pantone-ral.jpg)
