@@ -41,7 +41,7 @@ colorConvertor.grayscale.cmyk = function (grayscale) {
 }
 
 colorConvertor.grayscale.rgb = function (grayscale) {
-    grayscale /=  100
+    grayscale =  (100 - grayscale) /100
     grayscale *= 255
     grayscale = Math.round(grayscale)
     return {r: grayscale, g: grayscale, b: grayscale}
@@ -266,8 +266,6 @@ colorConvertor.lab.ral = function (lab){
         } 
     }
 
-    console.log(temp)
-    console.log(ralPattern[temp.position])
     return { 
         ral: ralPattern[temp.position].ral,
         name: ralPattern[temp.position].name, 
@@ -420,6 +418,9 @@ colorConvertor.rgb.hsv = function (rgb) {
 }
 
 colorConvertor.rgb.grayscale = function (rgb) {
+    rgb.r = 255 - rgb.r
+    rgb.g = 255 - rgb.g
+    rgb.b = 255 - rgb.b
     return Math.round(((0.3 * rgb.r) + (0.59 * rgb.g) + (0.11 * rgb.b))/ 2.56)
 }
 

@@ -1,4 +1,4 @@
-const ReindexColor = require('../_components/_frame_reindex')
+const ReindexColor = require('../_components/_color_reindex')
 const htmlPattern = require('../color_list/html.json')
 const ralPattern = require('../color_list/ral.json')
 const pantonePattern = require('../color_list/pantone.json')
@@ -42,8 +42,8 @@ colorSanitizer.cmyk = function (cmyk) {
 
 // 2 | --- grayscale
 colorSanitizer.grayscale = function (grayscale) {
-    // check if it is not a hex value
-    if(colorSanitizer.isHex(grayscale) === false){
+    // check if it is not a hex (o is the exception)
+    if(colorSanitizer.isHex(grayscale) === false || parseInt(grayscale) === 0 ){
         // if string convert to number
         if (typeof grayscale === 'string' && colorSanitizer.isHex(grayscale) === false){
             grayscale = parseInt(grayscale.replace(/[^0-9]/g,''))
