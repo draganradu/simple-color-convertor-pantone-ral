@@ -13,12 +13,19 @@ const colorConvertor = new AcceptedColors()
 
 colorConvertor.keys = Object.keys(colorConvertor)
 
-colorConvertor.keysFilterd = colorConvertor.keys.filter( keys => ['ral','pantone','grayscale','hex3','hex4','rgba'].indexOf(keys) === -1 ).sort(function( x, y ) {  return x == "lab" ? -1 : y == "lab" ? 1 : 0; })
+colorConvertor.keysFilterd = colorConvertor.keys.filter( keys => ['ral','pantone','grayscale','hex3','hex4','rgba'].indexOf(keys) === -1 ).sort(function( x, y ) {  return x == "lab" ? -1 : y == "lab" ? 1 : 0 })
+
+function splitCamelCase(name){
+    return name.replace(/([A-Z])/g, ' $1').trim()
+}
 
 function PullDataFromList(listName, coloType, refeance, query = 'name'){
     
     var temp = listName.filter(a => a[query] === refeance )
     if(temp.length > 0) {
+
+        // output 
+        // ----------------------------------
         return temp[0][coloType]
     }
     return false 
@@ -179,28 +186,32 @@ colorConvertor.hsl.w = function (hsl) {
 
 // 6 | --- hsv
 colorConvertor.hsv.rgb = function (hsv) {
-    let h = hsv.h / 360
-    let s = hsv.s / 100
-    let v = hsv.v / 100
+    hsv.h /=  360
+    hsv.s /=  100
+    hsv.v /=  100
 
-    let r, g, b;
-
-    let i = Math.floor(h * 6);
-    let f = h * 6 - i;
-    let p = v * (1 - s);
-    let q = v * (1 - f * s);
-    let t = v * (1 - (1 - f) * s);
+    const i = Math.floor(hsv.h * 6)
+    const f = hsv.h * 6 - i
+    const p = hsv.v * (1 - hsv.s)
+    const q = hsv.v * (1 - f * hsv.s)
+    const t = hsv.v * (1 - (1 - f) * hsv.s)
   
     switch (i % 6) {
-      case 0: r = v, g = t, b = p; break;
-      case 1: r = q, g = v, b = p; break;
-      case 2: r = p, g = v, b = t; break;
-      case 3: r = p, g = q, b = v; break;
-      case 4: r = t, g = p, b = v; break;
-      case 5: r = v, g = p, b = q; break;
+      case 0: 
+        return { r: hsv.v * 255, g: t * 255, b: p * 255 }
+      case 1: 
+        return { r: q * 255, g: hsv.v * 255, b: p * 255 }
+      case 2: 
+        return { r: p * 255, g: hsv.v * 255, b: t * 255 }
+      case 3: 
+        return { r: p * 255, g: q * 255, b: hsv.v * 255 }
+      case 4: 
+        return { r: t * 255, g: p * 255, b: hsv.v * 255 }
+      case 5: 
+        return { r: hsv.v * 255, g: p * 255, b: q * 255 }
     }
   
-    return { r: r * 255, g: g * 255, b: b * 255 };
+    return { r: r * 255, g: g * 255, b: b * 255 }
 }
 
 // 7 | --- html
@@ -259,7 +270,7 @@ colorConvertor.lab.ral = function (lab){
             if(temp.index === 0) {
                 return { 
                     ral: ralPattern[temp.position].ral,
-                    name: ralPattern[temp.position].name, 
+                    name: splitCamelCase(ralPattern[temp.position].name), 
                     lrv: ralPattern[temp.position].LRV,
                 }
             }
@@ -268,7 +279,7 @@ colorConvertor.lab.ral = function (lab){
 
     return { 
         ral: ralPattern[temp.position].ral,
-        name: ralPattern[temp.position].name, 
+        name: splitCamelCase(ralPattern[temp.position].name), 
         lrv: ralPattern[temp.position].LRV,
     }
 }
@@ -492,7 +503,7 @@ colorConvertor.rgb.html = function(rgb){
         let t = Math.abs(htmlPattern[html].rgb.r - rgb.r ) + Math.abs(htmlPattern[html].rgb.g - rgb.g ) + Math.abs(htmlPattern[html].rgb.b - rgb.b )
         if(t < temp.index){
             temp.index = t
-            temp.html = htmlPattern[html].name
+            temp.html = splitCamelCase(htmlPattern[html].name)
             if(temp.index === 0) {
                 return temp.html
             }
@@ -503,24 +514,20 @@ colorConvertor.rgb.html = function(rgb){
 }
 
 colorConvertor.rgb.xyz = function(rgb) {
-    let xyz = {}
-	rgb.r /= 255
-	rgb.g /= 255
-	rgb.b /= 255
+    function pivot(n) {
+        return (n > 0.04045 ? Math.pow((n + 0.055) / 1.055, 2.4) : n / 12.92) * 100.0
+    }
 
-	// assume sRGB
-	rgb.r = rgb.r > 0.04045 ? Math.pow(((rgb.r + 0.055) / 1.055), 2.4) : (rgb.r / 12.92)
-	rgb.g = rgb.g > 0.04045 ? Math.pow(((rgb.g + 0.055) / 1.055), 2.4) : (rgb.g / 12.92)
-	rgb.b = rgb.b > 0.04045 ? Math.pow(((rgb.b + 0.055) / 1.055), 2.4) : (rgb.b / 12.92)
+    rgb.r = pivot(rgb.r / 255.0)
+    rgb.g = pivot(rgb.g / 255.0)
+    rgb.b = pivot(rgb.b / 255.0)
+       
+    return {
+        x: rgb.r * 0.4124 + rgb.g * 0.3576 + rgb.b * 0.1805, 
+        y: rgb.r * 0.2126 + rgb.g * 0.7152 + rgb.b * 0.0722, 
+        z: rgb.r * 0.0193 + rgb.g * 0.1192 + rgb.b * 0.9505
+    }
 
-	xyz.x = (rgb.r * 0.41239079926595) + (rgb.g * 0.35758433938387) + (rgb.b * 0.18048078840183)
-	xyz.y = (rgb.r * 0.21263900587151) + (rgb.g * 0.71516867876775) + (rgb.b * 0.072192315360733)
-	xyz.z = (rgb.r * 0.019330818715591) + (rgb.g * 0.11919477979462) + (rgb.b * 0.95053215224966)
-
-    xyz.x = xyz.x * 94.972
-    xyz.y = xyz.y * 100
-    xyz.z = xyz.z * 122.638
-	return xyz
 }
 // 11 | --- w
 colorConvertor.rgba.rgb = function(rgba){
@@ -564,25 +571,24 @@ colorConvertor.w.rgb = function(w) {
      rgb.g = Math.round(rgb.g * 255)
      rgb.b = Math.round(rgb.b * 255)
 
-     return rgb;
+     return rgb
 }
 
 // 12 | --- XYZ
-colorConvertor.xyz.rgb = function(xyz) {
-    function sRGB(color) {
-        if (Math.abs(color) < 0.0031308) {
-          return 12.92 * color;
-        }
-        return 1.055 * Math.pow(color, 0.41666) - 0.055;
-      }
-    
-    rgb = {  
-        r : sRGB(3.2404542* xyz.x - 1.5371385* xyz.y - 0.4985314* xyz.z),
-        g : sRGB(-0.9692660* xyz.x + 1.8760108* xyz.y + 0.0415560* xyz.z),
-        b : sRGB(0.0556434* xyz.x - 0.2040259* xyz.y + 1.0572252* xyz.z),
+colorConvertor.xyz.lab = function(xyz) {   
+    function pivot(n) {
+        return n > 0.008856 ? Math.pow(n, 0.3333) : (903.3 * n + 16) / 116
     }
 
-    return rgb
-
+    const x = pivot(xyz.x / 95.047)
+    const y = pivot(xyz.y / 100.000)
+    const z = pivot(xyz.z / 108.883)
+   
+    return {
+        l: Math.max(0, 116 * y - 16), 
+        a: 500 * (x - y), 
+        b: 200 * (y - z)
+    }
 }
+
 module.exports = colorConvertor

@@ -1,9 +1,9 @@
 const _colorFactory   = require("./_components/_color_paint_factory")
 const _colorSanitizer = require("./_components/_color_sanitizer")
 const _colorTell      = require("./_components/_color_tell")
-const _permutation    = require("./_components/_frame_permutation")
+const _permutation    = require("simple-color-converter/_components/frame/_frame_permutation")
 
-const _clone          = require("./_components/_frame_clone")
+const _clone          = require("simple-color-converter/_components/frame/_frame_clone")
 
 class color {
   constructor (settingsArg = {}) {
@@ -97,6 +97,7 @@ class color {
 
   sanitizeFrom(settings) {
     // filter flags
+    
     let parameters = this.sanitizeExceptionsFrom(Object.keys(settings))
     
     if ( parameters.indexOf("grayscale") > -1 && typeof settings.grayscale === "boolean" &&  parameters.length > 1 ) {
@@ -205,11 +206,16 @@ class color {
 
   ColorConvert (tempColor, to) {
     if (!this.error && tempColor && to){
+        // normal flow
         if (to[0] !== to[1]){
           for(var i= 0; i< to.length-1; i++ ){
               tempColor = _colorFactory[to[i]][to[i+1]](_clone(tempColor))
           }
+        // if the to and from are both hex return uppercase value  
+        } else if (['hex3','hex4','hex6','hex8'].indexOf(to[0]) > -1) {
+          return tempColor.toUpperCase()
         }
+        // if to and from are both the same and not hex
         return tempColor     
       }
       this.error = this.error || 'Can`t convert color.'

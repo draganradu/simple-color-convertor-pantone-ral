@@ -19,7 +19,7 @@ module.exports = function (settingsColorString, settingsIndexColor, settingsRege
         }
 
         // cleanup and sort
-        tempString = tempString.filter(function(e){return e});
+        tempString = tempString.filter(function(e){return e})
 
         if(tempString.length === settingsIndexColor.length){
             tempIndex.sort()
@@ -30,10 +30,22 @@ module.exports = function (settingsColorString, settingsIndexColor, settingsRege
                 let end = settingsColorString.indexOf(tempString[i + 1])
                 if (end === -1){ end = settingsColorString.length}
                 
-                tempOut[tempString[i]] = Number(settingsColorString.substring(start, end).match(regexColorMatch)[0])
+                // false match prevention
+                let substring = settingsColorString.substring(start, end).match(regexColorMatch)
+                if(substring){
+                    tempOut[tempString[i]] = Number(substring[0])
+                }
             }
         
             return tempOut 
+        }
+    }
+
+    // build posible array from empty space
+    if(settingsColorString.match(/[/, ]/g)){
+        const arrayOfPosibleColors = settingsColorString.replace(/[/,]/g,' ').split(' ').filter(function(e){return e})
+        if (arrayOfPosibleColors.length === settingsIndexColor.length ) {
+            return arrayOfPosibleColors
         }
     }
 
