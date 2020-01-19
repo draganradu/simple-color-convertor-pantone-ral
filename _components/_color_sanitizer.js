@@ -3,11 +3,16 @@ const htmlPattern = require('../color_list/html.json')
 const ralPattern = require('../color_list/ral.json')
 const pantonePattern = require('../color_list/pantone.json')
 const AcceptedColors = require('./_accepted_colors')
-const { requireProcentFix, procentFix } = require('simple-color-converter/_components/frame/_frame_procent_fix')
 
 var colorSanitizer = new AcceptedColors()
 colorSanitizer.keys = Object.keys(colorSanitizer).filter(i => ['isHex','hex', 'isHexVerbos'].indexOf(i) === -1);
 
+function requireProcentFix(a,b){
+    if(a > 1 && a > 1){
+        return true
+    }
+    return false
+}
 // 1 | --- CMYK
 colorSanitizer.cmyk = function (cmyk) {
     // if string convert to an Array

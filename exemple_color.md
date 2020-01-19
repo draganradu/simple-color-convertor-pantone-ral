@@ -140,23 +140,21 @@ All this values yeld the same result.
 
 # Expected output
 
-| key       | value                         | note          |
-| ---       | ---                           | ---           |
-| color     |  "cmyk 39 0 39 7"             |  cmyk         |
-| color     |  "41"                         |  grayscale    |
-| color     |  "41"                         |  hex3    |
-| color     |  "41"                         |  hex4    |
-| color     |  "41"                         |  hex6    |
-| color     |  "41"                         |  hex8    |
-| color     |  "41"                         |  html    |
-| color     |  "41"                         |  lab    |
-| color     |  "41"                         |  hsl    |
-| color     |  "41"                         |  hsv    |
-| color     |  "41"                         |  pantone    |
-| color     |  "41"                         |  ral   |
-| color     |  "41"                         |  rgb   |
-| color     |  "41"                         |  rgba   |
-| color     |  "41"                         |  w   |
-| color     |  "41"                         |  xyz   |
+| key       | value                                | note          |
+| ---       | ---                                  | ---           |
+| cmyk      |  color: {c: 39, m: 0, y: 39, k: 7"}  |  object       |
+| grayscale     |  color: 88                       |  number    |
+| hex3     |  color: "#123"                        |  string    |
+| hex4     |  color: "#123f"                       |  string    |
+| hex6     |  color: "#112233"                     |  string    |
+| hex8     |  color: "#112233ff"                   |  string    |
+| lab      |  color: {l:87.1, a:-42.2, b:33.2 }    |  object    |
+| hsl      |  color: {h: 120, s: 71.4, l: 76.7"}   |  object    |
+| hsv      |  color: {h: 120, s: 36, v: 93"}       |  object    |
+| pantone  |  color: '296C'                        |  string    |
+| ral      |  color: { ral: 5011, name: 'Steel Blue', lrv: 2 } |  string    |
+| rgb      |  color: { r: 17, g: 34, b: 51 }       |  string    |
+| w        |  color: 488                           |  number    |
+
 
 # Errors

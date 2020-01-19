@@ -1,9 +1,9 @@
 const _colorFactory   = require("./_components/_color_paint_factory")
 const _colorSanitizer = require("./_components/_color_sanitizer")
 const _colorTell      = require("./_components/_color_tell")
-const _permutation    = require("simple-color-converter/_components/frame/_frame_permutation")
+const _permutation    = require("./_components/frame/_frame_permutation")
 
-const _clone          = require("simple-color-converter/_components/frame/_frame_clone")
+const _clone          = require("./_components/frame/_frame_clone")
 
 class color {
   constructor (settingsArg = {}) {

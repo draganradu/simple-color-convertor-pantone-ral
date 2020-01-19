@@ -10,7 +10,7 @@ const colorConvertor = require("../simple_color_converter")
 // });
 
 
-var list = {hsl: '252,65.3,47.5', to: 'rgb'}
+var list = {hex3: '#123', to: 'w'}
 
 list.debug = true
 

@@ -33,6 +33,9 @@ console.log(color) // { c: 0, m: 53, y: 60, k: 60 }
 ```
 
 # Supported colors
+Expected input value list [[here]](https://github.com/draganradu/simple-color-convertor-pantone-ral/blob/master/exemple_color.md#accepted-input).
+
+Expected output value list [[here]](https://github.com/draganradu/simple-color-convertor-pantone-ral/blob/master/exemple_color.md#expected-output).
 
 | color system      |  object   | array     | string |
 | ---               |  ---      | ---       | ---    |
