@@ -8,7 +8,7 @@ var colorSanitizer = new AcceptedColors()
 colorSanitizer.keys = Object.keys(colorSanitizer).filter(i => ['isHex','hex', 'isHexVerbos'].indexOf(i) === -1);
 
 function requireProcentFix(a,b){
-    if(a > 1 && a > 1){
+    if(a <= 1 && a <= 1){
         return true
     }
     return false
@@ -65,8 +65,7 @@ colorSanitizer.grayscale = function (grayscale) {
 
 // 3 | --- hex 3
 colorSanitizer.hex = function (hex) {
-    
-    if( typeof hex === 'string') {
+    if( typeof hex === 'string' && hex.length >= 3) {
     // safe guard against mislabeling hex (ex: magenta)
     if (hex.indexOf('#') === -1 || hex.indexOf('hex') === -1){
         for(let indexColor of colorSanitizer.keys){
@@ -223,9 +222,11 @@ colorSanitizer.pantone = function (pantone) {
 // 7 | --- html
 colorSanitizer.html = function (html) {
     html = html.toLowerCase().replace(/html|[^a-z]/g,'')
-    var temp = htmlPattern.filter(a => a.name.toLowerCase() === html )
-    if(temp.length > 0) {
-        return temp[0].name
+    if(html.length >= 3){
+        var temp = htmlPattern.filter(a => a.name.toLowerCase() === html )
+        if(temp.length > 0) {
+            return temp[0].name
+        }
     }
     return false
 }
@@ -233,7 +234,7 @@ colorSanitizer.html = function (html) {
 // 8 | --- Lab
 colorSanitizer.lab = function (lab) {
     // if string convert to an Array
-    if(typeof lab === 'string'){ 
+    if(typeof lab === 'string' && lab.length >= 5){ 
         lab = ReindexColor(lab,'lab','[+-]?([0-9]*[.])?[0-9]+')
         // lab = lab.match(/[+-]?([0-9]*[.])?[0-9]+/g)  
     }
@@ -259,6 +260,12 @@ colorSanitizer.lab = function (lab) {
 
 // 9 | --- ral
 colorSanitizer.ral = function (ral) {
+    function isRalNumeric (ral) { return (ral >= 1000 && ral <= 9023 ) }
+    function isRalName (ral) { 
+        ral.replace(/ral|[^a-z]/g,'')
+        if (ral.length >= 4) { return true }
+        return false
+    }
     let temp = ''
     if(typeof ral === "number") {
         // pass ral as numeric value ral {3009}

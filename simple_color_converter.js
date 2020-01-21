@@ -212,7 +212,7 @@ class color {
               tempColor = _colorFactory[to[i]][to[i+1]](_clone(tempColor))
           }
         // if the to and from are both hex return uppercase value  
-        } else if (['hex3','hex4','hex6','hex8'].indexOf(to[0]) > -1) {
+        } else if (['hex3', 'hex4', 'hex6', 'hex8'].indexOf(to[0]) > -1) {
           return tempColor.toUpperCase()
         }
         // if to and from are both the same and not hex
