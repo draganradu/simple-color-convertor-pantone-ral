@@ -1,6 +1,6 @@
 {
   "name": "simple-color-converter",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "This is a simple colors converter as an npm package, works for almost any color.",
   "keywords": [
     "simple color converter",

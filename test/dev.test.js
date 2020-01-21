@@ -10,7 +10,11 @@ const colorConvertor = require("../simple_color_converter")
 // });
 
 
-var list = {hex3: '#123', to: 'w'}
+var list = {
+    color: "h 120;s 36;v:93", 
+    to: 'hex3',
+    hexref: true    
+}
 
 list.debug = true
 

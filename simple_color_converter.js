@@ -55,7 +55,7 @@ class color {
         const lastElement = this.to[this.to.length - 1]
         const stepsTemp = this.sanitizeTo(lastElement,'hex6') 
 
-        if(lastElement === 'ral') {
+        if(lastElement === 'ral' || lastElement === 'html') {
           this.hexref = this.ColorConvert(_colorSanitizer[lastElement](this.color), stepsTemp)
         } else {
           this.hexref = this.ColorConvert(this.color, stepsTemp)
