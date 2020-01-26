@@ -42,7 +42,7 @@ module.exports = function(data) {
     // 1 | run index of if value is found in color it is probably that
    
     for (let i of _colorSanitizer.keys) {
-      if((data.indexOf(i) !== -1 || everyKeyIndexOf(i,data)) && _colorSanitizer[i](data)){
+      if((data.indexOf(i) > -1 || everyKeyIndexOf(i,data)) && _colorSanitizer[i](data)){
         return i 
       }
     }

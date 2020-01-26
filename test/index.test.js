@@ -34,7 +34,7 @@ var settings = {
 //----------------------- Data- --------
 //--------------------------------------
 // Return only the last element not to run all elements
-if(process.argv.length === 3 && process.argv.indexOf('last') > -1 && process.argv.indexOf('all') === -1){
+if(process.argv.length === 3 && process.argv.indexOf('last') > -1 && process.argv.indexOf('all') < 0){
     testData = [testData.pop()];
 }
 

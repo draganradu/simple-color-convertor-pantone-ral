@@ -7,9 +7,9 @@ class AcceptedColors {
         this.hex6 = {}
         this.hex8 = {}
         this.html = {}
-        this.lab = {}
         this.hsl = {}
         this.hsv = {}
+        this.lab = {}
         this.pantone = {}
         this.ral = {}
         this.rgb = {}

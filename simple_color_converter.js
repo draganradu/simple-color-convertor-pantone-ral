@@ -1,9 +1,10 @@
-const _colorFactory   = require("./_components/_color_paint_factory")
-const _colorSanitizer = require("./_components/_color_sanitizer")
-const _colorTell      = require("./_components/_color_tell")
-const _permutation    = require("./_components/frame/_frame_permutation")
+const _colorFactory   = require('./_components/_color_paint_factory')
+const _colorSanitizer = require('./_components/_color_sanitizer')
+const _colorTell      = require('./_components/_color_tell')
+const _permutation    = require('./_components/frame/_frame_permutation')
 
-const _clone          = require("./_components/frame/_frame_clone")
+const _clone          = require('./_components/frame/_frame_clone')
+const _removeFromArray= require('./_components/frame/_remove_array_from_array')
 
 class color {
   constructor (settingsArg = {}) {
@@ -11,7 +12,7 @@ class color {
     // get settings
     this.settings = this.sanitizeForHex(_clone(settingsArg))
     this.debug    = settingsArg.debug || false 
-    this.error    = ""
+    this.error    = ''
     this.grayscale = this.settings.grayscale || false
 
     // set from and to
@@ -39,8 +40,8 @@ class color {
       if (this.grayscale === true) {
         const LastColorStep = this.to.pop()
         let tempTo = [
-            this.sanitizeTo(LastColorStep, "grayscale"),
-            this.sanitizeTo("grayscale", LastColorStep),
+            this.sanitizeTo(LastColorStep, 'grayscale'),
+            this.sanitizeTo('grayscale', LastColorStep),
         ]
         if (tempTo[0] && tempTo[1]) {
             tempTo[0].pop()
@@ -67,8 +68,8 @@ class color {
   }
 
   sanitizeForHex(settings){
-    if (settings.hasOwnProperty('hex') && _colorSanitizer.isHex(settings.hex)){
-      settings['hex' + _colorSanitizer.isHex(settings.hex)] = settings.hex
+    if (settings.hasOwnProperty('hex') && _colorSanitizer.hex(settings.hex)){
+      settings['hex' + _colorSanitizer.hex(settings.hex).length] = settings.hex
       delete settings.hex
     }
     return settings
@@ -76,10 +77,10 @@ class color {
 
   sanitizeExceptionsFrom(parameters) {
     // remove the elements that are not colors
-    parameters = parameters.filter( from => ["to", "hexref", "debug" ].indexOf(from) === -1 )
+    parameters = _removeFromArray(parameters, ['to', 'hexref', 'debug' ])
 
     // Figure out wildcard colors
-    const parametersException = parameters.filter( from => ['color','from'].indexOf(from) !== -1 )
+    const parametersException = parameters.filter( from => ['color', 'from'].indexOf(from) > -1 )
 
     if(parametersException.length === 1){
       const pEX = parametersException[0] 
@@ -100,27 +101,27 @@ class color {
     
     let parameters = this.sanitizeExceptionsFrom(Object.keys(settings))
     
-    if ( parameters.indexOf("grayscale") > -1 && typeof settings.grayscale === "boolean" &&  parameters.length > 1 ) {
-      parameters.splice(parameters.indexOf("grayscale"), 1);
+    if ( parameters.indexOf('grayscale') > -1 && typeof settings.grayscale === 'boolean' &&  parameters.length > 1 ) {
+      parameters.splice(parameters.indexOf('grayscale'), 1);
     }
 
     if ( parameters.length === 1 &&  _colorFactory.keys.indexOf(parameters[0]) > -1 ) {
       return parameters[0];
-    } else if (parameters[0] === "color") {
+    } else if (parameters[0] === 'color') {
       let objectData = {}
       objectData.tell = _colorTell(objectData[parameters[0]]);
 
       if (objectData.tell) {
         objectData[objectData.tell] = objectData.color;
-        if (objectData.tell === "hex") {
+        if (objectData.tell === 'hex') {
           return _colorSanitizer.isHexVerbos(objectData.hex)
         }
         return objectData.tell;
       } else {
-        this.error = "Inputed color dose not math any color format";
+        this.error = 'Inputed color dose not math any color format';
       }
     } else {
-      this.error = "The color specified in from is not an accepted input";
+      this.error = 'The color specified in from is not an accepted input';
       return false;
     }
   }
@@ -138,11 +139,11 @@ class color {
       temp.push(_colorFactory[array[a]].hasOwnProperty(array[a+1]))
     }
     
-    return (temp.indexOf(false) === -1 )
+    return (temp.indexOf(false) < 0 )
   }
 
   sanitizeExceptionsTo(to){
-    var listOfExceptions = {
+    const listOfExceptions = {
       hex: 'hex6',
     }
     if(listOfExceptions.hasOwnProperty(to)){
@@ -152,7 +153,7 @@ class color {
   }
 
   toException(to){
-    var exceptionList = {
+    const exceptionList = {
       hex: 'hex6',
     };
 
@@ -175,7 +176,7 @@ class color {
       // actual color steps 
       if ( _colorFactory.keys.indexOf(to) !== -1) {
         for(let i = 1; i < _colorFactory.keysFilterd.length; i++){
-          let stepsTable = _permutation(_colorFactory.keysFilterd, from, to, i )
+          const stepsTable = _permutation(_colorFactory.keysFilterd, from, to, i )
           for (let a = 0; a < stepsTable.length; a++){
             if( this.validateLine(stepsTable[a]) ){
               return stepsTable[a]
@@ -184,17 +185,17 @@ class color {
         }
       }
 
-      this.error = "The value you want to convert to is not acceptable" ;
+      this.error = 'The value you want to convert to is not acceptable' ;
     }
 
     return false;
   }
 
   cleanUp () {
-    let tempKeys = Object.keys(this).filter(exception => ['hexref','color'].indexOf(exception) === -1);
+    const tempKeys = _removeFromArray(Object.keys(this), ['hexref', 'color'])
 
     if (this.error) {
-      tempKeys.splice(tempKeys.indexOf("error"), 1);
+      tempKeys.splice(tempKeys.indexOf('error'), 1);
     } 
 
     if(this.debug !== true){
@@ -208,7 +209,7 @@ class color {
     if (!this.error && tempColor && to){
         // normal flow
         if (to[0] !== to[1]){
-          for(var i= 0; i< to.length-1; i++ ){
+          for(let i = 0; i < to.length -1 ; i++ ){
               tempColor = _colorFactory[to[i]][to[i+1]](_clone(tempColor))
           }
         // if the to and from are both hex return uppercase value  

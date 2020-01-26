@@ -8,7 +8,7 @@
 
 # Simple color converter for (almost) Any Color
 
-[DEMO](https://draganradu.github.io/#/)
+[DEMO](https://draganradu.github.io/)
 
 It covers most colors formats from Pantone, Ral, Hex 3/4/6/8, HTML, sRgb, Cmyk, etc for converting from -> and -< to. 
 It's designed with simplicity in mind. you can pass data and specify the format or just let is guess what color you are tring to pass as string.

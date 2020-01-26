@@ -11,5 +11,3 @@ for(i in _color_paint_factory.keys){
 }
 
 console.table(_row_table)
-
-// console.table([['a','b'],['c','d']])

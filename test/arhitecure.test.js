@@ -59,7 +59,7 @@ for(let a of factoryKeys){
         i++
 
         if (stopAt){ 
-            if (stopAt == i) {
+            if (stopAt === i) {
                 logEr(a,b)  
             }
         } else {

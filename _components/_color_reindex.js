@@ -1,17 +1,21 @@
 module.exports = function (settingsColorString, settingsIndexColor, settingsRegexColorMatch){
-    
+    // stop if inposible due to legth
+    if (settingsColorString.length < (settingsIndexColor.length + (settingsIndexColor.length -1))) { return false }
+    // console.log(settingsColorString, settingsIndexColor, settingsRegexColorMatch)
+
     let tempIndex = [] 
     let tempString = []
     let tempOut = {}
     let regexColorMatch = new RegExp(settingsRegexColorMatch, 'g') || new RegExp('/(\d+)/', 'g')
 
-    if(settingsColorString.indexOf(settingsIndexColor) > -1){
+    // perfect match
+    if(settingsColorString.indexOf(settingsIndexColor) > -1) {
         tempOut = settingsColorString.match(regexColorMatch)
         if(tempOut.length === settingsIndexColor.length){
-            return settingsColorString.match(regexColorMatch)
+            return tempOut
         }
     } else {
-        // index of interpolated string
+        // index of interpolated match
         // build keys order
         for (i = 0; i < settingsIndexColor.length; i++) {
             tempString[settingsColorString.indexOf(settingsIndexColor[i])] = settingsIndexColor[i]
@@ -19,8 +23,8 @@ module.exports = function (settingsColorString, settingsIndexColor, settingsRege
         }
 
         // cleanup and sort
-        tempString = tempString.filter(function(e){return e})
-
+        tempString = tempString.filter(function(e){ return e })
+        
         if(tempString.length === settingsIndexColor.length){
             tempIndex.sort()
 
@@ -28,7 +32,7 @@ module.exports = function (settingsColorString, settingsIndexColor, settingsRege
             for (i = 0; i < tempString.length; i++) {
                 let start = settingsColorString.indexOf(tempString[i]) + 1 
                 let end = settingsColorString.indexOf(tempString[i + 1])
-                if (end === -1){ end = settingsColorString.length}
+                if (end < 0){ end = settingsColorString.length}
                 
                 // false match prevention
                 let substring = settingsColorString.substring(start, end).match(regexColorMatch)
@@ -44,10 +48,8 @@ module.exports = function (settingsColorString, settingsIndexColor, settingsRege
     // build posible array from empty space
     if(settingsColorString.match(/[/, ]/g)){
         const arrayOfPosibleColors = settingsColorString.replace(/[/,]/g,' ').split(' ').filter(function(e){return e})
-        if (arrayOfPosibleColors.length === settingsIndexColor.length ) {
-            return arrayOfPosibleColors
-        }
+        return (arrayOfPosibleColors.length === settingsIndexColor.length) ? arrayOfPosibleColors : false
     }
 
-    return true
+    return false
 }
