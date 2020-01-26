@@ -26,6 +26,16 @@ function arrayToObject(data, keys){
     return false
 }
 
+function makeInt(inputNumber){
+    const temp = parseInt(inputNumber)
+    return isNaN(temp) ? 0 : temp
+}
+
+function makeFloat(inputNumber){
+    const temp = parseFloat(inputNumber)
+    return isNaN(temp) ? 0 : temp
+}
+
 // 1 | --- CMYK -----------------------------------------------------
 colorSanitizer.cmyk = function (cmyk) {
     if(typeof cmyk === 'string' && _safeguard(cmyk,'cmyk', colorSanitizer.keys)){ 
@@ -36,7 +46,7 @@ colorSanitizer.cmyk = function (cmyk) {
     } 
     if (typeof cmyk === 'object') {
         for(let i of 'cmyk') {
-            cmyk[i] = parseFloat(cmyk[i])
+            cmyk[i] = makeFloat(cmyk[i])
             // validate on conversion
             if(cmyk[i] < 0 || cmyk[i] > 100 ){
                 return false
@@ -54,7 +64,7 @@ colorSanitizer.grayscale = function (grayscale) {
     if(!colorSanitizer.isHex(grayscale)){
         // if string convert to number
         if (typeof grayscale === 'string'){
-            grayscale = parseInt(grayscale.replace(/%20|[^0-9]/g,''))
+            grayscale = makeInt(grayscale.replace(/%20|[^0-9]/g,''))
         }
         // if string convert to number
         if (typeof grayscale === 'number' && grayscale >= 0 && grayscale <= 100 ){
@@ -140,7 +150,7 @@ colorSanitizer.hsl = function (hsl) {
     } 
     if (typeof hsl === 'object') {
         for(let i of 'hsl') {
-            hsl[i] = parseFloat(hsl[i])
+            hsl[i] = makeFloat(hsl[i])
         }
         
         if (hsl.h >= 0 && hsl.h <= 360 && hsl.s >= 0 && hsl.s <= 100 && hsl.l >= 0 && hsl.l <= 100){
@@ -165,7 +175,7 @@ colorSanitizer.hsv = function (hsv) {
     } 
     if (typeof hsv === 'object') {
         for(let i of 'hsv') {
-            hsv[i] = parseFloat(hsv[i])
+            hsv[i] = makeFloat(hsv[i])
         }
         
         if (hsv.h >= 0 && hsv.h <= 360 && hsv.s >= 0 && hsv.s <= 100 && hsv.v >= 0 && hsv.v <= 100){
@@ -243,7 +253,7 @@ colorSanitizer.ral = function (ral) {
         }
     } else if (typeof ral === 'string' && ral.indexOf('ral') > -1) {
         let ralFilterName = isRalName(ral)
-        let ralFilterNumber = isRalNumeric(parseInt(ral.replace(/[^0-9]/g,'')))
+        let ralFilterNumber = isRalNumeric(makeInt(ral.replace(/[^0-9]/g,'')))
 
         temp = (ralFilterName || ralFilterNumber ) ? ralPattern.filter( a => a.name.toLowerCase() === ralFilterName || a.ral === ralFilterNumber) : false
 
@@ -270,7 +280,7 @@ colorSanitizer.rgb = function (rgb) {
     } 
     if (typeof rgb === 'object') {
         for(let i of 'rgb') {
-            rgb[i] = parseInt(rgb[i])
+            rgb[i] = makeInt(rgb[i])
             if(rgb[i] < 0 || rgb[i] > 255 ){
                 return false
             }
@@ -291,7 +301,7 @@ colorSanitizer.rgba = function (rgba) {
     } 
     if (typeof rgba === 'object') {
         for(let i of 'rgb') {
-            rgba[i] = parseInt(rgba[i])
+            rgba[i] = makeInt(rgba[i])
             if(rgba[i] < 0 || rgba[i] > 255 ){
                 return false
             }
@@ -306,7 +316,7 @@ colorSanitizer.rgba = function (rgba) {
 // 15 | --- w -----------------------------------------------------
 colorSanitizer.w = function (w) {
     if (typeof w === 'string' && w.indexOf(w) > -1 ){
-        w = parseInt(w.replace(/[^0-9]/,''))
+        w = makeInt(w.replace(/[^0-9]/,''))
     } 
     if (typeof w === 'number'){
          return (w >= 380 && w <= 780)? w : false
@@ -324,7 +334,7 @@ colorSanitizer.w = function (w) {
     } 
     if (typeof xyz === 'object') {
         for(let i of 'xyz') {
-            xyz[i] = parseInt(xyz[i])
+            xyz[i] = makeInt(xyz[i])
             if(xyz[i] <= 0){
                 return false
             }

@@ -34,6 +34,11 @@ function doubleString(string){
     return temp.toUpperCase()
 }
 
+function makeNumeric(inputNumber){
+    const temp = parseInt(inputNumber)
+    return isNaN(temp) ? 0 : temp
+}
+
 // 1 | --- CMYK ---------------------------------------------------------
 colorConvertor.cmyk.rgb = function(cmyk){
     return {
@@ -302,10 +307,6 @@ colorConvertor.ral.lab = function (ral) {
 
 // 13 | --- rgb -----------------------------------------------------
 colorConvertor.rgb.hex6 = function (rgb) {
-    function makeNumeric(inputNumber){
-        return isNaN(parseInt(inputNumber)) ? 0 : parseInt(inputNumber)
-    }
-
     function rgbNormalize (color) {
         color = makeNumeric(color)
 

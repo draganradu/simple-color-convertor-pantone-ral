@@ -38,10 +38,11 @@ module.exports = function (settingsColorString, settingsIndexColor, settingsRege
                 let substring = settingsColorString.substring(start, end).match(regexColorMatch)
                 if(substring){
                     tempOut[tempString[i]] = Number(substring[0])
+                    if (isNaN(tempOut[tempString[i]])) { return false }
                 }
             }
-        
-            return tempOut 
+            
+            return (tempOut) ? tempOut : false 
         }
     }
 

@@ -11,7 +11,7 @@ const colorConvertor = require("../simple_color_converter")
 
 
 var list = {
-    color: "h: 252, s: 65.3, l: 47.5", 
+    color: 'greenb', 
     to: 'rgb',
     hexref: true    
 }
