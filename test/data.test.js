@@ -426,6 +426,7 @@ const testData = [
     [{color: 'y49.4 | u70.2 | v41.0', to: 'hex3'}, '068' ], 
     
     // test
+    [{color: 'greenb', to: 'hex3'}, '000' ],
 
     [{ hex8: '#00ffee12', to:'android'}, '00FFEE12'],
     [{ hex8: '#00ffee12', to:'rgbdecimal'}, 4625],
