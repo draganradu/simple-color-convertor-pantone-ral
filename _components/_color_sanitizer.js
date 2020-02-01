@@ -26,6 +26,34 @@ function arrayToObject(data, keys){
     return false
 }
 
+function makeInt(inputNumber){
+    const temp = parseInt(inputNumber)
+    return isNaN(temp) ? 0 : temp
+}
+
+function makeFloat(inputNumber){
+    const temp = parseFloat(inputNumber)
+    return isNaN(temp) ? 0 : temp
+}
+
+function abstractMakeInt(a,b = 100){
+    if(typeof a === 'string') {
+        if( a.indexOf('%') > -1 ){
+            return (parseFloat(a)/100) * b
+          }
+          if (parseFloat(a) < 1) {
+            return parseFloat(a) * b 
+          }
+          return parseFloat(a)
+    }
+    
+    return isNaN(a) ? false : a
+}
+
+function getNumbers (number) {
+    return makeInt(number.replace(/[^0-9]/g,'')) 
+}
+
 // 1 | --- CMYK -----------------------------------------------------
 colorSanitizer.cmyk = function (cmyk) {
     if(typeof cmyk === 'string' && _safeguard(cmyk,'cmyk', colorSanitizer.keys)){ 
@@ -36,9 +64,9 @@ colorSanitizer.cmyk = function (cmyk) {
     } 
     if (typeof cmyk === 'object') {
         for(let i of 'cmyk') {
-            cmyk[i] = parseFloat(cmyk[i])
+            cmyk[i] = abstractMakeInt(cmyk[i])
             // validate on conversion
-            if(cmyk[i] < 0 || cmyk[i] > 100 ){
+            if(isNaN(cmyk[i]) || cmyk[i] < 0 || cmyk[i] > 100 ){
                 return false
             }
         }
@@ -53,8 +81,8 @@ colorSanitizer.grayscale = function (grayscale) {
     // check if it is not a hex (o is the exception)
     if(!colorSanitizer.isHex(grayscale)){
         // if string convert to number
-        if (typeof grayscale === 'string'){
-            grayscale = parseInt(grayscale.replace(/%20|[^0-9]/g,''))
+        if (typeof grayscale === 'string' && grayscale.indexOf('rgb') === -1){
+            grayscale = makeInt(grayscale.replace(/%20|[^0-9]/g,''))
         }
         // if string convert to number
         if (typeof grayscale === 'number' && grayscale >= 0 && grayscale <= 100 ){
@@ -78,8 +106,8 @@ colorSanitizer.hex = function (hex) {
             return false
         }
     }
-
-    hex = hex.replace(/hex3|hex4|hex6|hex8|hex|0x|ox|[^a-f^0-9]/g,'')
+    
+    hex = hex.replace(/android|hex3|hex4|hex6|hex8|hex|0x|ox|[^a-f^0-9]/g,'')
     return (hex.length === 8 || hex.length === 6 || hex.length === 4 || hex.length === 3) ? hex : false
     }
     return false
@@ -140,7 +168,7 @@ colorSanitizer.hsl = function (hsl) {
     } 
     if (typeof hsl === 'object') {
         for(let i of 'hsl') {
-            hsl[i] = parseFloat(hsl[i])
+            hsl[i] = makeFloat(hsl[i])
         }
         
         if (hsl.h >= 0 && hsl.h <= 360 && hsl.s >= 0 && hsl.s <= 100 && hsl.l >= 0 && hsl.l <= 100){
@@ -165,7 +193,7 @@ colorSanitizer.hsv = function (hsv) {
     } 
     if (typeof hsv === 'object') {
         for(let i of 'hsv') {
-            hsv[i] = parseFloat(hsv[i])
+            hsv[i] = makeFloat(hsv[i])
         }
         
         if (hsv.h >= 0 && hsv.h <= 360 && hsv.s >= 0 && hsv.s <= 100 && hsv.v >= 0 && hsv.v <= 100){
@@ -243,7 +271,7 @@ colorSanitizer.ral = function (ral) {
         }
     } else if (typeof ral === 'string' && ral.indexOf('ral') > -1) {
         let ralFilterName = isRalName(ral)
-        let ralFilterNumber = isRalNumeric(parseInt(ral.replace(/[^0-9]/g,'')))
+        let ralFilterNumber = isRalNumeric(makeInt(ral.replace(/[^0-9]/g,'')))
 
         temp = (ralFilterName || ralFilterNumber ) ? ralPattern.filter( a => a.name.toLowerCase() === ralFilterName || a.ral === ralFilterNumber) : false
 
@@ -262,7 +290,8 @@ colorSanitizer.ral = function (ral) {
 // 13 | --- rgb -----------------------------------------------------
 colorSanitizer.rgb = function (rgb) {
     if(typeof rgb === 'string' && _safeguard(rgb,'rgb',colorSanitizer.keys)){ 
-        rgb = ReindexColor(rgb,'rgb',/(\d+)/)
+        // rgb = ReindexColor(rgb,'rgb',/(\d+)/)
+        rgb = ReindexColor(rgb,'rgb',/([0-9]*[.])?[0-9]?[0-9%]+/, true)
     }
     // if Array  convert to object is
     if(Array.isArray(rgb)){
@@ -270,8 +299,8 @@ colorSanitizer.rgb = function (rgb) {
     } 
     if (typeof rgb === 'object') {
         for(let i of 'rgb') {
-            rgb[i] = parseInt(rgb[i])
-            if(rgb[i] < 0 || rgb[i] > 255 ){
+            rgb[i] = abstractMakeInt(rgb[i], 255)
+            if(isNaN(rgb[i]) || rgb[i] < 0 || rgb[i] > 255 ){
                 return false
             }
         }
@@ -291,7 +320,7 @@ colorSanitizer.rgba = function (rgba) {
     } 
     if (typeof rgba === 'object') {
         for(let i of 'rgb') {
-            rgba[i] = parseInt(rgba[i])
+            rgba[i] = makeInt(rgba[i])
             if(rgba[i] < 0 || rgba[i] > 255 ){
                 return false
             }
@@ -303,10 +332,22 @@ colorSanitizer.rgba = function (rgba) {
     return false
 }
 
-// 15 | --- w -----------------------------------------------------
+// 15 | --- rgbdecimal -----------------------------------------------------
+colorSanitizer.rgbdecimal = function (rgb) {
+    if (typeof rgb === 'string') {
+        if(rgb.indexOf('rgb') > -1 || rgb.indexOf('decimal') > -1) {
+            let numericData =  rgb.match(/(\d+)/g)
+            return (numericData.length === 1) ? numericData : false
+        }
+    }
+
+    return false
+}
+
+// 16 | --- w -----------------------------------------------------
 colorSanitizer.w = function (w) {
     if (typeof w === 'string' && w.indexOf(w) > -1 ){
-        w = parseInt(w.replace(/[^0-9]/,''))
+        w = makeInt(w.replace(/[^0-9]/,''))
     } 
     if (typeof w === 'number'){
          return (w >= 380 && w <= 780)? w : false
@@ -314,7 +355,7 @@ colorSanitizer.w = function (w) {
     return false
  }
 
-// 16 | --- XYZ -----------------------------------------------------
+// 17 | --- XYZ -----------------------------------------------------
  colorSanitizer.xyz = function (xyz) {
     if(typeof xyz === 'string' && _safeguard(xyz,'xyz',colorSanitizer.keys)){ 
         xyz = ReindexColor(xyz,'xyz', '[+-]?([0-9]*[.])?[0-9]+')
@@ -324,12 +365,32 @@ colorSanitizer.w = function (w) {
     } 
     if (typeof xyz === 'object') {
         for(let i of 'xyz') {
-            xyz[i] = parseInt(xyz[i])
+            xyz[i] = makeInt(xyz[i])
             if(xyz[i] <= 0){
                 return false
             }
         }
         return xyz
+    }
+    return false
+}
+
+// 18 | --- YUV -----------------------------------------------------
+colorSanitizer.yuv = function (yuv) {
+    if(typeof yuv === 'string' && _safeguard(yuv,'yuv',colorSanitizer.keys)){ 
+        yuv = ReindexColor(yuv,'yuv', '[+-]?([0-9]*[.])?[0-9]+')
+    }
+    if(Array.isArray(yuv)){
+        yuv = arrayToObject(yuv, 'yuv')
+    } 
+    if (typeof yuv === 'object') {
+        for(let i of 'yuv') {
+            yuv[i] = makeInt(yuv[i])
+            if(yuv[i] < 0){
+                return false
+            }
+        }
+        return yuv
     }
     return false
 }

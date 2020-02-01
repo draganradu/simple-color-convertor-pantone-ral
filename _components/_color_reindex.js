@@ -37,11 +37,11 @@ module.exports = function (settingsColorString, settingsIndexColor, settingsRege
                 // false match prevention
                 let substring = settingsColorString.substring(start, end).match(regexColorMatch)
                 if(substring){
-                    tempOut[tempString[i]] = Number(substring[0])
+                    tempOut[tempString[i]] = substring[0]
                 }
             }
-        
-            return tempOut 
+            
+            return (tempOut) ? tempOut : false 
         }
     }
 

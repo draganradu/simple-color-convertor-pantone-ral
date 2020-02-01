@@ -10,7 +10,7 @@ class color {
   constructor (settingsArg = {}) {
 
     // get settings
-    this.settings = this.sanitizeForHex(_clone(settingsArg))
+    this.settings = this.sanitizeAlternativeKeys(_clone(settingsArg))
     this.debug    = settingsArg.debug || false 
     this.error    = ''
     this.grayscale = this.settings.grayscale || false
@@ -67,11 +67,25 @@ class color {
       return false
   }
 
-  sanitizeForHex(settings){
-    if (settings.hasOwnProperty('hex') && _colorSanitizer.hex(settings.hex)){
-      settings['hex' + _colorSanitizer.hex(settings.hex).length] = settings.hex
-      delete settings.hex
+  sanitizeAlternativeKeys (settings) {
+    let clean = {
+      removeKey:'',
+      setKey: '',
     }
+
+    if (settings.hasOwnProperty('hex') && _colorSanitizer.hex(settings.hex)){
+      clean.removeKey = 'hex'
+      clean.setKey = 'hex' + _colorSanitizer.hex(settings.hex).length
+    } else if (settings.hasOwnProperty('android') && _colorSanitizer.hex(settings.android)){
+      clean.removeKey = 'android'
+      clean.setKey = 'hex' + _colorSanitizer.hex(settings.android).length
+    }
+
+    if (clean.setKey && clean.removeKey ) {
+      settings[clean.setKey] = settings[clean.removeKey]
+      delete settings[clean.removeKey]
+    }
+
     return settings
   }
 
@@ -98,7 +112,6 @@ class color {
 
   sanitizeFrom(settings) {
     // filter flags
-    
     let parameters = this.sanitizeExceptionsFrom(Object.keys(settings))
     
     if ( parameters.indexOf('grayscale') > -1 && typeof settings.grayscale === 'boolean' &&  parameters.length > 1 ) {
@@ -145,22 +158,15 @@ class color {
   sanitizeExceptionsTo(to){
     const listOfExceptions = {
       hex: 'hex6',
+      android: 'hex8',
+      decimal: 'rgbdecimal',
+      web: 'hex3',
+      websafe: 'hex3',
     }
     if(listOfExceptions.hasOwnProperty(to)){
       return listOfExceptions[to]
     } 
     return to
-  }
-
-  toException(to){
-    const exceptionList = {
-      hex: 'hex6',
-    };
-
-    if(exceptionList.hasOwnProperty(to)){
-      return exceptionList[to]
-    } 
-    return to;
   }
 
   sanitizeTo(from, to) {

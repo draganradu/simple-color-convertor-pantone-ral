@@ -128,6 +128,9 @@ All this values yeld the same result.
 | color     |  'r153g238b153a0.99'          |  rgb    |
 | color     |  'a 0.99 g 238 r 153 b 153'   |  rgb    |
 | color     |  'g238b153a0.99r153'          |  rgb    |
+| color     |  'rgb 16711690'               |  rgbdecimal  |
+| color     |  'RGB 16711690'               |  rgbdecimal  |
+| color     |  '16711690'                   |  rgbdecimal  |
 | color     |  'w 544'                      |  w      |
 | color     |  'W 544'                      |  w      |
 | color     |  'W544'                       |  w      |

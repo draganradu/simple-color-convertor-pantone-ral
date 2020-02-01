@@ -165,6 +165,17 @@ const testData = [
     [{color: { c: 0, m: 16, y: 26, k: 21 }, to: 'rgb', hexref: true }, { r: 201, g: 169, b: 149 }],
     [{color: ' cmyk 0 16 26 21 ', to: 'rgb', hexref: true }, { r: 201, g: 169, b: 149 }],
     [{color: ' c: 0, m: 16, y: 26, k: 21 ', to: 'rgb', hexref: true }, { r: 201, g: 169, b: 149 }],
+    [{color: 'rgb 0 0 10', to: 'rgbdecimal'}, 10 ],
+    [{color: 'rgb 255 0 10', to: 'rgbdecimal'}, 16711690 ],
+    [{color: '10', to: 'rgb'}, { r: 230, g: 230, b: 230 } ],
+    [{color: '50', to: 'rgb'}, { r: 128, g: 128, b: 128 } ],
+    [{color: '99', to: 'rgb'}, { r: 3, g: 3, b: 3 } ],
+    [{color: 'rgb 10', to: 'rgb'}, { r: 0, g: 0, b: 10 } ],
+    [{color: 'rgb 599996', to: 'rgb'}, { r: 9, g: 39, b: 188 } ],
+    [{color: '599996', to: 'rgb'}, { r: 89, g: 153, b: 150 } ],
+    [{android: '59999681', to: 'rgb'}, { r: 45, g: 77, b: 76 } ],
+    [{color: '59999681', to: 'rgb'}, { r: 45, g: 77, b: 76 } ],
+    [{color: 'android 59999681', to: 'rgb'}, { r: 45, g: 77, b: 76 } ],
     // [{color: ' c: 0, m: 16, y: 26, ', to: 'rgb', hexref: true }, { r: 77, g: 56, b: 56 }], // ------------------ this is a problem it returns HSL not cmy(k)
     [{color: ' c: 0, m: 16, y: 26, k: 21 ', to: 'rgb', hexref: true }, { r: 201, g: 169, b: 149 }],
     [{color: ' c: 0, m: 16,  k: 21, y: 26,', to: 'rgb', hexref: true }, { r: 201, g: 169, b: 149 }],
@@ -207,17 +218,25 @@ const testData = [
     [{hex4: 'fff0', to: 'rgba', hexref: true},  { r: 255, g: 255, b: 255, a: 0 } ],
     [{hex: 'fff', to: 'hex4', hexref: true},  'FFFF' ],
     [{hex: '123456', to: 'hsv', hexref: true},  { h: 210, s: 79.06976744186048, v: 33.72549019607843 } ],
+    [{color: 'greenb', to: 'hex3'}, '000' ],
+    [{color: 'rgb 50% 25 10', to: 'hex3'}, '710' ],
+    [{color: 'rgb 50% 25 10', to: 'hex6'}, '7F190A' ],
+    [{color: 'rgb 50% 25 10', to: 'yuv'}, { y: 62.3475, u: 106.245, v: 174.0625 } ],
+    [{yuv: { y: 62.3475, u: 106.245, v: 174.0625 }, to: 'rgb'}, { r: 127, g: 25, b: 9 } ],
 
     // cmyk
     [{color: 'cmyk 39 0 39 7', to: 'hex3'}, '9E9' ],
+    [{color: 'cmyk 39% 0 39% 0.07', to: 'hex3'}, '9E9' ],
     [{color: 'c 39 m 0 y 39 k 7', to: 'hex3'}, '9E9' ],
     [{color: 'c: 39 m: 0 y: 39 k: 7', to: 'hex3'}, '9E9' ],
+    [{color: 'c: 0.39 m: 0 y: .39 k: 7%', to: 'hex3'}, '9E9' ],
     [{color: 'y: 39 c: 39 m: 0 k: 7', to: 'hex3'}, '9E9' ],
     [{color: '39 0 39 7', to: 'hex3'}, '9E9' ],
 
     // grayscale
     [{color: '21', to: 'hex3'}, 'CCC' ],
     [{color: '21%', to: 'hex3'}, 'CCC' ],
+    [{color: '.21', to: 'hex3'}, 'CCC' ],
     [{color: 'g 21', to: 'hex3'}, 'CCC' ],
     [{color: 'g 21%', to: 'hex3'}, 'CCC' ],
     [{color: 'grayscale 21%', to: 'hex3'}, 'CCC' ],
@@ -349,12 +368,19 @@ const testData = [
     [{color: '153 238 153', to: 'hex3'}, '9E9' ],
     [{color: 'rgb 153 238 153', to: 'hex3'}, '9E9' ],
     [{color: 'RGB 153 238 153', to: 'hex3'}, '9E9' ],
+    [{color: 'RGB 60% 93% 60%', to: 'hex3'}, '9E9' ],
+    [{color: 'RGB 0.6 0.93 0.6', to: 'hex3'}, '9E9' ],
+    [{color: 'RGB .6 .93 0.6', to: 'hex3'}, '9E9' ],
     [{color: 'r 153 g 238 b 153', to: 'hex3'}, '9E9' ],
     [{color: 'r:153, g:238, b:153', to: 'hex3'}, '9E9' ],
     [{color: 'R 153 G 238 B 153', to: 'hex3'}, '9E9' ],
+    [{color: 'R 60% G 93% B 60%', to: 'hex3'}, '9E9' ],
+    [{color: 'R .6 G 93% B 0.60', to: 'hex3'}, '9E9' ],
     [{color: 'r153g238b153', to: 'hex3'}, '9E9' ],
     [{color: 'g 238 r 153 b 153', to: 'hex3'}, '9E9' ],
+    [{color: 'R60%G93%B153', to: 'hex3'}, '9E9' ],
     [{color: 'g238b153r153', to: 'hex3'}, '9E9' ],
+    [{color: 'r.6 g.93 b.6', to: 'hex3'}, '9E9' ],
 
     // rgba
     [{color: '153 238 153 0.99', to: 'hex3'}, '9E9' ],
@@ -366,7 +392,17 @@ const testData = [
     [{color: 'r153g238b153a0.99', to: 'hex3'}, '9E9' ],
     [{color: 'a 0.99 g 238 r 153 b 153', to: 'hex3'}, '9E9' ],
     [{color: 'g238b153a0.99r153', to: 'hex3'}, '9E9' ],
-
+    
+    // rgbdecimal
+    [{color: 'rgb 16711690', to: 'rgb'}, { r: 255, g: 0, b: 10 } ],
+    [{color: 'RGB 16711690', to: 'rgb'}, { r: 255, g: 0, b: 10 } ],
+    [{color: 'decimal 16711690', to: 'rgb'}, { r: 255, g: 0, b: 10 } ],
+    [{color: 'Decimal 16711690', to: 'rgb'}, { r: 255, g: 0, b: 10 } ],
+    [{color: 'rgb Decimal 16711690', to: 'rgb'}, { r: 255, g: 0, b: 10 } ],
+    [{color: 'rgbDecimal 16711690', to: 'rgb'}, { r: 255, g: 0, b: 10 } ],
+    [{color: 'rgb 10', to: 'rgb'}, { r: 0, g: 0, b: 10 } ],
+    
+    
     // w
     [{color: 'w 544', to: 'hex3'}, '7F0' ],
     [{color: 'W 544', to: 'hex3'}, '7F0' ],
@@ -381,9 +417,23 @@ const testData = [
     [{color: 'Y: 70.22128357404782 X: 49.4611741415593, Z: 41.084178431412276', to: 'hex3'}, '9E9' ],
     [{color: 'x49.4611741415593y70.22128357404782z41.084178431412276', to: 'hex3'}, '9E9' ],
 
+    // yuv
+    [{color: 'yuv 49.4611741415593 70.22128357404782 41.084178431412276', to: 'hex3'}, '068' ],    
+    [{color: 'yuv 49.4 70.2 41.0', to: 'hex3'}, '068' ],  
+    [{color: 'y 49.4 u 70.2 v 41.0', to: 'hex3'}, '068' ], 
+    [{color: 'y: 49.4 u: 70.2 v:41.0', to: 'hex3'}, '068' ], 
+    [{color: 'y/49.4 u/70.2 v/41.0', to: 'hex3'}, '068' ], 
+    [{color: 'y49.4 | u70.2 | v41.0', to: 'hex3'}, '068' ], 
+    
     // test
 
-    
+    [{ hex8: '#00ffee12', to:'android'}, '00FFEE12'],
+    [{ hex8: '#00ffee12', to:'rgbdecimal'}, 4625],
+    [{ hex8: '#00ffee12', to:'decimal'}, 4625],
+    [{ hex8: '#00ffee12', to:'decimal', grayscale: true}, 855309],
+    [{ hex8: '#00ffee12', to:'web'}, '011'],
+    [{ hex8: '#00ffee12', to:'webSafe'}, '011'],
+    [{ color: 'rgb 50 60', to:'webSafe'}, '011'],
 ]
 
 

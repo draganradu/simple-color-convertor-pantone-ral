@@ -14,8 +14,10 @@ class AcceptedColors {
         this.ral = {}
         this.rgb = {}
         this.rgba = {}
+        this.rgbdecimal = {}
         this.w = {}
         this.xyz = {}
+        this.yuv = {}
     }
 }
 

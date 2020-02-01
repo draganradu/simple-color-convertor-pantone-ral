@@ -15,7 +15,8 @@ const colorConvertor = new AcceptedColors()
 
 colorConvertor.keys = Object.keys(colorConvertor)
 
-colorConvertor.keysFilterd = _removeFromArray(colorConvertor.keys,['ral', 'pantone', 'grayscale', 'hex3', 'hex4', 'rgba'])
+// remove final destination colors
+colorConvertor.keysFilterd = _removeFromArray(colorConvertor.keys,['ral', 'rgbdecimal' , 'pantone', 'grayscale', 'hex3', 'hex4', 'rgba', 'yuv'])
 
 function splitCamelCase(name){
     return name.replace(/([A-Z])/g, ' $1').trim()
@@ -32,6 +33,11 @@ function doubleString(string){
         temp += string[index] + string[index]
     }
     return temp.toUpperCase()
+}
+
+function makeNumeric(inputNumber){
+    const temp = parseInt(inputNumber)
+    return isNaN(temp) ? 0 : temp
 }
 
 // 1 | --- CMYK ---------------------------------------------------------
@@ -302,10 +308,6 @@ colorConvertor.ral.lab = function (ral) {
 
 // 13 | --- rgb -----------------------------------------------------
 colorConvertor.rgb.hex6 = function (rgb) {
-    function makeNumeric(inputNumber){
-        return isNaN(parseInt(inputNumber)) ? 0 : parseInt(inputNumber)
-    }
-
     function rgbNormalize (color) {
         color = makeNumeric(color)
 
@@ -445,6 +447,10 @@ colorConvertor.rgb.cmyk = function (rgb){
     return cmyk
 }
 
+colorConvertor.rgb.rgbdecimal = function(rgb){
+    return (rgb.r << 16) + (rgb.g << 8) + (rgb.b);
+}
+
 colorConvertor.rgb.html = function(rgb){
     let temp = {
         index: 768,
@@ -479,7 +485,15 @@ colorConvertor.rgb.xyz = function(rgb) {
         y: rgb.r * 0.2126 + rgb.g * 0.7152 + rgb.b * 0.0722, 
         z: rgb.r * 0.0193 + rgb.g * 0.1192 + rgb.b * 0.9505
     }
+}
 
+colorConvertor.rgb.yuv = function(rgb) {
+    let yuv = { y: 0, u: 0, v:0 }
+    yuv.y = (0.257 * rgb.r) + (0.504 * rgb.g) + (0.098 * rgb.b) + 16
+    yuv.u = (-0.148 * rgb.r) - (0.291 * rgb.g) + (0.439 * rgb.b) + 128
+    yuv.v = (0.439 * rgb.r) - (0.368 * rgb.g) - (0.071 * rgb.b) + 128
+
+    return yuv
 }
 
 // 14 | --- rgba -----------------------------------------------------
@@ -492,6 +506,17 @@ colorConvertor.rgba.rgb = function(rgba){
 
     return temp
 }
+
+// 14 | --- rgbdecimal -----------------------------------------------------
+
+colorConvertor.rgbdecimal.rgb = function (RGBdecimal) {
+    return {
+        r: (RGBdecimal & 0xff0000) >> 16, 
+        g: (RGBdecimal & 0x00ff00) >> 8, 
+        b: (RGBdecimal & 0x0000ff)
+    }
+}
+
 
 // 15 | --- w -----------------------------------------------------
 colorConvertor.w.rgb = function(w) {
@@ -537,6 +562,19 @@ colorConvertor.xyz.lab = function(xyz) {
         l: Math.max(0, 116 * y - 16), 
         a: 500 * (x - y), 
         b: 200 * (y - z)
+    }
+}
+
+// 16 | --- YUV -----------------------------------------------------
+
+colorConvertor.yuv.rgb = function(yuv) {  
+    yuv.y -= 16
+    yuv.u -= 128
+    yuv.v -= 128
+    return {
+        r: Math.round( 1.164 * yuv.y + 1.596 * yuv.v ),
+        g: Math.round( 1.164 * yuv.y - 0.392 * yuv.u - 0.813 * yuv.v),
+        b: Math.round( 1.164 * yuv.y + 2.017 * yuv.u )
     }
 }
 

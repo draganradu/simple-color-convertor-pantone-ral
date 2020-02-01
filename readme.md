@@ -53,8 +53,10 @@ Expected output value list [[here]](https://github.com/draganradu/simple-color-c
 | ral   | { ral : 6019 } | | 'ral 6019'|
 | rgb | { r: 144, g: 238, b: 144 } | [144, 238, 144] | 'rgb 144 238 144'|
 | rgba | { r: 144, g: 238, b: 144, a: 1 } | [144, 238, 144, 1] | 'rgba 144 238 144 1'|
+| rgb decimal | | | 'rgb decimal 6812065' | 
 | w | { r: 144, g: 238, b: 144, a: 1 } | [144, 238, 144, 1] | 'w 544' |
-| xyz | { x: 44, g: 69, b: 45 } | [44, 69, 45] | 'xyz 44 69 45' |
+| xyz | { x: 44, y: 69, z: 45 } | [44, 69, 45] | 'xyz 44 69 45' |
+| yuv | { y: 180, u: 113.2, v: 73.5 } | [ 180, 113.2, 73.5 ] | 'yuv 180 113.2 73.5' |
 
 # From
 Any of the colors mentioned above. You can specify the color and it will be faster of just use the built in color detector.
@@ -75,6 +77,12 @@ var slowerColor = new simpleColorConverter({
 })
 
 ```
+
+| Extra From colors         |  note         |
+| ---                       |  ---          |
+| color                     |  Autoidentify color         |
+| hex                       |  Autoidentify hex color         |
+| android                   |  hex8         |
 
 # Flags
 **flags** are the arguments used for special modifiers. The most useful one is rendering grayscale color, but there is a debugger and a hexref flag created if you need to convert a color but also output a close hex similar color(in case of online color convertors).
@@ -97,6 +105,15 @@ console.log(color) // { c: 0, m: 0, y: 0, k: 87 }
 | hexref    | Reference value in hex format         | boolean       | false          | For Hex it equels Hex6 |
 | debug     | this prevents the object cleanup      | boolean       | false          |       |
 
+
+## Contribute
+If there are any features you would like to support, or want to add it directly please send us a pull request. I`m more then happy. 
+
+If you have any suggestions or you spotted an aberrant behavior or bugs, don't hesitate to send me an email. 
+  
+## License
+
+Copyright © 2019, Radu Dragan. Licensed under the [MIT License](https://github.com/draganradu/simple-color-convertor-pantone-ral/blob/master/LICENSE).
 
 ## Thank you
 
