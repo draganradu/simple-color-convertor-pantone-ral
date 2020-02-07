@@ -434,7 +434,7 @@ const testData = [
     [{ hex8: '#00ffee12', to:'decimal', grayscale: true}, 855309],
     [{ hex8: '#00ffee12', to:'web'}, '011'],
     [{ hex8: '#00ffee12', to:'webSafe'}, '011'],
-    [{ color: 'rgb 50 60', to:'webSafe'}, '011'],
+    [{ color: 'rgb 50 60', to:'webSafe'}, {}],
 ]
 
 
