@@ -2,9 +2,7 @@
 // const deltaE        = require('../compare_colors/deltaE_CIEDE2000A.js')
 const deltaE        = require('../compare_colors/deltaE_CIE76.js')
 
-const htmlPattern   = require('../color_list/html.json')
-const pantonePattern= require('../color_list/pantone.json')
-const ralPattern    = require('../color_list/ral.json')
+const { html, pantone, ral } = require('color_library')
 const AcceptedColors = require('./_accepted_colors')
 
 const _removeFromArray = require('../_components/frame/_remove_array_from_array')
@@ -123,8 +121,8 @@ colorConvertor.hex8.rgba = function (hex8) {
 }
 
 // 7 | --- html  -----------------------------------------------------
-colorConvertor.html.rgb = function(html){
-    return PullDataFromList(htmlPattern, 'rgb', html )
+colorConvertor.html.rgb = function(htmlInput){
+    return PullDataFromList(html, 'rgb', htmlInput )
 }
 
 // 8 | --- hsl -----------------------------------------------------
@@ -213,12 +211,12 @@ colorConvertor.lab.pantone = function(labOrigin){
         name: '',
     }
 
-    for(let pantone in pantonePattern){
+    for(let elementPantone in pantone){
        
-        let t = deltaE(pantonePattern[pantone].lab, lab)
+        let t = deltaE(pantone[elementPantone].lab, lab)
         if(t < temp.index){
             temp.index = t
-            temp.name = pantonePattern[pantone].name
+            temp.name = pantone[elementPantone].name
             if(temp.index === 1) {
                 return temp.name
             }
@@ -231,28 +229,28 @@ colorConvertor.lab.pantone = function(labOrigin){
 colorConvertor.lab.ral = function (lab){
     let temp = {
         index: 768,
-        position: ralPattern.length - 1
+        position: ral.length - 1
     }
    
-    for(let ral in ralPattern){
-        let t = deltaE(ralPattern[ral].lab, lab)
+    for(let elementRal in ral){
+        let t = deltaE(ral[elementRal].lab, lab)
         if(t < temp.index){
             temp.index = t
-            temp.position = ral
+            temp.position = elementRal
             if(temp.index === 0) {
                 return { 
-                    ral: ralPattern[temp.position].ral,
-                    name: splitCamelCase(ralPattern[temp.position].name), 
-                    lrv: ralPattern[temp.position].LRV,
+                    ral: ral[temp.position].ral,
+                    name: splitCamelCase(ral[temp.position].name), 
+                    lrv: ral[temp.position].LRV,
                 }
             }
         } 
     }
 
     return { 
-        ral: ralPattern[temp.position].ral,
-        name: splitCamelCase(ralPattern[temp.position].name), 
-        lrv: ralPattern[temp.position].LRV,
+        ral: ral[temp.position].ral,
+        name: splitCamelCase(ral[temp.position].name), 
+        lrv: ral[temp.position].LRV,
     }
 }
 
@@ -281,29 +279,29 @@ colorConvertor.lab.rgb = function (lab) {
 }
 
 // 11 | --- Pantone -----------------------------------------------------
-colorConvertor.pantone.rgb = function (pantone) {
-    return PullDataFromList(pantonePattern, 'rgb', pantone )
+colorConvertor.pantone.rgb = function (pantoneInput) {
+    return PullDataFromList(pantone, 'rgb', pantoneInput )
 }
 
-colorConvertor.pantone.cmyk = function (pantone) {
-    return PullDataFromList(pantonePattern, 'cmyk', pantone )
+colorConvertor.pantone.cmyk = function (pantoneInput) {
+    return PullDataFromList(pantone, 'cmyk', pantoneInput )
 }
 
-colorConvertor.pantone.lab = function (pantone) {
-    return PullDataFromList(pantonePattern, 'lab', pantone )
+colorConvertor.pantone.lab = function (pantoneInput) {
+    return PullDataFromList(pantone, 'lab', pantoneInput )
 }
 
 // 12 | --- Ral -----------------------------------------------------
-colorConvertor.ral.rgb = function (ral) {
-    return PullDataFromList(ralPattern, 'rgb', ral, 'ral')
+colorConvertor.ral.rgb = function (ralInput) {
+    return PullDataFromList(ral, 'rgb', ralInput, 'ral')
 }
 
-colorConvertor.ral.cmyk = function (ral) {
-    return PullDataFromList(ralPattern, 'cmyk', ral, 'ral')
+colorConvertor.ral.cmyk = function (ralInput) {
+    return PullDataFromList(ral, 'cmyk', ralInput, 'ral')
 }
 
-colorConvertor.ral.lab = function (ral) {
-    return PullDataFromList(ralPattern, 'lab', ral, 'ral')
+colorConvertor.ral.lab = function (ralInput) {
+    return PullDataFromList(ral, 'lab', ralInput, 'ral')
 }
 
 // 13 | --- rgb -----------------------------------------------------
@@ -457,11 +455,11 @@ colorConvertor.rgb.html = function(rgb){
         html: '',
     }
 
-    for(let html in htmlPattern){
-        let t = Math.abs(htmlPattern[html].rgb.r - rgb.r ) + Math.abs(htmlPattern[html].rgb.g - rgb.g ) + Math.abs(htmlPattern[html].rgb.b - rgb.b )
+    for(let elementHtml in html){
+        let t = Math.abs(html[elementHtml].rgb.r - rgb.r ) + Math.abs(html[elementHtml].rgb.g - rgb.g ) + Math.abs(html[elementHtml].rgb.b - rgb.b )
         if(t < temp.index){
             temp.index = t
-            temp.html = splitCamelCase(htmlPattern[html].name)
+            temp.html = splitCamelCase(html[elementHtml].name)
             if(temp.index === 0) {
                 return temp.html
             }

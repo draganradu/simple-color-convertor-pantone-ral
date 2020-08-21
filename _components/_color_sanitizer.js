@@ -1,7 +1,5 @@
+const { html, pantone, ral } = require('color_library')
 const ReindexColor = require('../_components/_color_reindex')
-const htmlPattern = require('../color_list/html.json')
-const ralPattern = require('../color_list/ral.json')
-const pantonePattern = require('../color_list/pantone.json')
 const AcceptedColors = require('./_accepted_colors')
 const _safeguard = require('./_color_safeguard')
 
@@ -147,10 +145,10 @@ colorSanitizer.hex8 = function (hex) {
 }
 
 // 7 | --- html  -----------------------------------------------------
-colorSanitizer.html = function (html) {
-    if (_safeguard(html,'html',colorSanitizer.keys)){
-        html = html.toLowerCase().replace(/html|[^a-z]/g,'')
-        var temp = htmlPattern.filter(a => a.name.toLowerCase() === html )
+colorSanitizer.html = function (htmlInput) {
+    if (_safeguard(htmlInput,'html',colorSanitizer.keys)){
+        htmlInput = htmlInput.toLowerCase().replace(/html|[^a-z]/g,'')
+        var temp = html.filter(a => a.name.toLowerCase() === htmlInput )
         return (temp.length > 0)? temp[0].name : false
     }
     return false
@@ -228,60 +226,60 @@ colorSanitizer.lab = function (lab) {
 }
 
 // 11 | --- Pantone -----------------------------------------------------
-colorSanitizer.pantone = function (pantone) {
-    function truePantone (pantone) {
-        pantone = pantone.toLowerCase()
-        const p_tempNumeric = Number(pantone.replace(/[^0-9]/g,''))
-        const p_isIndex = (pantone.indexOf('c') > -1 || pantone.indexOf('pantone') > -1)
+colorSanitizer.pantone = function (pantoneInput) {
+    function truePantone (pantoneInput) {
+        pantoneInput = pantoneInput.toLowerCase()
+        const p_tempNumeric = Number(pantoneInput.replace(/[^0-9]/g,''))
+        const p_isIndex = (pantoneInput.indexOf('c') > -1 || pantoneInput.indexOf('pantone') > -1)
         const p_isNumeric = p_tempNumeric >= 100 && p_tempNumeric <= 5875;
         return (p_isNumeric && p_isIndex)? `${p_tempNumeric}C` : false
     }
 
     // Check if variable is a numberic valid pantone
     let tempPantoneNumber = ''
-    if(typeof pantone === 'number') { 
+    if(typeof pantoneInput === 'number') { 
         return false // because it would interfere with hex
-    } else if (typeof pantone === 'string' && pantone.length >= 3 && _safeguard(pantone,'pantone',colorSanitizer.keys)) {
-        tempPantoneNumber = truePantone(pantone)
-    } else if(typeof pantone === 'object' && pantone.name && typeof pantone.name === 'string' && pantone.length >= 3){
-        tempPantoneNumber = truePantone(pantone.name)
+    } else if (typeof pantoneInput === 'string' && pantoneInput.length >= 3 && _safeguard(pantoneInput,'pantone',colorSanitizer.keys)) {
+        tempPantoneNumber = truePantone(pantoneInput)
+    } else if(typeof pantoneInput === 'object' && pantoneInput.name && typeof pantoneInput.name === 'string' && pantoneInput.length >= 3){
+        tempPantoneNumber = truePantone(pantoneInput.name)
     } 
 
     // Check if variable is a valid pantone list color
     if (tempPantoneNumber) {
-        const tempPantoneArray = pantonePattern.filter(a => a.name === tempPantoneNumber)
+        const tempPantoneArray = pantone.filter(a => a.name === tempPantoneNumber)
         return (tempPantoneArray.length === 1)?tempPantoneArray[0].name : false
     }
     return false
 }
 
 // 12 | --- Ral -----------------------------------------------------
-colorSanitizer.ral = function (ral) {
-    function isRalNumeric (ral) { return (ral >= 1000 && ral <= 9023 )? ral : false }
-    function isRalName (ral) { 
-        ral = ral.replace(/ral|[^a-z]/g,'')
-        if (ral.length >= 4) { return ral }
+colorSanitizer.ral = function (ralInput) {
+    function isRalNumeric (ralInput) { return (ralInput >= 1000 && ralInput <= 9023 )? ralInput : false }
+    function isRalName (ralInput) { 
+        ralInput = ralInput.replace(/ral|[^a-z]/g,'')
+        if (ralInput.length >= 4) { return ralInput }
         return false
     }
     let temp = ''
-    if(typeof ral === 'number' && isRalNumeric(ral)) {
+    if(typeof ralInput === 'number' && isRalNumeric(ralInput)) {
         // pass ral as numeric value ral {3009}
-        ral = {
-            ral: `${ral}`
+        ralInput = {
+            ral: `${ralInput}`
         }
-    } else if (typeof ral === 'string' && ral.indexOf('ral') > -1) {
-        let ralFilterName = isRalName(ral)
-        let ralFilterNumber = isRalNumeric(makeInt(ral.replace(/[^0-9]/g,'')))
+    } else if (typeof ralInput === 'string' && ralInput.indexOf('ral') > -1) {
+        let ralFilterName = isRalName(ralInput)
+        let ralFilterNumber = isRalNumeric(makeInt(ralInput.replace(/[^0-9]/g,'')))
 
-        temp = (ralFilterName || ralFilterNumber ) ? ralPattern.filter( a => a.name.toLowerCase() === ralFilterName || a.ral === ralFilterNumber) : false
+        temp = (ralFilterName || ralFilterNumber ) ? ral.filter( a => a.name.toLowerCase() === ralFilterName || a.ral === ralFilterNumber) : false
 
-    } else if(typeof ral === 'object' && !ral.ral && ral.name && typeof ral.name === 'string'){
+    } else if(typeof ralInput === 'object' && !ralInput.ral && ralInput.name && typeof ralInput.name === 'string'){
         // pass ral as name value ral { ral: { name: 'oxide red', lrv: 5 }, 
-        ral.name = isRalName(ral.name)
-        temp = (ral.name) ? ralPattern.filter( a => a.name === ral.name ) : false
+        ralInput.name = isRalName(ralInput.name)
+        temp = (ralInput.name) ? ral.filter( a => a.name === ralInput.name ) : false
     } else  {
         // default normal value { ral: { ral: 3009, name: 'oxide red', lrv: 5 }, 
-        temp = ralPattern.filter( a => a.ral === ral.ral )
+        temp = ral.filter( a => a.ral === ralInput.ral )
     }
 
     return temp.length ? temp[0].ral : false
