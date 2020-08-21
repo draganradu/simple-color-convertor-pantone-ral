@@ -1,3 +1,4 @@
+'use strict'
 const _colorFactory   = require('./_components/_color_paint_factory')
 const _colorSanitizer = require('./_components/_color_sanitizer')
 const _colorTell      = require('./_components/_color_tell')

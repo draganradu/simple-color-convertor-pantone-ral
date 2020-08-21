@@ -1,6 +1,6 @@
 {
   "name": "simple-color-converter",
-  "version": "2.1.6",
+  "version": "2.1.7",
   "description": "This is a simple colors converter, works for almost any color. Has a built in color identifier for convertin strings to color. Supported convert colors: from and to CMYK, grayscale, hex3, hex4, hex6, hex8, html, hsl, hsv, lab, pantone, ral, rgb, rgba, rgba decimal, wavelength, xyz, yuv.",
   "keywords": [
     "color",

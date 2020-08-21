@@ -1,6 +1,4 @@
-// const deltaE        = require('../compare_colors/deltaE_CIEDE2000.js')
-// const deltaE        = require('../compare_colors/deltaE_CIEDE2000A.js')
-const deltaE        = require('../compare_colors/deltaE_CIE76.js')
+const deltaE        = require('../_components/compare_deltaE_CIE76.js')
 
 const { html, pantone, ral } = require('color_library')
 const AcceptedColors = require('./_accepted_colors')
