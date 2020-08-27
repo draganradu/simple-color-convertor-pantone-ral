@@ -10,8 +10,8 @@ const colorConvertor = require("../simple_color_converter")
 // });
 
 
-var list = {
-    color: 'rgb 50 60', 
+constlist = {
+    color: 'rgb 50 60 80', 
     to: 'rgb',
     hexref: true    
 }

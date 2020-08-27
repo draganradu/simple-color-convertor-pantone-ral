@@ -1,4 +1,4 @@
-![build passing](https://travis-ci.org/draganradu/simple-color-convertor-pantone-ral.svg?branch=master) ![License](https://img.shields.io/npm/l/simple-color-converter) ![maintained](https://img.shields.io/maintenance/yes/2019) ![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/simple-color-converter) 
+![build passing](https://travis-ci.org/draganradu/simple-color-convertor-pantone-ral.svg?branch=master) ![License](https://img.shields.io/npm/l/simple-color-converter) ![maintained](https://img.shields.io/maintenance/yes/2020) ![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/simple-color-converter) 
 ![Node Version](https://img.shields.io/node/v/simple-color-converter) ![NPM](https://img.shields.io/npm/v/simple-color-converter) 
 ![size NPM](https://img.shields.io/bundlephobia/min/simple-color-converter)  ![size Git](https://img.shields.io/github/languages/code-size/draganradu/simple-color-convertor-pantone-ral) 
 ![Release](https://img.shields.io/github/release-date/draganradu/simple-color-convertor-pantone-ral)  ![Commit](https://img.shields.io/github/last-commit/draganradu/simple-color-convertor-pantone-ral) 
@@ -24,7 +24,7 @@ $ npm install simple-color-converter
 ```javascript
 const simpleColorConverter = require('simple-color-converter');
 
-var color = new simpleColorConverter({
+let color = new simpleColorConverter({
     ral: { ral: 3009 }, 
     to: 'cmyk'
 })
@@ -64,14 +64,14 @@ Any of the colors mentioned above. You can specify the color and it will be fast
 ```javascript
 
 // faster
-var fasterColor = new simpleColorConverter({
+let fasterColor = new simpleColorConverter({
     rgb: {r: 10, g: 200, b: 50}, 
     to: 'cmyk'
 })
 
 // slower but more convenient
 
-var slowerColor = new simpleColorConverter({
+let slowerColor = new simpleColorConverter({
     color: 'rgb 10 200 50', 
     to: 'cmyk'
 })
@@ -90,7 +90,7 @@ var slowerColor = new simpleColorConverter({
 ```javascript
 const simpleColorConverter = require('simple-color-converter');
 
-var color = simpleColorConverter({
+let color = simpleColorConverter({
     hex3: '#228', 
     to: 'cmyk', 
     grayscale: true 

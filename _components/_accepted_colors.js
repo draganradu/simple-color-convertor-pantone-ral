@@ -19,6 +19,10 @@ class AcceptedColors {
         this.xyz = {}
         this.yuv = {}
     }
+
+    get keysa () {
+        return Object.keys(this)
+    }
 }
 
 module.exports = AcceptedColors;

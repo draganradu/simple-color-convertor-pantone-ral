@@ -24,7 +24,7 @@ const tester = function (input, output) {
     return temp
 } 
 
-var settings = {
+let settings = {
     pass: 0,
     fail: 0,
     total: 0, 

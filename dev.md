@@ -16,7 +16,7 @@ run arhitecture test
 npm run arhitecture
 ```
 
-# Dec test
+# Dev test
 
 run dev test
 ```

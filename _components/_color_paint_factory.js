@@ -7,12 +7,9 @@ const _removeFromArray = require('../_components/frame/_remove_array_from_array'
 
 const colorConvertor = new AcceptedColors()
 
-// 0 | --- factory worker
-
-colorConvertor.keys = Object.keys(colorConvertor)
 
 // remove final destination colors
-colorConvertor.keysFilterd = _removeFromArray(colorConvertor.keys,['ral', 'rgbdecimal' , 'pantone', 'grayscale', 'hex3', 'hex4', 'rgba', 'yuv'])
+colorConvertor.keysFilterd = _removeFromArray(colorConvertor.keysa,['ral', 'rgbdecimal' , 'pantone', 'grayscale', 'hex3', 'hex4', 'rgba', 'yuv'])
 
 function splitCamelCase(name){
     return name.replace(/([A-Z])/g, ' $1').trim()

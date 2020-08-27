@@ -3,11 +3,14 @@ const ReindexColor = require('../_components/_color_reindex')
 const AcceptedColors = require('./_accepted_colors')
 const _safeguard = require('./_color_safeguard')
 
-var colorSanitizer = new AcceptedColors()
+let colorSanitizer = new AcceptedColors()
 colorSanitizer.keys = Object.keys(colorSanitizer).filter(i => ['isHex', 'hex', 'isHexVerbos'].indexOf(i) < 0);
+console.log(colorSanitizer.keys)
+colorSanitizer.keys = colorSanitizer.keysa
+console.log(colorSanitizer.keys)
 
 function requireProcentFix(a,b){
-    if(a <= 1 && a <= 1){
+    if(a <= 1 && b <= 1){
         return true
     }
     return false
@@ -148,7 +151,7 @@ colorSanitizer.hex8 = function (hex) {
 colorSanitizer.html = function (htmlInput) {
     if (_safeguard(htmlInput,'html',colorSanitizer.keys)){
         htmlInput = htmlInput.toLowerCase().replace(/html|[^a-z]/g,'')
-        var temp = html.filter(a => a.name.toLowerCase() === htmlInput )
+        let temp = html.filter(a => a.name.toLowerCase() === htmlInput )
         return (temp.length > 0)? temp[0].name : false
     }
     return false

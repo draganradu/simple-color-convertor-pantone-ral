@@ -54,8 +54,8 @@ if(process.argv.length === 3){
     stopAt = parseInt(process.argv[2]);
 }
 
-for(let a of factoryKeys){
-    for(let b of factoryKeys){
+for(const a of factoryKeys){
+    for(const b of factoryKeys){
         i++
 
         if (stopAt){ 
