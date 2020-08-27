@@ -1,56 +1,74 @@
+'use strict'
+
 module.exports = function (settingsColorString, settingsIndexColor, settingsRegexColorMatch){
     // stop if inposible due to legth
     if (settingsColorString.length < (settingsIndexColor.length + (settingsIndexColor.length -1))) { return false }
     // console.log(settingsColorString, settingsIndexColor, settingsRegexColorMatch)
 
-    let tempIndex = [] 
-    let tempString = []
-    let tempOut = {}
-    let regexColorMatch = new RegExp(settingsRegexColorMatch, 'g') || new RegExp('/(\d+)/', 'g')
+    const _this = {
+        tempOut: {},
+        regexColorMatch: new RegExp(settingsRegexColorMatch, 'g') || new RegExp('/(\d+)/', 'g'),
 
-    // perfect match
-    if(settingsColorString.indexOf(settingsIndexColor) > -1) {
-        tempOut = settingsColorString.match(regexColorMatch)
-        if(tempOut.length === settingsIndexColor.length){
-            return tempOut
-        }
-    } else {
-        // index of interpolated match
-        // build keys order
-        for (i = 0; i < settingsIndexColor.length; i++) {
-            tempString[settingsColorString.indexOf(settingsIndexColor[i])] = settingsIndexColor[i]
-            tempIndex.push(settingsColorString.indexOf(settingsIndexColor[i]))
-        }
+        get perfectMatch () {
+            return settingsColorString.indexOf(settingsIndexColor) > -1
+        },
 
-        // cleanup and sort
-        tempString = tempString.filter(function(e){ return e })
-        
-        if(tempString.length === settingsIndexColor.length){
-            tempIndex.sort()
-
-            // build object based on order
-            for (i = 0; i < tempString.length; i++) {
-                let start = settingsColorString.indexOf(tempString[i]) + 1 
-                let end = settingsColorString.indexOf(tempString[i + 1])
-                if (end < 0){ end = settingsColorString.length}
-                
-                // false match prevention
-                let substring = settingsColorString.substring(start, end).match(regexColorMatch)
-                if(substring){
-                    tempOut[tempString[i]] = Number(substring[0])
-                    if (isNaN(tempOut[tempString[i]])) { return false }
+        get partialMatch () {
+            let requerdLetters = settingsIndexColor.length
+            for (const i of settingsIndexColor) {
+                if (settingsColorString.indexOf(i) > -1) {
+                    requerdLetters --
                 }
             }
-            
-            return (tempOut) ? tempOut : false 
+
+            return requerdLetters == 0
+        },
+
+
+        get preventNoFormatReindex () {
+            if(settingsIndexColor === 'hsl' ||  settingsIndexColor === 'hsv') {
+                if(settingsColorString.indexOf('°') === -1){
+                    return false
+                }
+            }
+            return true
+        }
+    }
+    
+    if(_this.perfectMatch) {
+        // perfect match
+        _this.tempOut = settingsColorString.match(_this.regexColorMatch)
+        if(_this.tempOut.length === settingsIndexColor.length){
+            return _this.tempOut
+        }
+    } else if (_this.partialMatch){
+        // partial - runs unorderd reindex
+        for (const i of settingsIndexColor) {
+            const colorIndex = settingsColorString.indexOf(i) + 1
+            const match = settingsColorString.substring(colorIndex).match(_this.regexColorMatch)
+            if(match){
+                _this.tempOut[i] = match[0]
+            }
+        }
+        
+        return (_this.tempOut) ? _this.tempOut : false
+    } else if (_this.preventNoFormatReindex) {
+        // no match - orderd reindexing
+        const match = settingsColorString.match(_this.regexColorMatch)
+        if(match && match.length === settingsIndexColor.length){
+            for (let i = 0; i < settingsIndexColor.length; i++) {
+                _this.tempOut[settingsIndexColor[i]] = match[i]   
+            }
+
+            return _this.tempOut
         }
     }
 
-    // build posible array from empty space
-    if(settingsColorString.match(/[/, ]/g)){
-        const arrayOfPosibleColors = settingsColorString.replace(/[/,]/g,' ').split(' ').filter(function(e){return e})
-        return (arrayOfPosibleColors.length === settingsIndexColor.length) ? arrayOfPosibleColors : false
-    }
+    // // build posible array from empty space
+    // if(settingsColorString.match(/[/, ]/g)){
+    //     const arrayOfPosibleColors = settingsColorString.replace(/[/,]/g,' ').split(' ').filter(function(e){return e})
+    //     return (arrayOfPosibleColors.length === settingsIndexColor.length) ? arrayOfPosibleColors : false
+    // }
 
     return false
 }

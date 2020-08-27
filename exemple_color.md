@@ -1,163 +1,307 @@
-# Accepted Input
-All this values yeld the same result.
+# Accepted String Values. 
 
-| key       | value                         | note          |
-| ---       | ---                           | ---           |
-| color     |  '39 0 39 7'                  |  cmyk         |
-| color     |  'cmyk 39 0 39 7'             |  cmyk         |
-| color     |  'c 39 m 0 y 39 k 7'          |  cmyk         |
-| color     |  'c: 39 m: 0 y: 39 k: 7'      |  cmyk         |
-| color     |  'y: 39 c: 39 m: 0 k: 7'      |  cmyk         |
-| color     |  '21'                         |  grayscale    |
-| color     |  '21%'                        |  grayscale    |
-| color     |  'grayscale 21'               |  grayscale    |
-| color     |  'grayscale 21%'              |  grayscale    |
-| color     |  'g 21'                       |  grayscale    |
-| color     |  'g 21%'                      |  grayscale    |
-| color     |  'mono 21'                    |  grayscale    |
-| color     |  'mono 21%'                   |  grayscale    |
-| color     |  '9E9'                        |  hex3    |
-| color     |  '#9E9'                       |  hex3    |
-| color     |  '0x9E9'                      |  hex3    |
-| color     |  'Ox9E9'                      |  hex3    |
-| color     |  'hex 9E9'                    |  hex3    |
-| color     |  'hex #9E9'                   |  hex3    |
-| color     |  'hex 0x9E9'                  |  hex3    |
-| color     |  'hex Ox9E9'                  |  hex3    |
-| color     |  'hex3 9E9'                   |  hex3    |
-| color     |  'hex3 #9E9'                  |  hex3    |
-| color     |  'hex3 0x9E9'                 |  hex3    |
-| color     |  'hex3 Ox9E9'                 |  hex3    |
-| color     |  '9E9F'                       |  hex4    |
-| color     |  '#9E9F'                      |  hex4    |
-| color     |  '0x9E9F'                     |  hex4    |
-| color     |  'Ox9E9F'                     |  hex4    |
-| color     |  'hex 9E9F'                   |  hex4    |
-| color     |  'hex #9E9F'                  |  hex4    |
-| color     |  'hex 0x9E9F'                 |  hex4    |
-| color     |  'hex Ox9E9F'                 |  hex4    |
-| color     |  'hex4 9E9F'                  |  hex4    |
-| color     |  'hex4 #9E9F'                 |  hex4    |
-| color     |  'hex4 0x9E9F'                |  hex4    |
-| color     |  'hex4 Ox9E9F'                |  hex4    |
-| color     |  '99EE99'                     |  hex6    |
-| color     |  '#99EE99'                    |  hex6    |
-| color     |  '0x99EE99'                   |  hex6    |
-| color     |  'Ox99EE99'                   |  hex6    |
-| color     |  'hex 99EE99'                 |  hex6    |
-| color     |  'hex #99EE99'                |  hex6    |
-| color     |  'hex 0x99EE99'               |  hex6    |
-| color     |  'hex Ox99EE99'               |  hex6    |
-| color     |  'hex6 99EE99'                |  hex6    |
-| color     |  'hex6 #99EE99'               |  hex6    |
-| color     |  'hex6 0x99EE99'              |  hex6    |
-| color     |  'hex6 Ox99EE99'              |  hex6    |
-| color     |  '99EE99FF'                   |  hex8    |
-| color     |  '#99EE99FF'                  |  hex8    |
-| color     |  '0x99EE99FF'                 |  hex8    |
-| color     |  'Ox99EE99FF'                 |  hex8    |
-| color     |  'hex 99EE99FF'               |  hex8    |
-| color     |  'hex #99EE99FF'              |  hex8    |
-| color     |  'hex 0x99EE99FF'             |  hex8    |
-| color     |  'hex Ox99EE99FF'             |  hex8    |
-| color     |  'hex8 99EE99FF'              |  hex8    |
-| color     |  'hex8 #99EE99FF'             |  hex8    |
-| color     |  'hex8 0x99EE99FF'            |  hex8    |
-| color     |  'hex8 Ox99EE99FF'            |  hex8    |
-| color     |  'PaleGreen'                  |  html    |
-| color     |  'palegreen'                  |  html    |
-| color     |  'Pale Green'                 |  html    |
-| color     |  'pale green'                 |  html    |
-| color     |  'paleGreen'                  |  html    |
-| color     |  'pale-green'                 |  html    |
-| color     |  'pale_green'                 |  html    |
-| color     |  'pale%20green'               |  html    |
-| color     |  'lab 87.1 -42.2 33.2'        |  lab     |
-| color     |  'l 87.1 a -42.2 b 33.2'      |  lab     |
-| color     |  'l87.1a-42.2b33.2'           |  lab     |
-| color     |  'l87.1 a-42.2 b33.2'         |  lab     |
-| color     |  'L 87.1 A -42.2 B 33.2'      |  lab     |
-| color     |  'L: 87.1, A: -42.2, B: 33.2' |  lab     |
-| color     |  '87.1 -42.2 33.2'            |  lab     |
-| color     |  '87.1, -42.2, 33.2'          |  lab     |
-| color     |  '87.1; -42.2; 33.2'          |  lab     |
-| color     |  'a -42.2 l 87.1 b 33.2'      |  lab     |
-| color     |  'a-42.2l87.1b33.2'           |  lab     |
-| color     |  'h 120 s 71.4 l 76.7'        |  hsl     |
-| color     |  'H 120 S 71.4 L 76.7'        |  hsl     |
-| color     |  'H:120 S:71.4 L:76.7'        |  hsl     |
-| color     |  'H 120, S 71.4, L 76.7'      |  hsl     |
-| color     |  'H 120; S 71.4; L 76.7'      |  hsl     |
-| color     |  'h120s71.4l76.7'             |  hsl     |
-| color     |  's 71.4 h 120 l 76.7'        |  hsl     |
-| color     |  'h 120 s 36 v 93'            |  hsv     |
-| color     |  'H 120 S 36 V 93'            |  hsv     |
-| color     |  'h:120, s:36, v:93'          |  hsv     |
-| color     |  'h 120;s 36;v:93'            |  hsv     |
-| color     |  'v 93 h 120 s 36'            |  hsv     |
-| color     |  'h120s36v93'                 |  hsv     |
-| color     |  'pantone 358C'               |  pantone    |
-| color     |  'PANTONE 358C'               |  pantone    |
-| color     |  'pantone358C'                |  pantone    |
-| color     |  'Pantone:358C'               |  pantone    |
-| color     |  'P: 358C'                    |  pantone    |
-| color     |  '358C'                       |  pantone    |
-| color     |  'RAL 6019'                   |  ral    |
-| color     |  'ral 6019'                   |  ral    |
-| color     |  'Ral: 6019'                  |  ral    |
-| color     |  'ral6019'                    |  ral    |
-| color     |  'RAL Pastel Green'           |  ral    |
-| color     |  'ralPastelGreen'             |  ral    |
-| color     |  'ralpastelgreen'             |  ral    |
-| color     |  'ral:pastelgreen'            |  ral    |
-| color     |  '153 238 153'                |  rgb    |
-| color     |  'rgb 153 238 153'            |  rgb    |
-| color     |  'RGB 153 238 153'            |  rgb    |
-| color     |  'r 153 g 238 b 153'          |  rgb    |
-| color     |  'r:153 g:238 b:153'          |  rgb    |
-| color     |  'R 153 G 238 B 153'          |  rgb    |
-| color     |  'r153g238b153'               |  rgb    |
-| color     |  'g 238 r 153 b 153'          |  rgb    |
-| color     |  'g238b153r153'               |  rgb    |
-| color     |  '153 238 153 0.99'           |  rgb    |
-| color     |  'rgba 153 238 153 0.99'      |  rgb    |
-| color     |  'RGBA 153 238 153 0.99'      |  rgb    |
-| color     |  'r 153 g 238 b 153 a 0.99'   |  rgb    |
-| color     |  'r:153 g:238 b:153 a:0.99'   |  rgb    |
-| color     |  'R 153 G 238 B 153 A 0.99'   |  rgb    |
-| color     |  'r153g238b153a0.99'          |  rgb    |
-| color     |  'a 0.99 g 238 r 153 b 153'   |  rgb    |
-| color     |  'g238b153a0.99r153'          |  rgb    |
-| color     |  'rgb 16711690'               |  rgbdecimal  |
-| color     |  'RGB 16711690'               |  rgbdecimal  |
-| color     |  '16711690'                   |  rgbdecimal  |
-| color     |  'w 544'                      |  w      |
-| color     |  'W 544'                      |  w      |
-| color     |  'W544'                       |  w      |
-| color     |  '544w'                       |  w      |
-| color     |  'xyz 49.4611741415593 70.22128357404782 41.084178431412276'  |  xyz      |
-| color     |  'XYZ 49.4611741415593 70.22128357404782 41.084178431412276'  |  xyz      |
-| color     |  'x 49.4611741415593 y 70.22128357404782 z 41.084178431412276'  |  xyz      |
-| color     |  'Y: 70.22128357404782 X: 49.4611741415593, Z: 41.084178431412276'  |  xyz      |
-| color     |  'x49.4611741415593y70.22128357404782z41.084178431412276'  |  xyz      |
+|key|value|note|
+|---|---|---|
+| cmyk |'39 0 39 7'| cmyk |
+| cmyk |'39,0,39,7'| cmyk |
+| cmyk |'39|0|39|7'| cmyk |
+| cmyk |'39/0/39/7'| cmyk |
+| cmyk |'39;0;39;7'| cmyk |
+| cmyk |'cmyk 39 0 39 7'| cmyk |
+| cmyk |'cmYk 39 0 39 7'| cmyk |
+| cmyk |'39 0 39 7 cmyk'| cmyk |
+| cmyk |'c 39 m 0 y 39 k 7'| cmyk |
+| cmyk |'c: 39 m: 0 y: 39 k: 7'| cmyk |
+| cmyk |'y 39 c 39 m 0 k 7'| cmyk |
+| cmyk |'y: 39 c: 39 m: 0 k: 7'| cmyk |
+| cmyk |'cmyk(39 0 39 7)'| cmyk |
+| cmyk |'cmyk(39,0,39,7)'| cmyk |
+| cmyk |'cmyk(39;0;39;7)'| cmyk |
+| cmyk |'cmyk(39|0|39|7)'| cmyk |
+| cmyk |'cmyk(39/0/39/7)'| cmyk |
+| grayscale |'21'| grayscale |
+| grayscale |'21%'| grayscale |
+| grayscale |'grayscale 21'| grayscale |
+| grayscale |'21 grayscale'| grayscale |
+| grayscale |'g 21'| grayscale |
+| grayscale |'g 21%'| grayscale |
+| grayscale |'mono 21'| grayscale |
+| grayscale |'mono 21%'| grayscale |
+| hex3 |'9E9'| hex3 |
+| hex3 |'#9E9'| hex3 |
+| hex3 |'0x9E9'| hex3 |
+| hex3 |'Ox9E9'| hex3 |
+| hex3 |'hex3 9E9'| hex3 |
+| hex3 |'hex3 #9E9'| hex3 |
+| hex3 |'hex3 0x9E9'| hex3 |
+| hex3 |'hex3 Ox9E9'| hex3 |
+| hex3 |'hex 9E9'| hex3 |
+| hex3 |'hex 9E9'| hex3 |
+| hex3 |'hex #9E9'| hex3 |
+| hex3 |'hex 0x9E9'| hex3 |
+| hex3 |'hex Ox9E9'| hex3 |
+| hex3 |'hex39E9'| hex3 |
+| hex3 |'hex39E9'| hex3 |
+| hex3 |'hex3#9E9'| hex3 |
+| hex3 |'hex30x9E9'| hex3 |
+| hex3 |'hex3Ox9E9'| hex3 |
+| hex3 |'hex9E9'| hex3 |
+| hex3 |'hex#9E9'| hex3 |
+| hex3 |'hex0x9E9'| hex3 |
+| hex3 |'hexOx9E9'| hex3 |
+| hex3 |'hex3 9E9'| hex3 |
+| hex3 |'hex3 9E9'| hex3 |
+| hex3 |'hex3 #9E9'| hex3 |
+| hex3 |'hex3 0x9E9'| hex3 |
+| hex3 |'hex3 Ox9E9'| hex3 |
+| hex3 |'9E9 hex3'| hex3 |
+| hex3 |'#9E9 hex3'| hex3 |
+| hex3 |'0x9E9 hex3'| hex3 |
+| hex3 |'Ox9E9 hex3'| hex3 |
+| hex3 |'9E9 hex'| hex3 |
+| hex3 |'#9E9 hex'| hex3 |
+| hex3 |'0x9E9 hex'| hex3 |
+| hex3 |'Ox9E9 hex'| hex3 |
+| hex3 |'9E9hex3'| hex3 |
+| hex3 |'9E9hex3'| hex3 |
+| hex3 |'#9E9hex3'| hex3 |
+| hex3 |'0x9E9hex3'| hex3 |
+| hex3 |'Ox9E9hex3'| hex3 |
+| hex3 |'9E9hex'| hex3 |
+| hex3 |'#9E9hex'| hex3 |
+| hex3 |'0x9E9hex'| hex3 |
+| hex3 |'Ox9E9hex'| hex3 |
+| hex4 |'9E9F'| hex4 |
+| hex4 |'#9E9F'| hex4 |
+| hex4 |'0x9E9F'| hex4 |
+| hex4 |'Ox9E9F'| hex4 |
+| hex4 |'hex4 9E9F'| hex4 |
+| hex4 |'hex4 #9E9F'| hex4 |
+| hex4 |'hex4 0x9E9F'| hex4 |
+| hex4 |'hex4 Ox9E9F'| hex4 |
+| hex4 |'hex 9E9F'| hex4 |
+| hex4 |'hex 9E9F'| hex4 |
+| hex4 |'hex #9E9F'| hex4 |
+| hex4 |'hex 0x9E9F'| hex4 |
+| hex4 |'hex Ox9E9F'| hex4 |
+| hex4 |'hex49E9F'| hex4 |
+| hex4 |'hex49E9F'| hex4 |
+| hex4 |'hex4#9E9F'| hex4 |
+| hex4 |'hex40x9E9F'| hex4 |
+| hex4 |'hex4Ox9E9F'| hex4 |
+| hex4 |'hex9E9F'| hex4 |
+| hex4 |'hex#9E9F'| hex4 |
+| hex4 |'hex0x9E9F'| hex4 |
+| hex4 |'hexOx9E9F'| hex4 |
+| hex4 |'hex4 9E9F'| hex4 |
+| hex4 |'hex4 9E9F'| hex4 |
+| hex4 |'hex4 #9E9F'| hex4 |
+| hex4 |'hex4 0x9E9F'| hex4 |
+| hex4 |'hex4 Ox9E9F'| hex4 |
+| hex4 |'9E9F hex4'| hex4 |
+| hex4 |'#9E9F hex4'| hex4 |
+| hex4 |'0x9E9F hex4'| hex4 |
+| hex4 |'Ox9E9F hex4'| hex4 |
+| hex4 |'9E9F hex'| hex4 |
+| hex4 |'#9E9F hex'| hex4 |
+| hex4 |'0x9E9F hex'| hex4 |
+| hex4 |'Ox9E9F hex'| hex4 |
+| hex4 |'9E9Fhex4'| hex4 |
+| hex4 |'9E9Fhex4'| hex4 |
+| hex4 |'#9E9Fhex4'| hex4 |
+| hex4 |'0x9E9Fhex4'| hex4 |
+| hex4 |'Ox9E9Fhex4'| hex4 |
+| hex4 |'9E9Fhex'| hex4 |
+| hex4 |'#9E9Fhex'| hex4 |
+| hex4 |'0x9E9Fhex'| hex4 |
+| hex4 |'Ox9E9Fhex'| hex4 |
+| hex6 |'99EE99'| hex6 |
+| hex6 |'#99EE99'| hex6 |
+| hex6 |'0x99EE99'| hex6 |
+| hex6 |'Ox99EE99'| hex6 |
+| hex6 |'hex6 99EE99'| hex6 |
+| hex6 |'hex6 #99EE99'| hex6 |
+| hex6 |'hex6 0x99EE99'| hex6 |
+| hex6 |'hex6 Ox99EE99'| hex6 |
+| hex6 |'hex 99EE99'| hex6 |
+| hex6 |'hex 99EE99'| hex6 |
+| hex6 |'hex #99EE99'| hex6 |
+| hex6 |'hex 0x99EE99'| hex6 |
+| hex6 |'hex Ox99EE99'| hex6 |
+| hex6 |'hex699EE99'| hex6 |
+| hex6 |'hex699EE99'| hex6 |
+| hex6 |'hex6#99EE99'| hex6 |
+| hex6 |'hex60x99EE99'| hex6 |
+| hex6 |'hex6Ox99EE99'| hex6 |
+| hex6 |'hex99EE99'| hex6 |
+| hex6 |'hex#99EE99'| hex6 |
+| hex6 |'hex0x99EE99'| hex6 |
+| hex6 |'hexOx99EE99'| hex6 |
+| hex6 |'hex6 99EE99'| hex6 |
+| hex6 |'hex6 99EE99'| hex6 |
+| hex6 |'hex6 #99EE99'| hex6 |
+| hex6 |'hex6 0x99EE99'| hex6 |
+| hex6 |'hex6 Ox99EE99'| hex6 |
+| hex6 |'99EE99 hex6'| hex6 |
+| hex6 |'#99EE99 hex6'| hex6 |
+| hex6 |'0x99EE99 hex6'| hex6 |
+| hex6 |'Ox99EE99 hex6'| hex6 |
+| hex6 |'99EE99 hex'| hex6 |
+| hex6 |'#99EE99 hex'| hex6 |
+| hex6 |'0x99EE99 hex'| hex6 |
+| hex6 |'Ox99EE99 hex'| hex6 |
+| hex6 |'99EE99hex6'| hex6 |
+| hex6 |'99EE99hex6'| hex6 |
+| hex6 |'#99EE99hex6'| hex6 |
+| hex6 |'0x99EE99hex6'| hex6 |
+| hex6 |'Ox99EE99hex6'| hex6 |
+| hex6 |'99EE99hex'| hex6 |
+| hex6 |'#99EE99hex'| hex6 |
+| hex6 |'0x99EE99hex'| hex6 |
+| hex6 |'Ox99EE99hex'| hex6 |
+| hex8 |'99EE99FF'| hex8 |
+| hex8 |'#99EE99FF'| hex8 |
+| hex8 |'0x99EE99FF'| hex8 |
+| hex8 |'Ox99EE99FF'| hex8 |
+| hex8 |'hex8 99EE99FF'| hex8 |
+| hex8 |'hex8 #99EE99FF'| hex8 |
+| hex8 |'hex8 0x99EE99FF'| hex8 |
+| hex8 |'hex8 Ox99EE99FF'| hex8 |
+| hex8 |'hex 99EE99FF'| hex8 |
+| hex8 |'hex 99EE99FF'| hex8 |
+| hex8 |'hex #99EE99FF'| hex8 |
+| hex8 |'hex 0x99EE99FF'| hex8 |
+| hex8 |'hex Ox99EE99FF'| hex8 |
+| hex8 |'hex899EE99FF'| hex8 |
+| hex8 |'hex899EE99FF'| hex8 |
+| hex8 |'hex8#99EE99FF'| hex8 |
+| hex8 |'hex80x99EE99FF'| hex8 |
+| hex8 |'hex8Ox99EE99FF'| hex8 |
+| hex8 |'hex99EE99FF'| hex8 |
+| hex8 |'hex#99EE99FF'| hex8 |
+| hex8 |'hex0x99EE99FF'| hex8 |
+| hex8 |'hexOx99EE99FF'| hex8 |
+| hex8 |'hex8 99EE99FF'| hex8 |
+| hex8 |'hex8 99EE99FF'| hex8 |
+| hex8 |'hex8 #99EE99FF'| hex8 |
+| hex8 |'hex8 0x99EE99FF'| hex8 |
+| hex8 |'hex8 Ox99EE99FF'| hex8 |
+| hex8 |'99EE99FF hex8'| hex8 |
+| hex8 |'#99EE99FF hex8'| hex8 |
+| hex8 |'0x99EE99FF hex8'| hex8 |
+| hex8 |'Ox99EE99FF hex8'| hex8 |
+| hex8 |'99EE99FF hex'| hex8 |
+| hex8 |'#99EE99FF hex'| hex8 |
+| hex8 |'0x99EE99FF hex'| hex8 |
+| hex8 |'Ox99EE99FF hex'| hex8 |
+| hex8 |'99EE99FFhex8'| hex8 |
+| hex8 |'99EE99FFhex8'| hex8 |
+| hex8 |'#99EE99FFhex8'| hex8 |
+| hex8 |'0x99EE99FFhex8'| hex8 |
+| hex8 |'Ox99EE99FFhex8'| hex8 |
+| hex8 |'99EE99FFhex'| hex8 |
+| hex8 |'#99EE99FFhex'| hex8 |
+| hex8 |'0x99EE99FFhex'| hex8 |
+| hex8 |'Ox99EE99FFhex'| hex8 |
+| html |'PaleGreen'| html |
+| html |'Pale Green'| html |
+| html |'pale green'| html |
+| html |'html pale green'| html |
+| html |'html(pale green)'| html |
+| html |'palegreen'| html |
+| html |'palegrEen'| html |
+| html |'Pale_green'| html |
+| html |'pale_Green'| html |
+| html |'Pale%20Green'| html |
+| html |'pale%20green'| html |
+| html |'Pale%20green'| html |
+| html |'pale%20Green'| html |
+| hsl |'120°, 93%, 79%'| hsl |
+| hsl |'hsl 120°, 93%, 79%'| hsl |
+| hsl |'h120°, s93%, l79%'| hsl |
+| hsl |'H120°, s93%, l79%'| hsl |
+| hsl |'h:120°, s:93%, l:79%'| hsl |
+| hsl |'h120, s93, l79'| hsl |
+| hsl |'h120s93l79'| hsl |
+| hsl |'h:120°s:93%l79%'| hsl |
+| hsl |'120°, 93%, 79% hsl'| hsl |
+| hsv |'hsv 120°, 39%, 98%'| hsv |
+| hsv |'h 120°, s 39%, v 98%'| hsv |
+| hsv |'s 39%, h 120°, v 98%'| hsv |
+| hsv |'h:120, s:39, v:98'| hsv |
+| hsv |'hsv120°,39%,98%'| hsv |
+| hsv |'h120s39v98'| hsv |
+| hsv |'120°, 39%, 98% hsv'| hsv |
+| lab |'lab 87.1 -42.2 33.2'| lab |
+| lab |'l 87.1 a -42.2 b 33.2'| lab |
+| lab |'l87.1a-42.2b33.2'| lab |
+| lab |'87.1 -42.2 33.2 lab'| lab |
+| lab |'l:87.1 a:-42.2 b:33.2'| lab |
+| lab |'a -42.2 b 33.2 l 87.1'| lab |
+| pantone |'pantone 421C'| pantone |
+| pantone |'421C'| pantone |
+| pantone |'pantone 421'| pantone |
+| pantone |'421 pantone'| pantone |
+| pantone |'421C pantone'| pantone |
+| ral |'RAL 1000'| ral |
+| ral |'Ral 1000'| ral |
+| ral |'1000RAL'| ral |
+| rgb |'204, 170, 153'| rgb |
+| rgb |'204 170 153'| rgb |
+| rgb |'rgb(204, 170, 153)'| rgb |
+| rgb |'r:204, g:170, b:153'| rgb |
+| rgb |'r:204 b:153 g:170'| rgb |
+| rgb |'r:204 b:153 G:170'| rgb |
+| rgb |'r204b153g170'| rgb |
+| rgba |'204, 170, 153, 0.9'| rgba |
+| rgba |'204, 170, 153, .9'| rgba |
+| rgba |'204/170/153/.9'| rgba |
+| rgba |'204|170|153|0.9'| rgba |
+| rgba |'204|170|153|.9'| rgba |
+| rgba |'rgba 204, 170, 153, 0.9'| rgba |
+| rgba |'rgba(204, 170, 153, 0.9)'| rgba |
+| rgba |'rgba(204 170 153 0.9)'| rgba |
+| rgba |'rgba(204, 170, 153, .9)'| rgba |
+| rgba |'r204 g170 b153 a.9'| rgba |
+| rgba |' a.9 g170 b153 r204'| rgba |
+| rgb decimal |'rgb 16711680'| rgb decimal |
+| rgb decimal |'16711680 rgb '| rgb decimal |
+| rgb decimal |'16711680'| rgb decimal |
+| rgb decimal |'16711680 decimal'| rgb decimal |
+| rgb decimal |'rgb decimal 16711680'| rgb decimal |
+| rgb decimal |'rgbdecimal16711680'| rgb decimal |
+| w |'w 430'| w |
+| w |'w430'| w |
+| w |'430w'| w |
+| w |'430 w'| w |
+| xyz |'xyz 45.0263, 43.8867, 36.2348'| xyz |
+| xyz |'45.0263, 43.8867, 36.2348 xyz'| xyz |
+| xyz |'xyz(45.0263, 43.8867, 36.2348)'| xyz |
+| xyz |'x:45.0263, y:43.8867, z:36.2348'| xyz |
+| yuv |'yuv 178.2280, -12.4374, 22.6020'| yuv |
+| yuv |'yuv(178.2280, -12.4374, 22.6020)'| yuv |
+| yuv |'178.2280, -12.4374, 22.6020 yuv'| yuv |
+| yuv |'y:178.2280, u-12.4374, v:22.6020'| yuv |
+| cmyk |'y 39 c 39 m 0 k 7'| cmyk |
 
 # Expected output
-
-| key       | value                                | note          |
-| ---       | ---                                  | ---           |
-| cmyk      |  color: {c: 39, m: 0, y: 39, k: 7'}  |  object       |
-| grayscale     |  color: 88                       |  number    |
-| hex3     |  color: '#123'                        |  string    |
-| hex4     |  color: '#123f'                       |  string    |
-| hex6     |  color: '#112233'                     |  string    |
-| hex8     |  color: '#112233ff'                   |  string    |
-| lab      |  color: {l:87.1, a:-42.2, b:33.2 }    |  object    |
-| hsl      |  color: {h: 120, s: 71.4, l: 76.7'}   |  object    |
-| hsv      |  color: {h: 120, s: 36, v: 93'}       |  object    |
-| pantone  |  color: '296C'                        |  string    |
-| ral      |  color: { ral: 5011, name: 'Steel Blue', lrv: 2 } |  string    |
-| rgb      |  color: { r: 17, g: 34, b: 51 }       |  string    |
-| w        |  color: 488                           |  number    |
-
-
-# Errors
+|key|value|note|
+|---|---|---|
+|cmyk|{"c":0,"m":100,"y":100,"k":0}|object|
+|grayscale|70|number|
+|hex3|"F00"|string|
+|hex4|"F00F"|string|
+|hex6|"FF0000"|string|
+|hex8|"FF0000FF"|string|
+|html|"Red"|string|
+|hsl|{"h":0,"s":100,"l":50}|object|
+|hsv|{"h":0,"s":100,"v":100}|object|
+|lab|{"l":53.23288178584245,"a":80.10930952982204,"b":67.22006831026425}|object|
+|pantone|"172C"|string|
+|ral|{"ral":3024,"name":"Luminous Red","lrv":30}|object|
+|rgb|{"r":255,"g":0,"b":0}|object|
+|rgba|{"r":255,"g":0,"b":0,"a":1}|object|
+|rgbdecimal|16711680|number|
+|w|620|number|
+|xyz|{"x":41.24,"y":21.26,"z":1.9300000000000002}|object|
+|yuv|{"y":81.535,"u":90.26,"v":239.945}|object|

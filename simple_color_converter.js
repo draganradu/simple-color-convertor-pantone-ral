@@ -9,87 +9,44 @@ const _removeFromArray= require('./_components/frame/_remove_array_from_array')
 
 class color {
   constructor (settingsArg = {}) {
-    this.settings = settingsArg
+
+    // get settings
+    this.settings = this.sanitizeAlternativeKeys(_clone(settingsArg))
+    this.debug    = settingsArg.debug || false 
+    this.error    = ''
+    this.grayscale = this.settings.grayscale || false
+
+    // set from and to
+    this.from = this.sanitizeFrom(this.settings) || false
+    this.to   = this.sanitizeTo(this.from, this.settings.to) || false
     
-    // to and from init setter
-    this.from = this.settings
-    this.to = this.settings
+    // run extra work for flags
+    this.extraStepsForGrayscale()
+    
+    // sanitize colors
+    this.color = (this.from && this.to) ? _colorSanitizer[this.from](this.settings[this.from]) : false
 
     // convert
-    this.color = this.ColorConvert(this.sanitizedColor, this.to)
+    this.color = this.ColorConvert(this.color, this.to)
+
+    // build extra hex3 for 
+    this.hexRefBuild()
 
     // build extra hex3 for 
     this.cleanUp()
   }
 
-  // -------------- 0 | Main getters and setters
-  get sanitizedColor () {
-      return (this.from && this.to) ? _colorSanitizer[this.from](this.settings[this.from]) : false
-  }
-
-  get settings () {
-    return this._settings;
-  }
-
-  set settings (value) {
-    const _this = _clone(value)
-    const garbage = {
-      removeKey:'',
-      setKey: '',
-    }
-
-    if (_this.hasOwnProperty('hex') && _colorSanitizer.hex(_this.hex)){
-      garbage.removeKey = 'hex'
-      garbage.setKey = 'hex' + _colorSanitizer.hex(_this.hex).length
-    } else if (_this.hasOwnProperty('android') && _colorSanitizer.hex(_this.android)){
-      garbage.removeKey = 'android'
-      garbage.setKey = 'hex' + _colorSanitizer.hex(_this.android).length
-    }
-
-    if (garbage.setKey && garbage.removeKey ) {
-      _this[garbage.setKey] = _this[garbage.removeKey]
-      delete _this[garbage.removeKey]
-    }
-
-    this._settings = _this
-  }
-
-  get from () {
-    return this._form
-  }
-
-  set from (valSettings) {
-    this._form = this.sanitizeFrom(valSettings)
-  }
-
-  get to () {
-    return this._to
-  }
-
-  set to (val) {
-    this._to = this.sanitizeTo(this.from, this.settings.to)
-    this.extraStepsForGrayscale()
-  }
-
-  // -------------- 1 | Secoundary setters and getters
-  get debug () {
-    return (this._settings.debug)? true: false
-  }
-
-  // -------------- 2 | Methods
   extraStepsForGrayscale () {
-    if (!this.settings.error) {
-      if (this.settings.grayscale === true) {
-        // extract last element in to
+    if (!this.error) {
+      if (this.grayscale === true) {
         const LastColorStep = this.to.pop()
-        const tempTo = [
+        let tempTo = [
             this.sanitizeTo(LastColorStep, 'grayscale'),
             this.sanitizeTo('grayscale', LastColorStep),
         ]
-        
         if (tempTo[0] && tempTo[1]) {
             tempTo[0].pop()
-            this._to = this._to.concat(tempTo[0],tempTo[1])
+            this.to = this.to.concat(tempTo[0],tempTo[1])
         }
       }  
     }
@@ -109,6 +66,28 @@ class color {
         return true
       } 
       return false
+  }
+
+  sanitizeAlternativeKeys (settings) {
+    let clean = {
+      removeKey:'',
+      setKey: '',
+    }
+
+    if (settings.hasOwnProperty('hex') && _colorSanitizer.hex(settings.hex)){
+      clean.removeKey = 'hex'
+      clean.setKey = 'hex' + _colorSanitizer.hex(settings.hex).length
+    } else if (settings.hasOwnProperty('android') && _colorSanitizer.hex(settings.android)){
+      clean.removeKey = 'android'
+      clean.setKey = 'hex' + _colorSanitizer.hex(settings.android).length
+    }
+
+    if (clean.setKey && clean.removeKey ) {
+      settings[clean.setKey] = settings[clean.removeKey]
+      delete settings[clean.removeKey]
+    }
+
+    return settings
   }
 
   sanitizeExceptionsFrom(parameters) {
@@ -140,11 +119,11 @@ class color {
       parameters.splice(parameters.indexOf('grayscale'), 1);
     }
 
-    console.log(_colorFactory)
+
     if ( parameters.length === 1 &&  _colorFactory.keys.indexOf(parameters[0]) > -1 ) {
       return parameters[0];
     } else if (parameters[0] === 'color') {
-      const objectData = {}
+      let objectData = {}
       objectData.tell = _colorTell(objectData[parameters[0]]);
 
       if (objectData.tell) {
@@ -154,10 +133,10 @@ class color {
         }
         return objectData.tell;
       } else {
-        this.settings.error = 'Inputed color dose not math any color format';
+        this.error = 'Inputed color dose not math any color format';
       }
     } else {
-      this.settings.error = 'The color specified in from is not an accepted input';
+      this.error = 'The color specified in from is not an accepted input';
       return false;
     }
   }
@@ -170,7 +149,7 @@ class color {
   }
 
   validateLine(array) {
-    const temp = []
+    let temp = []
     for(let a = 0; a < (array.length -1); a++){
       temp.push(_colorFactory[array[a]].hasOwnProperty(array[a+1]))
     }
@@ -193,18 +172,19 @@ class color {
   }
 
   sanitizeTo(from, to) {
-    if (!this.settings.error) {
+    if (!this.error) {
 
       to = this.sanitizeExceptionsTo(to)
 
-      if ( _colorFactory[from].hasOwnProperty(to) || to === from ) {
+      // direct conversion
+      if (_colorFactory[from].hasOwnProperty(to) || to === from) {
         return [from, to];
       }
 
       // actual color steps 
       if ( _colorFactory.keys.indexOf(to) !== -1) {
-        for(let i = 1; i < _colorFactory.keysFilterd.length; i++){
-          const stepsTable = _permutation(_colorFactory.keysFilterd, from, to, i )
+        for(let i = 1; i < _colorFactory.paintKeys.length; i++){
+          const stepsTable = _permutation(_colorFactory.paintKeys, from, to, i )
           for (let a = 0; a < stepsTable.length; a++){
             if( this.validateLine(stepsTable[a]) ){
               return stepsTable[a]
@@ -213,30 +193,28 @@ class color {
         }
       }
 
-      this.settings.error = 'The value you want to convert to is not acceptable' ;
+      this.error = 'The value you want to convert to is not acceptable' ;
     }
 
     return false;
   }
 
   cleanUp () {
-    this.hexRefBuild();
-
     const tempKeys = _removeFromArray(Object.keys(this), ['hexref', 'color'])
 
-    if (this.settings.error) {
+    if (this.error) {
       tempKeys.splice(tempKeys.indexOf('error'), 1);
     } 
 
     if(this.debug !== true){
-      for (const i of tempKeys) {
+      for (let i of tempKeys) {
         delete this[i];
       }
     }
   }
 
   ColorConvert (tempColor, to) {
-    if (!this.settings.error && tempColor && to){
+    if (!this.error && tempColor && to){
         // normal flow
         if (to[0] !== to[1]){
           for(let i = 0; i < to.length -1 ; i++ ){
@@ -249,7 +227,7 @@ class color {
         // if to and from are both the same and not hex
         return tempColor     
       }
-      this.settings.error = this.settings.error || 'Can`t convert color.'
+      this.error = this.error || 'Can`t convert color.'
       return {}
   }
 }

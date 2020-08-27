@@ -1,3 +1,4 @@
+'use strict'
 module.exports = function (ObjectToClone) {
     if(typeof ObjectToClone === "object"){
         let temp = JSON.stringify(ObjectToClone)
@@ -6,5 +7,4 @@ module.exports = function (ObjectToClone) {
     } else {
         return ObjectToClone
     }
-
 }

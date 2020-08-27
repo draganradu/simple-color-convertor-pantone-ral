@@ -24,7 +24,7 @@ $ npm install simple-color-converter
 ```javascript
 const simpleColorConverter = require('simple-color-converter');
 
-let color = new simpleColorConverter({
+var color = new simpleColorConverter({
     ral: { ral: 3009 }, 
     to: 'cmyk'
 })
@@ -64,14 +64,14 @@ Any of the colors mentioned above. You can specify the color and it will be fast
 ```javascript
 
 // faster
-let fasterColor = new simpleColorConverter({
+var fasterColor = new simpleColorConverter({
     rgb: {r: 10, g: 200, b: 50}, 
     to: 'cmyk'
 })
 
 // slower but more convenient
 
-let slowerColor = new simpleColorConverter({
+var slowerColor = new simpleColorConverter({
     color: 'rgb 10 200 50', 
     to: 'cmyk'
 })
@@ -90,7 +90,7 @@ let slowerColor = new simpleColorConverter({
 ```javascript
 const simpleColorConverter = require('simple-color-converter');
 
-let color = simpleColorConverter({
+var color = simpleColorConverter({
     hex3: '#228', 
     to: 'cmyk', 
     grayscale: true 

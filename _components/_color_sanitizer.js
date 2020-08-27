@@ -1,25 +1,18 @@
+'use strict'
+
 const { html, pantone, ral } = require('color_library')
-const ReindexColor = require('../_components/_color_reindex')
-const AcceptedColors = require('./_accepted_colors')
 const _safeguard = require('./_color_safeguard')
+const AcceptedColors = require('./_accepted_colors')
+const ReindexColor = require('../_components/_color_reindex')
+const procent = require('../_components/frame/_frame_procent_fix')
 
-let colorSanitizer = new AcceptedColors()
-colorSanitizer.keys = Object.keys(colorSanitizer).filter(i => ['isHex', 'hex', 'isHexVerbos'].indexOf(i) < 0);
-console.log(colorSanitizer.keys)
-colorSanitizer.keys = colorSanitizer.keysa
-console.log(colorSanitizer.keys)
 
-function requireProcentFix(a,b){
-    if(a <= 1 && b <= 1){
-        return true
-    }
-    return false
-}
+var colorSanitizer = new AcceptedColors()
 
 function arrayToObject(data, keys){
     if(data.length === keys.length){
-        let temp = {}
-        for(let i in keys) {
+        const temp = {}
+        for(const i in keys) {
             temp[keys[i]] = data[i]
         }
         return temp
@@ -57,14 +50,14 @@ function getNumbers (number) {
 
 // 1 | --- CMYK -----------------------------------------------------
 colorSanitizer.cmyk = function (cmyk) {
-    if(typeof cmyk === 'string' && _safeguard(cmyk,'cmyk', colorSanitizer.keys)){ 
+    if(_safeguard(cmyk,'cmyk')){ 
         cmyk = ReindexColor(cmyk,'cmyk', '[+-]?([0-9]*[.])?[0-9]+')
     }
     if(Array.isArray(cmyk)){
         cmyk = arrayToObject(cmyk,'cmyk')
     } 
     if (typeof cmyk === 'object') {
-        for(let i of 'cmyk') {
+        for(const i of 'cmyk') {
             cmyk[i] = abstractMakeInt(cmyk[i])
             // validate on conversion
             if(isNaN(cmyk[i]) || cmyk[i] < 0 || cmyk[i] > 100 ){
@@ -95,10 +88,10 @@ colorSanitizer.grayscale = function (grayscale) {
 
 // 3 | --- hex 3
 colorSanitizer.hex = function (hex) {
-    if( typeof hex === 'string' && _safeguard(hex,'hex',colorSanitizer.keys)) {
+    if(_safeguard(hex,'hex')) {
     // safe guard against mislabeling hex (ex: magenta)
     if (hex.indexOf('#') < 0 || hex.indexOf('hex') < 0){
-        for(let indexColor of colorSanitizer.keys){
+        for(const indexColor of colorSanitizer.sanitaryKeys){
             if (hex.indexOf(indexColor) > -1 && ['hex3', 'hex4', 'hex6', 'hex8'].indexOf(indexColor) < 0) {
                 return false
             }
@@ -115,7 +108,7 @@ colorSanitizer.hex = function (hex) {
 }
 
 colorSanitizer.isHex = function (hex) {
-    let temp = colorSanitizer.hex(hex)
+    const temp = colorSanitizer.hex(hex)
     return (temp) ? temp.length : false
 }
 // ------------- needs work
@@ -149,9 +142,9 @@ colorSanitizer.hex8 = function (hex) {
 
 // 7 | --- html  -----------------------------------------------------
 colorSanitizer.html = function (htmlInput) {
-    if (_safeguard(htmlInput,'html',colorSanitizer.keys)){
+    if (_safeguard(htmlInput,'html')){
         htmlInput = htmlInput.toLowerCase().replace(/html|[^a-z]/g,'')
-        let temp = html.filter(a => a.name.toLowerCase() === htmlInput )
+        var temp = html.filter(a => a.name.toLowerCase() === htmlInput )
         return (temp.length > 0)? temp[0].name : false
     }
     return false
@@ -161,19 +154,19 @@ colorSanitizer.html = function (htmlInput) {
 
 // 8 | --- hsl -----------------------------------------------------
 colorSanitizer.hsl = function (hsl) {
-    if(typeof hsl === 'string' && _safeguard(hsl,'hsl',colorSanitizer.keys)){ 
+    if(_safeguard(hsl,'hsl')){ 
         hsl = ReindexColor(hsl,'hsl',new RegExp('([0-9]*[.])?[0-9]+'))
     }
     if(Array.isArray(hsl)){
         hsl = arrayToObject(hsl, 'hsl')
     } 
     if (typeof hsl === 'object') {
-        for(let i of 'hsl') {
+        for(const i of 'hsl') {
             hsl[i] = makeFloat(hsl[i])
         }
         
         if (hsl.h >= 0 && hsl.h <= 360 && hsl.s >= 0 && hsl.s <= 100 && hsl.l >= 0 && hsl.l <= 100){
-            if(requireProcentFix(hsl.s,hsl.l)){
+            if(procent.require(hsl.s,hsl.l)){
                 hsl.s *= 100 
                 hsl.l *= 100 
             }
@@ -186,19 +179,19 @@ colorSanitizer.hsl = function (hsl) {
 
 // 9 | --- hsv -----------------------------------------------------
 colorSanitizer.hsv = function (hsv) {
-    if(typeof hsv === 'string' && _safeguard(hsv,'hsv',colorSanitizer.keys)){ 
+    if(_safeguard(hsv,'hsv')){ 
         hsv = ReindexColor(hsv,'hsv',new RegExp('[+-]?([0-9]*[.])?[0-9]+'))
     }
     if(Array.isArray(hsv)){
         hsv = arrayToObject(hsv, 'hsv')
     } 
     if (typeof hsv === 'object') {
-        for(let i of 'hsv') {
+        for(const i of 'hsv') {
             hsv[i] = makeFloat(hsv[i])
         }
         
         if (hsv.h >= 0 && hsv.h <= 360 && hsv.s >= 0 && hsv.s <= 100 && hsv.v >= 0 && hsv.v <= 100){
-            if (requireProcentFix(hsv.s, hsv.v)) {
+            if (procent.require(hsv.s, hsv.v)) {
                 hsv.s *= 100
                 hsv.v *= 100
             }
@@ -210,14 +203,14 @@ colorSanitizer.hsv = function (hsv) {
 
 // 10 | --- Lab -----------------------------------------------------
 colorSanitizer.lab = function (lab) {
-    if(typeof lab === 'string' && _safeguard(lab,'lab', colorSanitizer.keys)){ 
+    if(_safeguard(lab,'lab')){ 
         lab = ReindexColor(lab,'lab', '[+-]?([0-9]*[.])?[0-9]+')
     }
     if(Array.isArray(lab)){
         lab = arrayToObject(lab, 'lab')
     } 
     if (typeof lab === 'object') {
-        for(let i of 'lab') {
+        for(const i of 'lab') {
             lab[i] = parseFloat(lab[i])
         }
 
@@ -242,7 +235,7 @@ colorSanitizer.pantone = function (pantoneInput) {
     let tempPantoneNumber = ''
     if(typeof pantoneInput === 'number') { 
         return false // because it would interfere with hex
-    } else if (typeof pantoneInput === 'string' && pantoneInput.length >= 3 && _safeguard(pantoneInput,'pantone',colorSanitizer.keys)) {
+    } else if (typeof pantoneInput === 'string' && pantoneInput.length >= 3 && _safeguard(pantoneInput,'pantone')) {
         tempPantoneNumber = truePantone(pantoneInput)
     } else if(typeof pantoneInput === 'object' && pantoneInput.name && typeof pantoneInput.name === 'string' && pantoneInput.length >= 3){
         tempPantoneNumber = truePantone(pantoneInput.name)
@@ -271,8 +264,8 @@ colorSanitizer.ral = function (ralInput) {
             ral: `${ralInput}`
         }
     } else if (typeof ralInput === 'string' && ralInput.indexOf('ral') > -1) {
-        let ralFilterName = isRalName(ralInput)
-        let ralFilterNumber = isRalNumeric(makeInt(ralInput.replace(/[^0-9]/g,'')))
+        const ralFilterName = isRalName(ralInput)
+        const ralFilterNumber = isRalNumeric(makeInt(ralInput.replace(/[^0-9]/g,'')))
 
         temp = (ralFilterName || ralFilterNumber ) ? ral.filter( a => a.name.toLowerCase() === ralFilterName || a.ral === ralFilterNumber) : false
 
@@ -290,7 +283,7 @@ colorSanitizer.ral = function (ralInput) {
 
 // 13 | --- rgb -----------------------------------------------------
 colorSanitizer.rgb = function (rgb) {
-    if(typeof rgb === 'string' && _safeguard(rgb,'rgb',colorSanitizer.keys)){ 
+    if(_safeguard(rgb,'rgb')){ 
         // rgb = ReindexColor(rgb,'rgb',/(\d+)/)
         rgb = ReindexColor(rgb,'rgb',/([0-9]*[.])?[0-9]?[0-9%]+/, true)
     }
@@ -299,7 +292,7 @@ colorSanitizer.rgb = function (rgb) {
         rgb = arrayToObject(rgb, 'rgb')
     } 
     if (typeof rgb === 'object') {
-        for(let i of 'rgb') {
+        for(const i of 'rgb') {
             rgb[i] = abstractMakeInt(rgb[i], 255)
             if(isNaN(rgb[i]) || rgb[i] < 0 || rgb[i] > 255 ){
                 return false
@@ -313,14 +306,14 @@ colorSanitizer.rgb = function (rgb) {
 
 // 14 | --- rgba -----------------------------------------------------
 colorSanitizer.rgba = function (rgba) {
-    if(typeof rgba === 'string' && _safeguard(rgba,'rgba',colorSanitizer.keys)){ 
+    if(_safeguard(rgba,'rgba')){ 
         rgba = ReindexColor(rgba,'rgba', '([0-9]*[.])?[0-9]+')
     }
     if(Array.isArray(rgba)){
         rgba = arrayToObject(rgba, 'rgba')
     } 
     if (typeof rgba === 'object') {
-        for(let i of 'rgb') {
+        for(const i of 'rgb') {
             rgba[i] = makeInt(rgba[i])
             if(rgba[i] < 0 || rgba[i] > 255 ){
                 return false
@@ -336,9 +329,13 @@ colorSanitizer.rgba = function (rgba) {
 // 15 | --- rgbdecimal -----------------------------------------------------
 colorSanitizer.rgbdecimal = function (rgb) {
     if (typeof rgb === 'string') {
+        const numericData =  rgb.match(/(\d+)/g)
         if(rgb.indexOf('rgb') > -1 || rgb.indexOf('decimal') > -1) {
-            let numericData =  rgb.match(/(\d+)/g)
-            return (numericData.length === 1) ? numericData : false
+            return (numericData && numericData.length === 1) ? numericData : false
+        } else {
+            if(numericData && numericData.length === 1) {
+                return makeInt(numericData[0]) > 65792 ? numericData : false
+            }
         }
     }
 
@@ -347,6 +344,7 @@ colorSanitizer.rgbdecimal = function (rgb) {
 
 // 16 | --- w -----------------------------------------------------
 colorSanitizer.w = function (w) {
+    
     if (typeof w === 'string' && w.indexOf(w) > -1 ){
         w = makeInt(w.replace(/[^0-9]/,''))
     } 
@@ -358,14 +356,14 @@ colorSanitizer.w = function (w) {
 
 // 17 | --- XYZ -----------------------------------------------------
  colorSanitizer.xyz = function (xyz) {
-    if(typeof xyz === 'string' && _safeguard(xyz,'xyz',colorSanitizer.keys)){ 
+    if(_safeguard(xyz,'xyz')){ 
         xyz = ReindexColor(xyz,'xyz', '[+-]?([0-9]*[.])?[0-9]+')
     }
     if(Array.isArray(xyz)){
         xyz = arrayToObject(xyz, 'xyz')
     } 
     if (typeof xyz === 'object') {
-        for(let i of 'xyz') {
+        for(const i of 'xyz') {
             xyz[i] = makeInt(xyz[i])
             if(xyz[i] <= 0){
                 return false
@@ -378,16 +376,16 @@ colorSanitizer.w = function (w) {
 
 // 18 | --- YUV -----------------------------------------------------
 colorSanitizer.yuv = function (yuv) {
-    if(typeof yuv === 'string' && _safeguard(yuv,'yuv',colorSanitizer.keys)){ 
+    if(_safeguard(yuv,'yuv')){ 
         yuv = ReindexColor(yuv,'yuv', '[+-]?([0-9]*[.])?[0-9]+')
     }
     if(Array.isArray(yuv)){
         yuv = arrayToObject(yuv, 'yuv')
     } 
     if (typeof yuv === 'object') {
-        for(let i of 'yuv') {
+        for(const i of 'yuv') {
             yuv[i] = makeInt(yuv[i])
-            if(yuv[i] < 0){
+            if(i !== 'u' && yuv[i] < 0){
                 return false
             }
         }

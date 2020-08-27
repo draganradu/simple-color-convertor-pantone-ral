@@ -1,6 +1,6 @@
 {
   "name": "simple-color-converter",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "description": "This is a simple colors converter, works for almost any color. Has a built in color identifier for convertin strings to color. Supported convert colors: from and to CMYK, grayscale, hex3, hex4, hex6, hex8, html, hsl, hsv, lab, pantone, ral, rgb, rgba, rgba decimal, wavelength, xyz, yuv.",
   "keywords": [
     "color",
@@ -32,10 +32,9 @@
   "repository": "draganradu/simple-color-convertor-pantone-ral",
   "homepage": "https://draganradu.github.io/",
   "scripts": {
-    "arhitecture": "node test/arhitecure.test.js",
     "dev": "node test/dev.test.js",
     "test": "node test/index.test.js last",
-    "table": "node test/build_table.js"
+    "table": "node test/md.build.js"
   },
   "author": "Radu Dragan <draganaurelradu@gmail.com>",
   "license": "MIT",

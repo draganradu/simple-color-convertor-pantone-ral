@@ -1,15 +1,12 @@
-const deltaE        = require('../_components/compare_deltaE_CIE76.js')
+// 'use strict'
 
+const deltaE        = require('../_components/compare_deltaE_CIE76.js')
 const { html, pantone, ral } = require('color_library')
 const AcceptedColors = require('./_accepted_colors')
 
-const _removeFromArray = require('../_components/frame/_remove_array_from_array')
-
 const colorConvertor = new AcceptedColors()
 
-
-// remove final destination colors
-colorConvertor.keysFilterd = _removeFromArray(colorConvertor.keysa,['ral', 'rgbdecimal' , 'pantone', 'grayscale', 'hex3', 'hex4', 'rgba', 'yuv'])
+// 0 | --- factory worker
 
 function splitCamelCase(name){
     return name.replace(/([A-Z])/g, ' $1').trim()
@@ -66,6 +63,19 @@ colorConvertor.hex4.hex8 = function (hex4) {
     return doubleString(hex4)
 }
 
+colorConvertor.hex4.rgb = function (hex4) {
+    const temp = {
+        color: colorConvertor.hex6.rgb(colorConvertor.hex3.hex6(hex4.substring(0, 3))),
+        opacity: parseInt([hex4.substring(3, 4),hex4.substring(3, 4)].join(''), 16) / 255,
+    }
+    console.log(temp)
+    for (const i in temp.color) {
+        temp.color[i] *= temp.opacity
+        temp.color[i] = Math.round(temp.color[i])
+    }
+    return temp.color
+}
+
 // 5 | --- Hex 6 -----------------------------------------------------
 colorConvertor.hex6.hex3 = function (hex6) {
     function convertor (a,b) {
@@ -95,12 +105,12 @@ colorConvertor.hex6.rgb = function (hex6) {
 
 // 6 | --- hex 8 -----------------------------------------------------
 colorConvertor.hex8.rgb = function (hex8) {
-    let temp = {
+    const temp = {
         color: colorConvertor.hex6.rgb(hex8.substring(0,6)),
         opacity: parseInt(hex8.substring(6,8), 16) / 255,
     } 
 
-    for(let i in temp.color){
+    for(const i in temp.color){
         temp.color[i] *= temp.opacity
         temp.color[i] = Math.round(temp.color[i])
     } 
@@ -122,7 +132,7 @@ colorConvertor.html.rgb = function(htmlInput){
 
 // 8 | --- hsl -----------------------------------------------------
 colorConvertor.hsl.rgb = function (hsl) {
-    let rgb = { r: 0, g: 0, b: 0, }
+    const rgb = { r: 0, g: 0, b: 0, }
 
     hsl.h /= 60
     if (hsl.h < 0) {
@@ -157,7 +167,7 @@ colorConvertor.hsl.rgb = function (hsl) {
     }
 
     hsl.m = hsl.l - hsl.c / 2
-    for(let i of 'rgb') {
+    for(const i of 'rgb') {
         rgb[i] = Math.round((rgb[i] + hsl.m) * 255)
     }
 
@@ -201,14 +211,14 @@ colorConvertor.hsv.rgb = function (hsv) {
 // 10 | --- Lab -----------------------------------------------------
 colorConvertor.lab.pantone = function(labOrigin){
     const lab = Object.create(labOrigin)
-    let temp = {
+    const temp = {
         index: 768,
         name: '',
     }
 
-    for(let elementPantone in pantone){
+    for(const elementPantone in pantone){
        
-        let t = deltaE(pantone[elementPantone].lab, lab)
+        const t = deltaE(pantone[elementPantone].lab, lab)
         if(t < temp.index){
             temp.index = t
             temp.name = pantone[elementPantone].name
@@ -222,13 +232,13 @@ colorConvertor.lab.pantone = function(labOrigin){
 }
 
 colorConvertor.lab.ral = function (lab){
-    let temp = {
+    const temp = {
         index: 768,
         position: ral.length - 1
     }
    
-    for(let elementRal in ral){
-        let t = deltaE(ral[elementRal].lab, lab)
+    for(const elementRal in ral){
+        const t = deltaE(ral[elementRal].lab, lab)
         if(t < temp.index){
             temp.index = t
             temp.position = elementRal
@@ -250,7 +260,7 @@ colorConvertor.lab.ral = function (lab){
 }
 
 colorConvertor.lab.rgb = function (lab) {
-    let xyz = { x: 0, y:0 , z: 0 }
+    const xyz = { x: 0, y:0 , z: 0 }
 
     xyz.y = (lab.l + 16) / 116,
     xyz.x = lab.a / 500 + xyz.y,
@@ -260,12 +270,12 @@ colorConvertor.lab.rgb = function (lab) {
     xyz.y = 1.00000 * ((Math.pow(xyz.y,3) > 0.008856) ? Math.pow(xyz.y,3) : (xyz.y - 16/116) / 7.787)
     xyz.z = 1.08883 * ((Math.pow(xyz.z,3) > 0.008856) ? Math.pow(xyz.z,3) : (xyz.z - 16/116) / 7.787)
 
-    let rgb = { r: 0, g: 0, b: 0 }
+    const rgb = { r: 0, g: 0, b: 0 }
     rgb.r = xyz.x *  3.2406 + xyz.y * -1.5372 + xyz.z * -0.4986
     rgb.g = xyz.x * -0.9689 + xyz.y *  1.8758 + xyz.z *  0.0415
     rgb.b = xyz.x *  0.0557 + xyz.y * -0.2040 + xyz.z *  1.0570
 
-    for(let i of 'rgb') {
+    for(const i of 'rgb') {
         rgb[i] = (rgb[i] > 0.0031308) ? (1.055 * Math.pow(rgb[i], 1/2.4) - 0.055) : 12.92 * rgb[i]
         rgb[i] = Math.round(Math.max(0, Math.min(1, rgb[i])) * 255)
     }
@@ -321,8 +331,8 @@ colorConvertor.rgb.rgba = function (rgb) {
 }
 
 colorConvertor.rgb.hsl = function (rgb) {
-    let hsl = { h:0, s:0, l:0 }
-    for(let i of 'rgb') {
+    const hsl = { h:0, s:0, l:0 }
+    for(const i of 'rgb') {
         rgb[i] /= 255
     }
 
@@ -356,7 +366,7 @@ colorConvertor.rgb.hsl = function (rgb) {
 }
 
 colorConvertor.rgb.hsv = function (rgb) {
-    for(let i of 'rgb') {
+    for(const i of 'rgb') {
         rgb[i] /= 255
     }
 
@@ -373,8 +383,8 @@ colorConvertor.rgb.hsv = function (rgb) {
         }
     } else {
         // color
-        let d = ( rgb.r === minRGB) ? rgb.g - rgb.b : ((rgb.b === minRGB) ? rgb.r - rgb.g : rgb.b - rgb.r)
-        let h = ( rgb.r === minRGB) ? 3 : (( rgb.b === minRGB) ? 1 : 5)
+        const d = ( rgb.r === minRGB) ? rgb.g - rgb.b : ((rgb.b === minRGB) ? rgb.r - rgb.g : rgb.b - rgb.r)
+        const h = ( rgb.r === minRGB) ? 3 : (( rgb.b === minRGB) ? 1 : 5)
         hsv = {
             h: 60 * ( h - d / (maxRGB - minRGB)),
             s: (( maxRGB - minRGB ) / maxRGB ) * 100,
@@ -386,14 +396,19 @@ colorConvertor.rgb.hsv = function (rgb) {
 }
 
 colorConvertor.rgb.grayscale = function (rgb) {
-    for(let i of 'rgb') {
+    for(const i of 'rgb') {
         rgb[i] = 255 - rgb[i]
     }
     return Math.round(((0.3 * rgb.r) + (0.59 * rgb.g) + (0.11 * rgb.b))/ 2.56)
 }
 
+// colorConvertor.rgb.grayscale = function (rgb) {
+//     return Math.round(((0.3 * rgb.r) + (0.59 * rgb.g) + (0.11 * rgb.b)) / 2.56)
+// }
+
+
 colorConvertor.rgb.lab = function (rgb) {
-    for(let i of 'rgb') {
+    for(const i of 'rgb') {
         rgb[i] /= 255
     }
 
@@ -401,7 +416,7 @@ colorConvertor.rgb.lab = function (rgb) {
     rgb.g = (rgb.g > 0.04045) ? Math.pow((rgb.g + 0.055) / 1.055, 2.4) : rgb.g / 12.92
     rgb.b = (rgb.b > 0.04045) ? Math.pow((rgb.b + 0.055) / 1.055, 2.4) : rgb.b / 12.92
 
-    let xyz = { x: 0, y: 0, z: 0}
+    const xyz = { x: 0, y: 0, z: 0}
 
     xyz.x = (rgb.r * 0.4124 + rgb.g * 0.3576 + rgb.b * 0.1805) / 0.95047
     xyz.y = (rgb.r * 0.2126 + rgb.g * 0.7152 + rgb.b * 0.0722) / 1.00000
@@ -415,13 +430,13 @@ colorConvertor.rgb.lab = function (rgb) {
 }
 
 colorConvertor.rgb.cmyk = function (rgb){
-    let cmyk = { c: 0, m: 0, y: 0, k: 0, }
+    const cmyk = { c: 0, m: 0, y: 0, k: 0, }
 
     if (rgb.r === 0 && rgb.g === 0 && rgb.b === 0) {
         cmyk.k = 100
     } else {
 
-        for(let i of 'rgb') {
+        for(const i of 'rgb') {
             rgb[i] /= 255
         }
 
@@ -432,7 +447,7 @@ colorConvertor.rgb.cmyk = function (rgb){
             cmyk.m = (1 - rgb.g - cmyk.k) / (1 - cmyk.k)
             cmyk.y = (1 - rgb.b - cmyk.k) / (1 - cmyk.k)
 
-            for(let i of 'cmyk'){
+            for(const i of 'cmyk'){
                 cmyk[i] = Math.round(cmyk[i] * 100)
             }
         }
@@ -445,13 +460,13 @@ colorConvertor.rgb.rgbdecimal = function(rgb){
 }
 
 colorConvertor.rgb.html = function(rgb){
-    let temp = {
+    const temp = {
         index: 768,
         html: '',
     }
 
-    for(let elementHtml in html){
-        let t = Math.abs(html[elementHtml].rgb.r - rgb.r ) + Math.abs(html[elementHtml].rgb.g - rgb.g ) + Math.abs(html[elementHtml].rgb.b - rgb.b )
+    for(const elementHtml in html){
+        const t = Math.abs(html[elementHtml].rgb.r - rgb.r ) + Math.abs(html[elementHtml].rgb.g - rgb.g ) + Math.abs(html[elementHtml].rgb.b - rgb.b )
         if(t < temp.index){
             temp.index = t
             temp.html = splitCamelCase(html[elementHtml].name)
@@ -469,7 +484,7 @@ colorConvertor.rgb.xyz = function(rgb) {
         return (n > 0.04045 ? Math.pow((n + 0.055) / 1.055, 2.4) : n / 12.92) * 100.0
     }
 
-    for(let i of 'rgb'){
+    for(const i of 'rgb'){
         rgb[i] = pivot(rgb[i] / 255.0)
     }
        
@@ -481,7 +496,7 @@ colorConvertor.rgb.xyz = function(rgb) {
 }
 
 colorConvertor.rgb.yuv = function(rgb) {
-    let yuv = { y: 0, u: 0, v:0 }
+    const yuv = { y: 0, u: 0, v:0 }
     yuv.y = (0.257 * rgb.r) + (0.504 * rgb.g) + (0.098 * rgb.b) + 16
     yuv.u = (-0.148 * rgb.r) - (0.291 * rgb.g) + (0.439 * rgb.b) + 128
     yuv.v = (0.439 * rgb.r) - (0.368 * rgb.g) - (0.071 * rgb.b) + 128
@@ -491,9 +506,9 @@ colorConvertor.rgb.yuv = function(rgb) {
 
 // 14 | --- rgba -----------------------------------------------------
 colorConvertor.rgba.rgb = function(rgba){
-    let temp = {}
+    const temp = {}
 
-    for(let i of 'rgb'){
+    for(const i of 'rgb'){
         temp[i] = Math.round(rgba[i] * rgba.a)
     }
 
@@ -513,7 +528,7 @@ colorConvertor.rgbdecimal.rgb = function (RGBdecimal) {
 
 // 15 | --- w -----------------------------------------------------
 colorConvertor.w.rgb = function(w) {
-    let rgb = { r: 0, g: 0, b: 0, }
+    const rgb = { r: 0, g: 0, b: 0, }
 
      if (w >= 380 && w < 440) {
          rgb.r = -1 * (w - 440) / (440 - 380)
@@ -534,7 +549,7 @@ colorConvertor.w.rgb = function(w) {
          rgb.r = 1
      } 
 
-     for(let i of 'rgb'){
+     for(const i of 'rgb'){
         rgb[i] = Math.round(rgb[i] * 255)
     }
 
@@ -561,13 +576,11 @@ colorConvertor.xyz.lab = function(xyz) {
 // 16 | --- YUV -----------------------------------------------------
 
 colorConvertor.yuv.rgb = function(yuv) {  
-    yuv.y -= 16
-    yuv.u -= 128
-    yuv.v -= 128
+
     return {
-        r: Math.round( 1.164 * yuv.y + 1.596 * yuv.v ),
-        g: Math.round( 1.164 * yuv.y - 0.392 * yuv.u - 0.813 * yuv.v),
-        b: Math.round( 1.164 * yuv.y + 2.017 * yuv.u )
+        r: Math.round( yuv.y + (1.140 * yuv.v) ),
+        g: Math.round( yuv.y - (0.395 * yuv.v) - (0.581 * yuv.v) ),
+        b: Math.round( yuv.y + (2.032 * yuv.u) )
     }
 }
 
