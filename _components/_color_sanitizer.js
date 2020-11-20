@@ -6,7 +6,6 @@ const AcceptedColors = require('./_accepted_colors')
 const ReindexColor = require('../_components/_color_reindex')
 const procent = require('../_components/frame/_frame_procent_fix')
 
-
 var colorSanitizer = new AcceptedColors()
 
 function arrayToObject(data, keys){
@@ -227,11 +226,11 @@ colorSanitizer.pantone = function (pantoneInput) {
         pantoneInput = pantoneInput.toLowerCase()
         const p_tempNumeric = Number(pantoneInput.replace(/[^0-9]/g,''))
         const p_isIndex = (pantoneInput.indexOf('c') > -1 || pantoneInput.indexOf('pantone') > -1)
-        const p_isNumeric = p_tempNumeric >= 100 && p_tempNumeric <= 5875;
+        const p_isNumeric = p_tempNumeric >= 100 && p_tempNumeric <= 5875
         return (p_isNumeric && p_isIndex)? `${p_tempNumeric}C` : false
     }
 
-    // Check if variable is a numberic valid pantone
+    // Check if variable is a numeric valid pantone
     let tempPantoneNumber = ''
     if(typeof pantoneInput === 'number') { 
         return false // because it would interfere with hex

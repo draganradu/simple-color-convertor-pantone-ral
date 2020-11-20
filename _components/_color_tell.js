@@ -6,20 +6,20 @@ module.exports = function (data) {
 	function everyKeyIndexOf(keys, string) {
 		for (let i of keys) {
 			if (string.indexOf(i) === -1) {
-				return false;
+				return false
 			}
 		}
 
-		return true;
+		return true
 	}
 
 	function ColorHasKeys(color, data) {
 		for (let i = 0; i < color.length; i++) {
 			if (!data.hasOwnProperty(color[i])) {
-				return false;
+				return false
 			}
 		}
-		return true;
+		return true
 	}
 
 	if (typeof data === "number") {
@@ -31,7 +31,7 @@ module.exports = function (data) {
 	} else if (typeof data === "object") {
 		for (let i of _colorSanitizer.sanitaryKeys) {
 			if (ColorHasKeys(i, data)) {
-				return i;
+				return i
 			}
 		}
 	} else if (typeof data === "string") {
@@ -53,8 +53,8 @@ module.exports = function (data) {
 				return i
 			}
 		}
-		return false;
+		return false
 	}
 
-	return false;
-};
+	return false
+}

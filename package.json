@@ -1,7 +1,7 @@
 {
   "name": "simple-color-converter",
   "version": "2.1.9",
-  "description": "This is a simple colors converter, works for almost any color. Has a built in color identifier for convertin strings to color. Supported convert colors: from and to CMYK, grayscale, hex3, hex4, hex6, hex8, html, hsl, hsv, lab, pantone, ral, rgb, rgba, rgba decimal, wavelength, xyz, yuv.",
+  "description": "This is a simple colors converter, works for almost any color. Has a built in color identifier for converting strings to color. Supported convert colors: from and to CMYK, grayscale, hex3, hex4, hex6, hex8, html, hsl, hsv, lab, pantone, ral, rgb, rgba, rgba decimal, wavelength, xyz, yuv.",
   "keywords": [
     "color",
     "simple color converter",
@@ -41,6 +41,9 @@
     "color_library": "0.0.2"
   },
   "devDependencies": {
+    "eslint": "^7.13.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
     "jest": "^26.6.3"
   }
 }

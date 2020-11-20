@@ -34,9 +34,9 @@ class AcceptedColors {
 
     get sanitaryKeys () {
         return _removeFromArray(this.keys,['isHex', 'hex', 'isHexVerbos']).sort(function(a, b){
-            return b.length - a.length;
+            return b.length - a.length
           })
     }
 }
 
-module.exports = AcceptedColors;
+module.exports = AcceptedColors

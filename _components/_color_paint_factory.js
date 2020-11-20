@@ -1,33 +1,33 @@
-// 'use strict'
+'use strict'
 
-const deltaE        = require('../_components/compare_deltaE_CIE76.js')
+const deltaE = require('../_components/compare_deltaE_CIE76.js')
 const { html, pantone, ral } = require('color_library')
 const AcceptedColors = require('./_accepted_colors')
 
 const colorConvertor = new AcceptedColors()
 
-// 0 | --- factory worker
+// 0 | --- Factory worker
 
 function splitCamelCase(name){
     return name.replace(/([A-Z])/g, ' $1').trim()
 }
 
-function PullDataFromList(listName, coloType, refeance, query = 'name'){
-    const temp = listName.filter(a => a[query] === refeance )
-    return (temp.length) ? temp[0][coloType] : false 
+function PullDataFromList(listName, coloType, reference, query = 'name'){
+    const _this = listName.filter(a => a[query] === reference )
+    return (_this.length) ? _this[0][coloType] : false 
 }
 
 function doubleString(string){
-    let temp = ''
+    let _this = ''
     for (let index = 0; index < string.length; index++) {
-        temp += string[index] + string[index]
+        _this += string[index] + string[index]
     }
-    return temp.toUpperCase()
+    return _this.toUpperCase()
 }
 
 function makeNumeric(inputNumber){
-    const temp = parseInt(inputNumber)
-    return isNaN(temp) ? 0 : temp
+    const _this = parseInt(inputNumber)
+    return isNaN(_this) ? 0 : _this
 }
 
 // 1 | --- CMYK ---------------------------------------------------------
@@ -64,25 +64,25 @@ colorConvertor.hex4.hex8 = function (hex4) {
 }
 
 colorConvertor.hex4.rgb = function (hex4) {
-    const temp = {
+    const _this = {
         color: colorConvertor.hex6.rgb(colorConvertor.hex3.hex6(hex4.substring(0, 3))),
         opacity: parseInt([hex4.substring(3, 4),hex4.substring(3, 4)].join(''), 16) / 255,
     }
 
-    for (const i in temp.color) {
-        temp.color[i] *= temp.opacity
-        temp.color[i] = Math.round(temp.color[i])
+    for (const i in _this.color) {
+        _this.color[i] *= _this.opacity
+        _this.color[i] = Math.round(_this.color[i])
     }
-    return temp.color
+    return _this.color
 }
 
 // 5 | --- Hex 6 -----------------------------------------------------
 colorConvertor.hex6.hex3 = function (hex6) {
     function convertor (a,b) {
-        let temp = ''
-        temp = [a, b].join('')
-        temp = Math.floor(parseInt(temp, 16)/16)
-        return temp.toString(16).toUpperCase()
+        let _this = ''
+        _this = [a, b].join('')
+        _this = Math.floor(parseInt(_this, 16)/16)
+        return _this.toString(16).toUpperCase()
     }
     return convertor(hex6[0], hex6[1]) + convertor(hex6[2], hex6[3]) + convertor(hex6[4], hex6[5])
 }
@@ -105,24 +105,24 @@ colorConvertor.hex6.rgb = function (hex6) {
 
 // 6 | --- hex 8 -----------------------------------------------------
 colorConvertor.hex8.rgb = function (hex8) {
-    const temp = {
+    const _this = {
         color: colorConvertor.hex6.rgb(hex8.substring(0,6)),
         opacity: parseInt(hex8.substring(6,8), 16) / 255,
     } 
 
-    for(const i in temp.color){
-        temp.color[i] *= temp.opacity
-        temp.color[i] = Math.round(temp.color[i])
+    for(const i in _this.color){
+        _this.color[i] *= _this.opacity
+        _this.color[i] = Math.round(_this.color[i])
     } 
 
-    return temp.color
+    return _this.color
 }
 
 colorConvertor.hex8.rgba = function (hex8) {
-    const temp = colorConvertor.hex6.rgb(hex8.substring(0,6))
-    temp.a = Number((parseInt(hex8.substring(6,8), 16) / 255).toFixed(2))
+    const _this = colorConvertor.hex6.rgb(hex8.substring(0,6))
+    _this.a = Number((parseInt(hex8.substring(6,8), 16) / 255).toFixed(2))
 
-    return temp
+    return _this
 }
 
 // 7 | --- html  -----------------------------------------------------
@@ -211,7 +211,7 @@ colorConvertor.hsv.rgb = function (hsv) {
 // 10 | --- Lab -----------------------------------------------------
 colorConvertor.lab.pantone = function(labOrigin){
     const lab = Object.create(labOrigin)
-    const temp = {
+    const _this = {
         index: 768,
         name: '',
     }
@@ -219,43 +219,43 @@ colorConvertor.lab.pantone = function(labOrigin){
     for(const elementPantone in pantone){
        
         const t = deltaE(pantone[elementPantone].lab, lab)
-        if(t < temp.index){
-            temp.index = t
-            temp.name = pantone[elementPantone].name
-            if(temp.index === 1) {
-                return temp.name
+        if(t < _this.index){
+            _this.index = t
+            _this.name = pantone[elementPantone].name
+            if(_this.index === 1) {
+                return _this.name
             }
         }
     }
 
-    return temp.name
+    return _this.name
 }
 
 colorConvertor.lab.ral = function (lab){
-    const temp = {
+    const _this = {
         index: 768,
         position: ral.length - 1
     }
    
     for(const elementRal in ral){
         const t = deltaE(ral[elementRal].lab, lab)
-        if(t < temp.index){
-            temp.index = t
-            temp.position = elementRal
-            if(temp.index === 0) {
+        if(t < _this.index){
+            _this.index = t
+            _this.position = elementRal
+            if(_this.index === 0) {
                 return { 
-                    ral: ral[temp.position].ral,
-                    name: splitCamelCase(ral[temp.position].name), 
-                    lrv: ral[temp.position].LRV,
+                    ral: ral[_this.position].ral,
+                    name: splitCamelCase(ral[_this.position].name), 
+                    lrv: ral[_this.position].LRV,
                 }
             }
         } 
     }
 
     return { 
-        ral: ral[temp.position].ral,
-        name: splitCamelCase(ral[temp.position].name), 
-        lrv: ral[temp.position].LRV,
+        ral: ral[_this.position].ral,
+        name: splitCamelCase(ral[_this.position].name), 
+        lrv: ral[_this.position].LRV,
     }
 }
 
@@ -326,8 +326,7 @@ colorConvertor.rgb.hex6 = function (rgb) {
 }
 
 colorConvertor.rgb.rgba = function (rgb) {
-    rgb.a = 1
-    return rgb
+    return Object.assign(rgb, { a:1 })
 }
 
 colorConvertor.rgb.hsl = function (rgb) {
@@ -396,16 +395,20 @@ colorConvertor.rgb.hsv = function (rgb) {
 }
 
 colorConvertor.rgb.grayscale = function (rgb) {
-    for(const i of 'rgb') {
-        rgb[i] = 255 - rgb[i]
+    if(rgb) {
+        const grayscaleWhite = {
+            r: 0.3,
+            g: 0.59,
+            b: 0.11,
+        }
+
+        for(const i of 'rgb') {
+            rgb[i] = ( 255 - rgb[i] ) * grayscaleWhite[i] 
+        }
+        return Math.round(( rgb.r + rgb.g + rgb.b )/ 2.56)
     }
-    return Math.round(((0.3 * rgb.r) + (0.59 * rgb.g) + (0.11 * rgb.b))/ 2.56)
+    return 100
 }
-
-// colorConvertor.rgb.grayscale = function (rgb) {
-//     return Math.round(((0.3 * rgb.r) + (0.59 * rgb.g) + (0.11 * rgb.b)) / 2.56)
-// }
-
 
 colorConvertor.rgb.lab = function (rgb) {
     for(const i of 'rgb') {
@@ -460,23 +463,23 @@ colorConvertor.rgb.rgbdecimal = function(rgb){
 }
 
 colorConvertor.rgb.html = function(rgb){
-    const temp = {
+    const _this = {
         index: 768,
         html: '',
     }
 
     for(const elementHtml in html){
         const t = Math.abs(html[elementHtml].rgb.r - rgb.r ) + Math.abs(html[elementHtml].rgb.g - rgb.g ) + Math.abs(html[elementHtml].rgb.b - rgb.b )
-        if(t < temp.index){
-            temp.index = t
-            temp.html = splitCamelCase(html[elementHtml].name)
-            if(temp.index === 0) {
-                return temp.html
+        if(t < _this.index){
+            _this.index = t
+            _this.html = splitCamelCase(html[elementHtml].name)
+            if(_this.index === 0) {
+                return _this.html
             }
         }
     }
 
-    return temp.html
+    return _this.html
 }
 
 colorConvertor.rgb.xyz = function(rgb) {
@@ -506,13 +509,13 @@ colorConvertor.rgb.yuv = function(rgb) {
 
 // 14 | --- rgba -----------------------------------------------------
 colorConvertor.rgba.rgb = function(rgba){
-    const temp = {}
+    const _this = {}
 
     for(const i of 'rgb'){
-        temp[i] = Math.round(rgba[i] * rgba.a)
+        _this[i] = Math.round(rgba[i] * rgba.a)
     }
 
-    return temp
+    return _this
 }
 
 // 14 | --- rgbdecimal -----------------------------------------------------
@@ -524,7 +527,6 @@ colorConvertor.rgbdecimal.rgb = function (RGBdecimal) {
         b: (RGBdecimal & 0x0000ff)
     }
 }
-
 
 // 15 | --- w -----------------------------------------------------
 colorConvertor.w.rgb = function(w) {
@@ -574,7 +576,6 @@ colorConvertor.xyz.lab = function(xyz) {
 }
 
 // 16 | --- YUV -----------------------------------------------------
-
 colorConvertor.yuv.rgb = function(yuv) {  
 
     return {
