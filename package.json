@@ -33,12 +33,14 @@
   "homepage": "https://draganradu.github.io/",
   "scripts": {
     "dev": "node test/dev.test.js",
-    "test": "node test/index.test.js last",
-    "table": "node test/md.build.js"
+    "test": "jest"
   },
   "author": "Radu Dragan <draganaurelradu@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "color_library": "0.0.2"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3"
   }
 }

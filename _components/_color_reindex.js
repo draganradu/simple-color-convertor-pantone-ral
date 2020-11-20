@@ -3,7 +3,6 @@
 module.exports = function (settingsColorString, settingsIndexColor, settingsRegexColorMatch){
     // stop if inposible due to legth
     if (settingsColorString.length < (settingsIndexColor.length + (settingsIndexColor.length -1))) { return false }
-    // console.log(settingsColorString, settingsIndexColor, settingsRegexColorMatch)
 
     const _this = {
         tempOut: {},

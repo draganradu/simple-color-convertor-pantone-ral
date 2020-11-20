@@ -68,7 +68,7 @@ colorConvertor.hex4.rgb = function (hex4) {
         color: colorConvertor.hex6.rgb(colorConvertor.hex3.hex6(hex4.substring(0, 3))),
         opacity: parseInt([hex4.substring(3, 4),hex4.substring(3, 4)].join(''), 16) / 255,
     }
-    console.log(temp)
+
     for (const i in temp.color) {
         temp.color[i] *= temp.opacity
         temp.color[i] = Math.round(temp.color[i])

@@ -49,7 +49,6 @@ module.exports = function (data) {
 		for (let i of _colorSanitizer.sanitaryKeys) {
 			let tempSanitized = _colorSanitizer[i](data)
 
-			// console.log(i, '|' ,tempSanitized) // sanitization work
 			if (tempSanitized) {
 				return i
 			}
