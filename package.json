@@ -34,7 +34,8 @@
   "scripts": {
     "dev": "node test/dev.test.js",
     "test": "jest",
-    "lint": "eslint *.js && eslint _components/*.js"
+    "lint": "eslint *.js && eslint _components/*.js",
+    "lintfix": "eslint *.js && eslint _components/*.js --fix"
   },
   "author": "Radu Dragan <draganaurelradu@gmail.com>",
   "license": "MIT",

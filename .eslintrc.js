@@ -19,5 +19,6 @@ module.exports = {
         'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
         'no-restricted-syntax': ['error', 'BinaryExpression[operator="in"]'],
         'linebreak-style': 0,
+        'no-bitwise': ['error', { allow: ['&', '>>', '<<'] }],
     },
 }

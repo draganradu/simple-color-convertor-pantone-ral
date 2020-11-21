@@ -1,9 +1,7 @@
-'use strict'
-
-const _removeFromArray = require('../_components/frame/_remove_array_from_array')
+const _removeFromArray = require('./frame/_remove_array_from_array')
 
 class AcceptedColors {
-    constructor () {
+    constructor() {
         this.cmyk = {}
         this.grayscale = {}
         this.hex3 = {}
@@ -24,18 +22,16 @@ class AcceptedColors {
         this.yuv = {}
     }
 
-    get keys () {
+    get keys() {
         return Object.keys(this)
     }
 
-    get paintKeys () {
-        return _removeFromArray(this.keys,['ral', 'rgbdecimal' , 'pantone', 'grayscale', 'hex3', 'hex4', 'rgba', 'yuv'])
+    get paintKeys() {
+        return _removeFromArray(this.keys, ['ral', 'rgbdecimal', 'pantone', 'grayscale', 'hex3', 'hex4', 'rgba', 'yuv'])
     }
 
-    get sanitaryKeys () {
-        return _removeFromArray(this.keys,['isHex', 'hex', 'isHexVerbos']).sort(function(a, b){
-            return b.length - a.length
-          })
+    get sanitaryKeys() {
+        return _removeFromArray(this.keys, ['isHex', 'hex', 'isHexVerbos']).sort((a, b) => b.length - a.length)
     }
 }
 
