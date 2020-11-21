@@ -1,14 +1,11 @@
-'use strict'
-
 module.exports = {
-    require: function (number1, number2) {
-        if(number1 > 1 && number2 > 1) {
+    require(number1, number2) {
+        if (number1 > 1 && number2 > 1) {
             return false
-        } else {
-            return true
         }
+        return true
     },
-    fix: function (number) {
+    fix(number) {
         return number * 100
-    }
+    },
 }

@@ -1,6 +1,6 @@
 {
   "name": "simple-color-converter",
-  "version": "2.1.9",
+  "version": "2.1.10",
   "description": "This is a simple colors converter, works for almost any color. Has a built in color identifier for converting strings to color. Supported convert colors: from and to CMYK, grayscale, hex3, hex4, hex6, hex8, html, hsl, hsv, lab, pantone, ral, rgb, rgba, rgba decimal, wavelength, xyz, yuv.",
   "keywords": [
     "color",
@@ -34,8 +34,8 @@
   "scripts": {
     "dev": "node test/dev.test.js",
     "test": "jest",
-    "lint": "eslint *.js && eslint _components/*.js",
-    "lintfix": "eslint *.js && eslint _components/*.js --fix"
+    "lint": "eslint *.js _components/*.js _components/**/*.js",
+    "lintfix": "eslint *.js _components/*.js _components/**/*.js --fix"
   },
   "author": "Radu Dragan <draganaurelradu@gmail.com>",
   "license": "MIT",

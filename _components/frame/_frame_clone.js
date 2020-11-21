@@ -1,9 +1,6 @@
-'use strict'
-
-module.exports = function (ObjectToClone) {
-    if(typeof ObjectToClone === 'object'){
+module.exports = function copyObjectFix(ObjectToClone) {
+    if (typeof ObjectToClone === 'object') {
         return JSON.parse(JSON.stringify(ObjectToClone).toLocaleLowerCase())
-    } else {
-        return ObjectToClone
     }
+    return ObjectToClone
 }

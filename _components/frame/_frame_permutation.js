@@ -1,16 +1,12 @@
-'use strict'
-
-module.exports = function(list,from,to, maxLen) {
+module.exports = function generateSteps(list, from, to, maxLen) {
     function noDuplicates(array) {
         return (new Set(array)).size === array.length
     }
-    
+
     // Copy initial values as arrays
-    const perm = list.map(function(val) {
-        return [val]
-    })
+    const perm = list.map((val) => [val])
     // Our permutation generator
-    const generate = function(_perm, _maxLen, currLen) {
+    const generate = function recursiveFunction(_perm, _maxLen, currLen) {
         // Reached desired length
         if (currLen === _maxLen) {
             return _perm
@@ -21,7 +17,7 @@ module.exports = function(list,from,to, maxLen) {
             // Create new permutation
             for (let k = 0; k < list.length; k++) {
                 const _temp = currPerm.concat(list[k])
-                if (noDuplicates(_temp)){
+                if (noDuplicates(_temp)) {
                     _perm.push(_temp)
                 }
             }
@@ -32,9 +28,11 @@ module.exports = function(list,from,to, maxLen) {
 
     // Start with size 1 because of initial values
     const temp = generate(perm, maxLen, 1)
-    for (let a in temp){
-        temp[a].unshift(from)
-        temp[a].push(to)
+    for (const a in temp) {
+        if (Object.prototype.hasOwnProperty.call(temp, a)) {
+            temp[a].unshift(from)
+            temp[a].push(to)
+        }
     }
     return temp
 }
