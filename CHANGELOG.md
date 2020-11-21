@@ -14,3 +14,9 @@ extraStepsForGrayscale
 removed trailing ;
 removed typos from comments
 removed _new_color_reindex component
+
+
+Linter
+528 - init
+274 - indent
+43 - line brakes

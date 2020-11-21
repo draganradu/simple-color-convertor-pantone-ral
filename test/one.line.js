@@ -1,4 +1,4 @@
-'use strict'
+
 
 let simpleColorConverter = require('../simple_color_converter')
 

@@ -1,4 +1,4 @@
-'use strict'
+
 
 const dotColor = require('../simple_color_converter')
 const testData = require('./test.data')
