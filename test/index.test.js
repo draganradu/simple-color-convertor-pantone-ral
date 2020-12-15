@@ -1,4 +1,4 @@
-const DotColor = require('../simple_color_converter')
+const DotColor = require('../index')
 const testData = require('./test.data')
 
 for (const rawTestColor of testData) {

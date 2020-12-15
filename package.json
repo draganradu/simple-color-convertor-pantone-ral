@@ -1,6 +1,6 @@
 {
   "name": "simple-color-converter",
-  "version": "2.1.11",
+  "version": "3.0.0",
   "description": "This is a simple colors converter, works for almost any color. Has a built in color identifier for converting strings to color. Supported convert colors: from and to CMYK, grayscale, hex3, hex4, hex6, hex8, html, hsl, hsv, lab, pantone, ral, rgb, rgba, rgba decimal, wavelength, xyz, yuv.",
   "keywords": [
     "simple color",
@@ -29,7 +29,7 @@
   "engines": {
     "node": ">= 0.6"
   },
-  "main": "simple_color_converter.js",
+  "main": "index.js",
   "repository": "draganradu/simple-color-convertor-pantone-ral",
   "homepage": "https://draganradu.github.io/",
   "scripts": {
@@ -47,7 +47,7 @@
     "eslint": "^7.13.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
-    "jest": "^22.4.2"
+    "jest": "^22.4.4"
   },
   "jest": {
     "testEnvironment": "node"
