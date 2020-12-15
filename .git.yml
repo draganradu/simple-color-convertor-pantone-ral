@@ -1,0 +1,15 @@
+image: node:latest
+
+cache:
+  paths:
+  - node_modules/
+
+build:
+  stage: build
+  script:
+   - npm install
+   - npm build
+test:
+   stage: test
+   script:
+   - echo "Test Script"
