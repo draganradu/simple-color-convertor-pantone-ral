@@ -35,6 +35,7 @@
   "scripts": {
     "dev": "node test/dev.test.js",
     "test": "jest",
+    "one": "node test/one.line.js",
     "lint": "eslint *.js _components/*.js _components/**/*.js",
     "lintfix": "eslint *.js test/*.js _components/**/*.js --fix"
   },

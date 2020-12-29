@@ -5,4 +5,9 @@ module.exports = ({value, type}) => {
         }
     }
     
+    if(typeof value === 'object') {
+        const colorName = Object.keys(value).join('').toUpperCase()
+        const colorValue = Object.values(value).join(', ')
+        return `${colorName}(${colorValue})`
+    }
 }

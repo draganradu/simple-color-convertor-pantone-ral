@@ -15,13 +15,15 @@ const is = {
                 length: hexLength
             }
         }
-
+    },
+    rgb: (value) => {
+        
     }
+
 }
 
 module.exports = ({ from, value }) => {
     from = colorNameSanitization(from)
-    console.log('value', value, 2)
     if(from) {
         return is[from](value)
     }

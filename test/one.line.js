@@ -8,6 +8,10 @@ const SimpleColorConverter = require('../index.js')
 const color = new SimpleColorConverter()
 color.color = '#123'
 
+function log (a) {
+    console.log(color[a], '|' ,a) 
+}
+
 // console.log(color._identify, '|', '_identify')
 // console.log(color.identify, '|', 'identify') 
 // console.log(color.color, '|', 'color') 
@@ -21,5 +25,7 @@ color.color = '#123'
 
 color.hex3 = '#999'
 
-console.log(color.hex3, '|', 'hex3'  )
-console.log(color._hex3, '|', '_hex3'  )
+
+log('hex3')
+log('_rgb')
+log('rgb')
