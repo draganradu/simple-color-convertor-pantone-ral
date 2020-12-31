@@ -6,6 +6,17 @@ const colorConvertor = new AcceptedColors()
 
 // 0 | --- Factory worker
 
+function toFixed(colorObject){
+    const _this = {...colorObject}
+    for (const i in _this) {
+        if (Object.prototype.hasOwnProperty.call(_this, i)) {
+            _this[i] = (Math.round(_this[i] * 1000000000) / 1000000000) 
+        }
+    }
+
+    return _this
+} 
+
 function splitCamelCase(name) {
     return name.replace(/([A-Z])/g, ' $1').trim()
 }
@@ -136,7 +147,7 @@ colorConvertor.html.rgb = function convertHtmlRgb(htmlInput) {
 
 // 8 | --- hsl -----------------------------------------------------
 colorConvertor.hsl.rgb = function convertHslRgb(_hsl) {
-    const hsl = _hsl
+    const hsl = { ..._hsl}
     const rgb = { r: 0, g: 0, b: 0 }
 
     hsl.h /= 60
@@ -185,7 +196,7 @@ colorConvertor.hsl.w = function convertHslW(hsl) {
 
 // 9 | --- hsv -----------------------------------------------------
 colorConvertor.hsv.rgb = function convertHsvRgb(_hsv) {
-    const hsv = _hsv
+    const hsv = {..._hsv}
     hsv.h /= 360
     hsv.s /= 100
     hsv.v /= 100
@@ -216,7 +227,7 @@ colorConvertor.hsv.rgb = function convertHsvRgb(_hsv) {
 
 // 10 | --- Lab -----------------------------------------------------
 colorConvertor.lab.pantone = function convertLabPantone(labOrigin) {
-    const lab = Object.create(labOrigin)
+    const lab = { ...labOrigin}
     const _this = {
         index: 768,
         name: '',
@@ -336,50 +347,50 @@ colorConvertor.rgb.rgba = function convertRgbRgba(rgb) {
     return Object.assign(rgb, { a: 1 })
 }
 
-colorConvertor.rgb.hsl = function convertRgbHsl(rgb) {
-    const _rgb = rgb
+colorConvertor.rgb.hsl = function convertRgbHsl(_rgb) {
+    const rgb = {..._rgb}
     const hsl = { h: 0, s: 0, l: 0 }
     for (const i of 'rgb') {
-        _rgb[i] /= 255
+        rgb[i] /= 255
     }
 
     // Min Max chanel val
-    _rgb.cmin = Math.min(_rgb.r, _rgb.g, _rgb.b)
-    _rgb.cmax = Math.max(_rgb.r, _rgb.g, _rgb.b)
-    _rgb.delta = _rgb.cmax - _rgb.cmin
+    rgb.cmin = Math.min(rgb.r, rgb.g, rgb.b)
+    rgb.cmax = Math.max(rgb.r, rgb.g, rgb.b)
+    rgb.delta = rgb.cmax - rgb.cmin
 
     // Calculate hue
-    if (_rgb.delta === 0) {
+    if (rgb.delta === 0) {
         hsl.h = 0
-    } else if (_rgb.cmax === _rgb.r) {
-        hsl.h = Math.round((((_rgb.g - _rgb.b) / _rgb.delta) % 6) * 60)
-    } else if (_rgb.cmax === _rgb.g) {
-        hsl.h = Math.round(((_rgb.b - _rgb.r) / _rgb.delta + 2) * 60)
+    } else if (rgb.cmax === rgb.r) {
+        hsl.h = Math.round((((rgb.g - rgb.b) / rgb.delta) % 6) * 60)
+    } else if (rgb.cmax === rgb.g) {
+        hsl.h = Math.round(((rgb.b - rgb.r) / rgb.delta + 2) * 60)
     } else {
-        hsl.h = Math.round(((_rgb.r - _rgb.g) / _rgb.delta + 4) * 60)
+        hsl.h = Math.round(((rgb.r - rgb.g) / rgb.delta + 4) * 60)
     }
 
     // Make negative hues positive behind 360°
     hsl.h = (hsl.h < 0) ? hsl.h + 360 : hsl.h
 
-    hsl.l = (_rgb.cmax + _rgb.cmin) / 2
+    hsl.l = (rgb.cmax + rgb.cmin) / 2
 
-    hsl.s = _rgb.delta === 0 ? 0 : _rgb.delta / (1 - Math.abs(2 * hsl.l - 1))
+    hsl.s = rgb.delta === 0 ? 0 : rgb.delta / (1 - Math.abs(2 * hsl.l - 1))
 
     hsl.s = parseFloat((hsl.s * 100).toFixed(1))
     hsl.l = parseFloat((hsl.l * 100).toFixed(1))
 
-    return hsl
+    return toFixed(hsl)
 }
 
-colorConvertor.rgb.hsv = function convertRgbHsv(rgb) {
-    const _rgb = rgb
+colorConvertor.rgb.hsv = function convertRgbHsv(_rgb) {
+    const rgb = {..._rgb}
     for (const i of 'rgb') {
-        _rgb[i] /= 255
+        rgb[i] /= 255
     }
 
-    const minRGB = Math.min(_rgb.r, Math.min(_rgb.g, _rgb.b))
-    const maxRGB = Math.max(_rgb.r, Math.max(_rgb.g, _rgb.b))
+    const minRGB = Math.min(rgb.r, Math.min(rgb.g, rgb.b))
+    const maxRGB = Math.max(rgb.r, Math.max(rgb.g, rgb.b))
     let hsv = false
 
     if (minRGB === maxRGB) {
@@ -391,10 +402,10 @@ colorConvertor.rgb.hsv = function convertRgbHsv(rgb) {
         }
     } else {
         // color
-        let d = ((_rgb.b === minRGB) ? _rgb.r - _rgb.g : _rgb.b - _rgb.r)
-        let h = (_rgb.b === minRGB) ? 1 : 5
-        if (_rgb.r === minRGB) {
-            d = (_rgb.g - _rgb.b)
+        let d = ((rgb.b === minRGB) ? rgb.r - rgb.g : rgb.b - rgb.r)
+        let h = (rgb.b === minRGB) ? 1 : 5
+        if (rgb.r === minRGB) {
+            d = (rgb.g - rgb.b)
             h = 3
         }
 
@@ -408,9 +419,9 @@ colorConvertor.rgb.hsv = function convertRgbHsv(rgb) {
     return hsv
 }
 
-colorConvertor.rgb.grayscale = function convertRgbGrayscale(rgb) {
-    if (rgb) {
-        const _rgb = rgb
+colorConvertor.rgb.grayscale = function convertRgbGrayscale(_rgb) {
+    if (_rgb) {
+        const rgb = {..._rgb}
         const grayscaleWhite = {
             r: 0.3,
             g: 0.59,
@@ -418,55 +429,56 @@ colorConvertor.rgb.grayscale = function convertRgbGrayscale(rgb) {
         }
 
         for (const i of 'rgb') {
-            _rgb[i] = (255 - _rgb[i]) * grayscaleWhite[i]
+            rgb[i] = (255 - rgb[i]) * grayscaleWhite[i]
         }
-        return Math.round((_rgb.r + _rgb.g + _rgb.b) / 2.56)
+        return Math.round((rgb.r + rgb.g + rgb.b) / 2.56)
     }
     return 100
 }
 
-colorConvertor.rgb.lab = function convertRgbLab(rgb) {
-    const _rgb = rgb
+colorConvertor.rgb.lab = function convertRgbLab(_rgb) {
+    const rgb = {..._rgb}
     for (const i of 'rgb') {
-        _rgb[i] /= 255
+        rgb[i] /= 255
     }
 
-    _rgb.r = (_rgb.r > 0.04045) ? (((_rgb.r + 0.055) / 1.055) ** 2.4) : _rgb.r / 12.92
-    _rgb.g = (_rgb.g > 0.04045) ? (((_rgb.g + 0.055) / 1.055) ** 2.4) : _rgb.g / 12.92
-    _rgb.b = (_rgb.b > 0.04045) ? (((_rgb.b + 0.055) / 1.055) ** 2.4) : _rgb.b / 12.92
+    rgb.r = (rgb.r > 0.04045) ? (((rgb.r + 0.055) / 1.055) ** 2.4) : rgb.r / 12.92
+    rgb.g = (rgb.g > 0.04045) ? (((rgb.g + 0.055) / 1.055) ** 2.4) : rgb.g / 12.92
+    rgb.b = (rgb.b > 0.04045) ? (((rgb.b + 0.055) / 1.055) ** 2.4) : rgb.b / 12.92
 
     const xyz = { x: 0, y: 0, z: 0 }
 
-    xyz.x = (_rgb.r * 0.4124 + _rgb.g * 0.3576 + _rgb.b * 0.1805) / 0.95047
-    xyz.y = (_rgb.r * 0.2126 + _rgb.g * 0.7152 + _rgb.b * 0.0722) / 1.00000
-    xyz.z = (_rgb.r * 0.0193 + _rgb.g * 0.1192 + _rgb.b * 0.9505) / 1.08883
+    xyz.x = (rgb.r * 0.4124 + rgb.g * 0.3576 + rgb.b * 0.1805) / 0.95047
+    xyz.y = (rgb.r * 0.2126 + rgb.g * 0.7152 + rgb.b * 0.0722) / 1.00000
+    xyz.z = (rgb.r * 0.0193 + rgb.g * 0.1192 + rgb.b * 0.9505) / 1.08883
 
     xyz.x = (xyz.x > 0.008856) ? (xyz.x ** (1 / 3)) : (7.787 * xyz.x) + 16 / 116
     xyz.y = (xyz.y > 0.008856) ? (xyz.y ** (1 / 3)) : (7.787 * xyz.y) + 16 / 116
     xyz.z = (xyz.z > 0.008856) ? (xyz.z ** (1 / 3)) : (7.787 * xyz.z) + 16 / 116
 
-    return { l: ((116 * xyz.y) - 16), a: (500 * (xyz.x - xyz.y)), b: (200 * (xyz.y - xyz.z)) }
+    const lab = { l: ((116 * xyz.y) - 16), a: (500 * (xyz.x - xyz.y)), b: (200 * (xyz.y - xyz.z)) }
+    return toFixed(lab)
 }
 
-colorConvertor.rgb.cmyk = function convertRgbCmyk(rgb) {
-    const _rgb = rgb
+colorConvertor.rgb.cmyk = function convertRgbCmyk(_rgb) {
+    const rgb = {..._rgb}
     const cmyk = {
         c: 0, m: 0, y: 0, k: 0,
     }
 
-    if (_rgb.r === 0 && _rgb.g === 0 && _rgb.b === 0) {
+    if (rgb.r === 0 && rgb.g === 0 && rgb.b === 0) {
         cmyk.k = 100
     } else {
-        for (const i of '_rgb') {
-            _rgb[i] /= 255
+        for (const i of 'rgb') {
+            rgb[i] /= 255
         }
 
-        cmyk.k = 1 - Math.max(_rgb.r, _rgb.g, _rgb.b)
+        cmyk.k = 1 - Math.max(rgb.r, rgb.g, rgb.b)
 
         if (cmyk.k !== 1) {
-            cmyk.c = (1 - _rgb.r - cmyk.k) / (1 - cmyk.k)
-            cmyk.m = (1 - _rgb.g - cmyk.k) / (1 - cmyk.k)
-            cmyk.y = (1 - _rgb.b - cmyk.k) / (1 - cmyk.k)
+            cmyk.c = (1 - rgb.r - cmyk.k) / (1 - cmyk.k)
+            cmyk.m = (1 - rgb.g - cmyk.k) / (1 - cmyk.k)
+            cmyk.y = (1 - rgb.b - cmyk.k) / (1 - cmyk.k)
 
             for (const i of 'cmyk') {
                 cmyk[i] = Math.round(cmyk[i] * 100)
@@ -500,20 +512,20 @@ colorConvertor.rgb.html = function convertRgbHtml(rgb) {
     return _this.html
 }
 
-colorConvertor.rgb.xyz = function convertRgbXyz(rgb) {
-    const _rgb = rgb
+colorConvertor.rgb.xyz = function convertRgbXyz(_rgb) {
+    const rgb = {..._rgb}
     function pivot(n) {
         return (n > 0.04045 ? (((n + 0.055) / 1.055) ** 2.4) : n / 12.92) * 100.0
     }
 
     for (const i of 'rgb') {
-        _rgb[i] = pivot(_rgb[i] / 255.0)
+        rgb[i] = pivot(rgb[i] / 255.0)
     }
 
     return {
-        x: _rgb.r * 0.4124 + _rgb.g * 0.3576 + _rgb.b * 0.1805,
-        y: _rgb.r * 0.2126 + _rgb.g * 0.7152 + _rgb.b * 0.0722,
-        z: _rgb.r * 0.0193 + _rgb.g * 0.1192 + _rgb.b * 0.9505,
+        x: rgb.r * 0.4124 + rgb.g * 0.3576 + rgb.b * 0.1805,
+        y: rgb.r * 0.2126 + rgb.g * 0.7152 + rgb.b * 0.0722,
+        z: rgb.r * 0.0193 + rgb.g * 0.1192 + rgb.b * 0.9505,
     }
 }
 
@@ -587,11 +599,13 @@ colorConvertor.xyz.lab = function convertXyzLab(xyz) {
     const y = pivot(xyz.y / 100.000)
     const z = pivot(xyz.z / 108.883)
 
-    return {
+    const lab = {
         l: Math.max(0, 116 * y - 16),
         a: 500 * (x - y),
         b: 200 * (y - z),
     }
+
+    return toFixed(lab)
 }
 
 // 16 | --- YUV -----------------------------------------------------
