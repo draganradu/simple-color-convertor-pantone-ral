@@ -1,5 +1,7 @@
 test/
+node_modules/
 dev.md
 exemple_color.md
 issue.md
 *.tgz
+assets/

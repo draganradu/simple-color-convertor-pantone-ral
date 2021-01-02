@@ -1,3 +1,1 @@
-module.exports = function removeFromArray(listOfElements, listOfExclusion) {
-    return listOfElements.filter((x) => listOfExclusion.indexOf(x) < 0)
-}
+module.exports = (listOfElements, listOfExclusion) => listOfElements.filter((x) => listOfExclusion.indexOf(x) < 0)

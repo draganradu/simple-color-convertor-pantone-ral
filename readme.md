@@ -1,6 +1,6 @@
 ![build passing](https://travis-ci.org/draganradu/simple-color-convertor-pantone-ral.svg?branch=master) ![License](https://img.shields.io/npm/l/simple-color-converter) ![maintained](https://img.shields.io/maintenance/yes/2020) ![Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/npm/simple-color-converter) 
 ![Node Version](https://img.shields.io/node/v/simple-color-converter) ![NPM](https://img.shields.io/npm/v/simple-color-converter) 
-![size NPM](https://img.shields.io/bundlephobia/min/simple-color-converter)  ![size Git](https://img.shields.io/github/languages/code-size/draganradu/simple-color-convertor-pantone-ral) 
+![size NPM](https://img.shields.io/bundlephobia/minzip/simple-color-converter)  ![size](https://img.shields.io/github/languages/code-size/draganradu/simple-color-convertor-pantone-ral) 
 ![Release](https://img.shields.io/github/release-date/draganradu/simple-color-convertor-pantone-ral)  ![Commit](https://img.shields.io/github/last-commit/draganradu/simple-color-convertor-pantone-ral) 
 ![Issues](https://img.shields.io/github/issues/draganradu/simple-color-convertor-pantone-ral) 
 ![Total downloads](https://img.shields.io/npm/dt/simple-color-converter) 
@@ -105,6 +105,8 @@ console.log(color) // { c: 0, m: 0, y: 0, k: 87 }
 | hexref    | Reference value in hex format         | boolean       | false          | For Hex it equels Hex6 |
 | debug     | this prevents the object cleanup      | boolean       | false          |       |
 
+## Future
+I am working on version 3 or this package and the new version will be a modern setter and getter based color convertor. A much modern way of approaching this problem.
 
 ## Contribute
 If there are any features you would like to support, or want to add it directly please send us a pull request. I`m more then happy. 

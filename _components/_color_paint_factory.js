@@ -6,27 +6,25 @@ const colorConvertor = new AcceptedColors()
 
 // 0 | --- Factory worker
 
-function toFixed(colorObject){
-    const _this = {...colorObject}
+const approxFix = (colorObject) => {
+    const _this = { ...colorObject }
     for (const i in _this) {
         if (Object.prototype.hasOwnProperty.call(_this, i)) {
-            _this[i] = (Math.round(_this[i] * 1000000000) / 1000000000) 
+            _this[i] = (Math.round(_this[i] * 1000000000) / 1000000000)
         }
     }
 
     return _this
-} 
-
-function splitCamelCase(name) {
-    return name.replace(/([A-Z])/g, ' $1').trim()
 }
 
-function PullDataFromList(listName, coloType, reference, query = 'name') {
+const splitCamelCase = (name) => name.replace(/([A-Z])/g, ' $1').trim()
+
+const PullDataFromList = (listName, coloType, reference, query = 'name') => {
     const _this = listName.filter((a) => a[query] === reference)
     return (_this.length) ? _this[0][coloType] : false
 }
 
-function doubleString(string) {
+const doubleString = (string) => {
     let _this = ''
     for (let index = 0; index < string.length; index++) {
         _this += string[index] + string[index]
@@ -34,47 +32,37 @@ function doubleString(string) {
     return _this.toUpperCase()
 }
 
-function makeNumeric(inputNumber) {
+const makeNumeric = (inputNumber) => {
     const _this = parseInt(inputNumber, 10)
     return Number.isNaN(_this) ? 0 : _this
 }
 
 // 1 | --- CMYK ---------------------------------------------------------
-colorConvertor.cmyk.rgb = function convertCmykRgb(cmyk) {
-    return {
-        r: Math.round(255 * (1 - cmyk.c / 100) * (1 - cmyk.k / 100)),
-        g: Math.round(255 * (1 - cmyk.m / 100) * (1 - cmyk.k / 100)),
-        b: Math.round(255 * (1 - cmyk.y / 100) * (1 - cmyk.k / 100)),
-    }
-}
+colorConvertor.cmyk.rgb = (cmyk) => ({
+    r: Math.round(255 * (1 - cmyk.c / 100) * (1 - cmyk.k / 100)),
+    g: Math.round(255 * (1 - cmyk.m / 100) * (1 - cmyk.k / 100)),
+    b: Math.round(255 * (1 - cmyk.y / 100) * (1 - cmyk.k / 100)),
+})
 
 // 2 | --- Grayscale -----------------------------------------------------
-colorConvertor.grayscale.cmyk = function convertGrayscaleCmyk(grayscale) {
-    return {
-        c: 0, m: 0, y: 0, k: grayscale,
-    }
-}
+colorConvertor.grayscale.cmyk = (grayscale) => ({
+    c: 0, m: 0, y: 0, k: grayscale,
+})
 
-colorConvertor.grayscale.rgb = function convertGrayscaleRgb(_grayscale) {
+colorConvertor.grayscale.rgb = (_grayscale) => {
     const grayscale = Math.round((100 - _grayscale) / 0.392156862745098)
     return { r: grayscale, g: grayscale, b: grayscale }
 }
 
-colorConvertor.grayscale.w = function convertGrayscaleW() {
-    return { error: 'You can`t get the wavelength of no color' }
-}
+colorConvertor.grayscale.w = () => ({ error: 'You can`t get the wavelength of no color' })
 
 // 3 | --- Hex 3 ---------------------------------------------------------
-colorConvertor.hex3.hex6 = function convertHex3hex6(hex3) {
-    return doubleString(hex3)
-}
+colorConvertor.hex3.hex6 = (hex3) => doubleString(hex3)
 
 // 4 | --- Hex 4 -----------------------------------------------------
-colorConvertor.hex4.hex8 = function convertHex4hex8(hex4) {
-    return doubleString(hex4)
-}
+colorConvertor.hex4.hex8 = (hex4) => doubleString(hex4)
 
-colorConvertor.hex4.rgb = function convertHex4Rgb(hex4) {
+colorConvertor.hex4.rgb = (hex4) => {
     const _this = {
         color: colorConvertor.hex6.rgb(colorConvertor.hex3.hex6(hex4.substring(0, 3))),
         opacity: parseInt([hex4.substring(3, 4), hex4.substring(3, 4)].join(''), 16) / 255,
@@ -90,8 +78,8 @@ colorConvertor.hex4.rgb = function convertHex4Rgb(hex4) {
 }
 
 // 5 | --- Hex 6 -----------------------------------------------------
-colorConvertor.hex6.hex3 = function convertHex6Hex3(hex6) {
-    function convertor(a, b) {
+colorConvertor.hex6.hex3 = (hex6) => {
+    const convertor = (a, b) => {
         let _this = ''
         _this = [a, b].join('')
         _this = Math.floor(parseInt(_this, 16) / 16)
@@ -100,24 +88,18 @@ colorConvertor.hex6.hex3 = function convertHex6Hex3(hex6) {
     return convertor(hex6[0], hex6[1]) + convertor(hex6[2], hex6[3]) + convertor(hex6[4], hex6[5])
 }
 
-colorConvertor.hex6.hex4 = function convertHex6Hex4(hex6) {
-    return (`${colorConvertor.hex6.hex3(hex6)}F`)
-}
+colorConvertor.hex6.hex4 = (hex6) => (`${colorConvertor.hex6.hex3(hex6)}F`)
 
-colorConvertor.hex6.hex8 = function convertHex6Hex8(hex6) {
-    return (`${hex6}FF`).toUpperCase()
-}
+colorConvertor.hex6.hex8 = (hex6) => (`${hex6}FF`).toUpperCase()
 
-colorConvertor.hex6.rgb = function convertHex6Rgb(hex6) {
-    return {
-        r: parseInt(hex6.substring(0, 2), 16),
-        g: parseInt(hex6.substring(2, 4), 16),
-        b: parseInt(hex6.substring(4, 6), 16),
-    }
-}
+colorConvertor.hex6.rgb = (hex6) => ({
+    r: parseInt(hex6.substring(0, 2), 16),
+    g: parseInt(hex6.substring(2, 4), 16),
+    b: parseInt(hex6.substring(4, 6), 16),
+})
 
 // 6 | --- hex 8 -----------------------------------------------------
-colorConvertor.hex8.rgb = function convertHex8Rgb(hex8) {
+colorConvertor.hex8.rgb = (hex8) => {
     const _this = {
         color: colorConvertor.hex6.rgb(hex8.substring(0, 6)),
         opacity: parseInt(hex8.substring(6, 8), 16) / 255,
@@ -133,7 +115,7 @@ colorConvertor.hex8.rgb = function convertHex8Rgb(hex8) {
     return _this.color
 }
 
-colorConvertor.hex8.rgba = function convertHex8Rgba(hex8) {
+colorConvertor.hex8.rgba = (hex8) => {
     const _this = colorConvertor.hex6.rgb(hex8.substring(0, 6))
     _this.a = Number((parseInt(hex8.substring(6, 8), 16) / 255).toFixed(2))
 
@@ -141,13 +123,11 @@ colorConvertor.hex8.rgba = function convertHex8Rgba(hex8) {
 }
 
 // 7 | --- html  -----------------------------------------------------
-colorConvertor.html.rgb = function convertHtmlRgb(htmlInput) {
-    return PullDataFromList(html, 'rgb', htmlInput)
-}
+colorConvertor.html.rgb = (htmlInput) => PullDataFromList(html, 'rgb', htmlInput)
 
 // 8 | --- hsl -----------------------------------------------------
-colorConvertor.hsl.rgb = function convertHslRgb(_hsl) {
-    const hsl = { ..._hsl}
+colorConvertor.hsl.rgb = (_hsl) => {
+    const hsl = { ..._hsl }
     const rgb = { r: 0, g: 0, b: 0 }
 
     hsl.h /= 60
@@ -190,13 +170,11 @@ colorConvertor.hsl.rgb = function convertHslRgb(_hsl) {
     return rgb
 }
 
-colorConvertor.hsl.w = function convertHslW(hsl) {
-    return Math.round(620 - ((170 / 270) * hsl.h))
-}
+colorConvertor.hsl.w = (hsl) => Math.round(620 - ((170 / 270) * hsl.h))
 
 // 9 | --- hsv -----------------------------------------------------
-colorConvertor.hsv.rgb = function convertHsvRgb(_hsv) {
-    const hsv = {..._hsv}
+colorConvertor.hsv.rgb = (_hsv) => {
+    const hsv = { ..._hsv }
     hsv.h /= 360
     hsv.s /= 100
     hsv.v /= 100
@@ -226,8 +204,8 @@ colorConvertor.hsv.rgb = function convertHsvRgb(_hsv) {
 }
 
 // 10 | --- Lab -----------------------------------------------------
-colorConvertor.lab.pantone = function convertLabPantone(labOrigin) {
-    const lab = { ...labOrigin}
+colorConvertor.lab.pantone = (labOrigin) => {
+    const lab = { ...labOrigin }
     const _this = {
         index: 768,
         name: '',
@@ -247,7 +225,7 @@ colorConvertor.lab.pantone = function convertLabPantone(labOrigin) {
     return _this.name
 }
 
-colorConvertor.lab.ral = function convertLabRal(lab) {
+colorConvertor.lab.ral = (lab) => {
     const _this = {
         index: 768,
         position: ral.length - 1,
@@ -277,8 +255,9 @@ colorConvertor.lab.ral = function convertLabRal(lab) {
     }
 }
 
-colorConvertor.lab.rgb = function convertLabRgb(lab) {
+colorConvertor.lab.rgb = (lab) => {
     const xyz = { x: 0, y: 0, z: 0 }
+    const rgb = { r: 0, g: 0, b: 0 }
 
     xyz.y = (lab.l + 16) / 116
     xyz.x = lab.a / 500 + xyz.y
@@ -288,7 +267,6 @@ colorConvertor.lab.rgb = function convertLabRgb(lab) {
     xyz.y = 1.00000 * (((xyz.y ** 3) > 0.008856) ? (xyz.y ** 3) : (xyz.y - 16 / 116) / 7.787)
     xyz.z = 1.08883 * (((xyz.z ** 3) > 0.008856) ? (xyz.z ** 3) : (xyz.z - 16 / 116) / 7.787)
 
-    const rgb = { r: 0, g: 0, b: 0 }
     rgb.r = xyz.x * 3.2406 + xyz.y * -1.5372 + xyz.z * -0.4986
     rgb.g = xyz.x * -0.9689 + xyz.y * 1.8758 + xyz.z * 0.0415
     rgb.b = xyz.x * 0.0557 + xyz.y * -0.2040 + xyz.z * 1.0570
@@ -302,34 +280,22 @@ colorConvertor.lab.rgb = function convertLabRgb(lab) {
 }
 
 // 11 | --- Pantone -----------------------------------------------------
-colorConvertor.pantone.rgb = function convertPantoneRgb(pantoneInput) {
-    return PullDataFromList(pantone, 'rgb', pantoneInput)
-}
+colorConvertor.pantone.rgb = (pantoneInput) => PullDataFromList(pantone, 'rgb', pantoneInput)
 
-colorConvertor.pantone.cmyk = function convertPantoneCmyk(pantoneInput) {
-    return PullDataFromList(pantone, 'cmyk', pantoneInput)
-}
+colorConvertor.pantone.cmyk = (pantoneInput) => PullDataFromList(pantone, 'cmyk', pantoneInput)
 
-colorConvertor.pantone.lab = function convertPantoneLab(pantoneInput) {
-    return PullDataFromList(pantone, 'lab', pantoneInput)
-}
+colorConvertor.pantone.lab = (pantoneInput) => PullDataFromList(pantone, 'lab', pantoneInput)
 
 // 12 | --- Ral -----------------------------------------------------
-colorConvertor.ral.rgb = function convertRalRgb(ralInput) {
-    return PullDataFromList(ral, 'rgb', ralInput, 'ral')
-}
+colorConvertor.ral.rgb = (ralInput) => PullDataFromList(ral, 'rgb', ralInput, 'ral')
 
-colorConvertor.ral.cmyk = function convertRalCmyk(ralInput) {
-    return PullDataFromList(ral, 'cmyk', ralInput, 'ral')
-}
+colorConvertor.ral.cmyk = (ralInput) => PullDataFromList(ral, 'cmyk', ralInput, 'ral')
 
-colorConvertor.ral.lab = function convertRalLab(ralInput) {
-    return PullDataFromList(ral, 'lab', ralInput, 'ral')
-}
+colorConvertor.ral.lab = (ralInput) => PullDataFromList(ral, 'lab', ralInput, 'ral')
 
 // 13 | --- rgb -----------------------------------------------------
-colorConvertor.rgb.hex6 = function convertRgbHex6(rgb) {
-    function rgbNormalize(colorBase) {
+colorConvertor.rgb.hex6 = (_rgb) => {
+    const rgbNormalize = (colorBase) => {
         let color = makeNumeric(colorBase)
 
         if (color < 16) {
@@ -340,19 +306,21 @@ colorConvertor.rgb.hex6 = function convertRgbHex6(rgb) {
 
         return color
     }
-    return [rgbNormalize(rgb.r), rgbNormalize(rgb.g), rgbNormalize(rgb.b)].join('').toUpperCase()
+
+    const rgb = { ..._rgb }
+
+    Object.keys(rgb).map((k) => { rgb[k] = rgbNormalize(rgb[k]) })
+
+    return [rgb.r, rgb.g, rgb.b].join('').toUpperCase()
 }
 
-colorConvertor.rgb.rgba = function convertRgbRgba(rgb) {
-    return Object.assign(rgb, { a: 1 })
-}
+colorConvertor.rgb.rgba = (rgb) => Object.assign(rgb, { a: 1 })
 
-colorConvertor.rgb.hsl = function convertRgbHsl(_rgb) {
-    const rgb = {..._rgb}
+colorConvertor.rgb.hsl = (_rgb) => {
+    const rgb = { ..._rgb }
     const hsl = { h: 0, s: 0, l: 0 }
-    for (const i of 'rgb') {
-        rgb[i] /= 255
-    }
+
+    Object.keys(rgb).map((k) => { rgb[k] /= 255 })
 
     // Min Max chanel val
     rgb.cmin = Math.min(rgb.r, rgb.g, rgb.b)
@@ -372,22 +340,19 @@ colorConvertor.rgb.hsl = function convertRgbHsl(_rgb) {
 
     // Make negative hues positive behind 360°
     hsl.h = (hsl.h < 0) ? hsl.h + 360 : hsl.h
-
     hsl.l = (rgb.cmax + rgb.cmin) / 2
-
     hsl.s = rgb.delta === 0 ? 0 : rgb.delta / (1 - Math.abs(2 * hsl.l - 1))
 
     hsl.s = parseFloat((hsl.s * 100).toFixed(1))
     hsl.l = parseFloat((hsl.l * 100).toFixed(1))
 
-    return toFixed(hsl)
+    return approxFix(hsl)
 }
 
-colorConvertor.rgb.hsv = function convertRgbHsv(_rgb) {
-    const rgb = {..._rgb}
-    for (const i of 'rgb') {
-        rgb[i] /= 255
-    }
+colorConvertor.rgb.hsv = (_rgb) => {
+    const rgb = { ..._rgb }
+
+    Object.keys(rgb).map((k) => { rgb[k] /= 255 })
 
     const minRGB = Math.min(rgb.r, Math.min(rgb.g, rgb.b))
     const maxRGB = Math.max(rgb.r, Math.max(rgb.g, rgb.b))
@@ -419,32 +384,28 @@ colorConvertor.rgb.hsv = function convertRgbHsv(_rgb) {
     return hsv
 }
 
-colorConvertor.rgb.grayscale = function convertRgbGrayscale(_rgb) {
+colorConvertor.rgb.grayscale = (_rgb) => {
     if (_rgb) {
-        const rgb = {..._rgb}
+        const rgb = { ..._rgb }
         const grayscaleWhite = {
             r: 0.3,
             g: 0.59,
             b: 0.11,
         }
 
-        for (const i of 'rgb') {
-            rgb[i] = (255 - rgb[i]) * grayscaleWhite[i]
-        }
+        Object.keys(rgb).map((k) => { rgb[k] = (255 - rgb[k]) * grayscaleWhite[k] })
+
         return Math.round((rgb.r + rgb.g + rgb.b) / 2.56)
     }
     return 100
 }
 
-colorConvertor.rgb.lab = function convertRgbLab(_rgb) {
-    const rgb = {..._rgb}
-    for (const i of 'rgb') {
-        rgb[i] /= 255
-    }
-
-    rgb.r = (rgb.r > 0.04045) ? (((rgb.r + 0.055) / 1.055) ** 2.4) : rgb.r / 12.92
-    rgb.g = (rgb.g > 0.04045) ? (((rgb.g + 0.055) / 1.055) ** 2.4) : rgb.g / 12.92
-    rgb.b = (rgb.b > 0.04045) ? (((rgb.b + 0.055) / 1.055) ** 2.4) : rgb.b / 12.92
+colorConvertor.rgb.lab = (_rgb) => {
+    const rgb = { ..._rgb }
+    Object.keys(rgb).map((k) => {
+        rgb[k] /= 255
+        rgb[k] = (rgb[k] > 0.04045) ? (((rgb[k] + 0.055) / 1.055) ** 2.4) : rgb[k] / 12.92
+    })
 
     const xyz = { x: 0, y: 0, z: 0 }
 
@@ -452,16 +413,14 @@ colorConvertor.rgb.lab = function convertRgbLab(_rgb) {
     xyz.y = (rgb.r * 0.2126 + rgb.g * 0.7152 + rgb.b * 0.0722) / 1.00000
     xyz.z = (rgb.r * 0.0193 + rgb.g * 0.1192 + rgb.b * 0.9505) / 1.08883
 
-    xyz.x = (xyz.x > 0.008856) ? (xyz.x ** (1 / 3)) : (7.787 * xyz.x) + 16 / 116
-    xyz.y = (xyz.y > 0.008856) ? (xyz.y ** (1 / 3)) : (7.787 * xyz.y) + 16 / 116
-    xyz.z = (xyz.z > 0.008856) ? (xyz.z ** (1 / 3)) : (7.787 * xyz.z) + 16 / 116
+    Object.keys(xyz).map((k) => { xyz[k] = (xyz[k] > 0.008856) ? (xyz[k] ** (1 / 3)) : (7.787 * xyz[k]) + 16 / 116 })
 
     const lab = { l: ((116 * xyz.y) - 16), a: (500 * (xyz.x - xyz.y)), b: (200 * (xyz.y - xyz.z)) }
-    return toFixed(lab)
+    return approxFix(lab)
 }
 
-colorConvertor.rgb.cmyk = function convertRgbCmyk(_rgb) {
-    const rgb = {..._rgb}
+colorConvertor.rgb.cmyk = (_rgb) => {
+    const rgb = { ..._rgb }
     const cmyk = {
         c: 0, m: 0, y: 0, k: 0,
     }
@@ -469,9 +428,7 @@ colorConvertor.rgb.cmyk = function convertRgbCmyk(_rgb) {
     if (rgb.r === 0 && rgb.g === 0 && rgb.b === 0) {
         cmyk.k = 100
     } else {
-        for (const i of 'rgb') {
-            rgb[i] /= 255
-        }
+        Object.keys(rgb).map((k) => { rgb[k] /= 255 })
 
         cmyk.k = 1 - Math.max(rgb.r, rgb.g, rgb.b)
 
@@ -480,29 +437,26 @@ colorConvertor.rgb.cmyk = function convertRgbCmyk(_rgb) {
             cmyk.m = (1 - rgb.g - cmyk.k) / (1 - cmyk.k)
             cmyk.y = (1 - rgb.b - cmyk.k) / (1 - cmyk.k)
 
-            for (const i of 'cmyk') {
-                cmyk[i] = Math.round(cmyk[i] * 100)
-            }
+            Object.keys(cmyk).map((k) => { cmyk[k] = Math.round(cmyk[k] * 100) })
         }
     }
     return cmyk
 }
 
-colorConvertor.rgb.rgbdecimal = function convertRgbDecimal(rgb) {
-    return (rgb.r << 16) + (rgb.g << 8) + (rgb.b)
-}
+colorConvertor.rgb.rgbdecimal = (rgb) => (rgb.r << 16) + (rgb.g << 8) + (rgb.b)
 
-colorConvertor.rgb.html = function convertRgbHtml(rgb) {
+colorConvertor.rgb.html = (rgb) => {
     const _this = {
         index: 768,
         html: '',
     }
+
     const { r, g, b } = rgb
-    for (const elementHtml of html) {
-        const t = Math.abs(elementHtml.rgb.r - r) + Math.abs(elementHtml.rgb.g - g) + Math.abs(elementHtml.rgb.b - b)
+    for (const eHtml of html) {
+        const t = Math.abs(eHtml.rgb.r - r) + Math.abs(eHtml.rgb.g - g) + Math.abs(eHtml.rgb.b - b)
         if (t < _this.index) {
             _this.index = t
-            _this.html = splitCamelCase(elementHtml.name)
+            _this.html = splitCamelCase(eHtml.name)
             if (_this.index === 0) {
                 return _this.html
             }
@@ -512,15 +466,12 @@ colorConvertor.rgb.html = function convertRgbHtml(rgb) {
     return _this.html
 }
 
-colorConvertor.rgb.xyz = function convertRgbXyz(_rgb) {
-    const rgb = {..._rgb}
-    function pivot(n) {
-        return (n > 0.04045 ? (((n + 0.055) / 1.055) ** 2.4) : n / 12.92) * 100.0
-    }
+colorConvertor.rgb.xyz = (_rgb) => {
+    const pivot = (n) => (n > 0.04045 ? (((n + 0.055) / 1.055) ** 2.4) : n / 12.92) * 100.0
 
-    for (const i of 'rgb') {
-        rgb[i] = pivot(rgb[i] / 255.0)
-    }
+    const rgb = { ..._rgb }
+
+    Object.keys(rgb).map((k) => { rgb[k] = pivot(rgb[k] / 255.0) })
 
     return {
         x: rgb.r * 0.4124 + rgb.g * 0.3576 + rgb.b * 0.1805,
@@ -529,7 +480,7 @@ colorConvertor.rgb.xyz = function convertRgbXyz(_rgb) {
     }
 }
 
-colorConvertor.rgb.yuv = function convertRgbYuv(rgb) {
+colorConvertor.rgb.yuv = (rgb) => {
     const yuv = { y: 0, u: 0, v: 0 }
     yuv.y = (0.257 * rgb.r) + (0.504 * rgb.g) + (0.098 * rgb.b) + 16
     yuv.u = (-0.148 * rgb.r) - (0.291 * rgb.g) + (0.439 * rgb.b) + 128
@@ -539,28 +490,24 @@ colorConvertor.rgb.yuv = function convertRgbYuv(rgb) {
 }
 
 // 14 | --- rgba -----------------------------------------------------
-colorConvertor.rgba.rgb = function convertRgbaRGB(rgba) {
-    const _this = {}
+colorConvertor.rgba.rgb = (rgba) => {
+    const rgb = { r: 0, g: 0, b: 0 }
 
-    for (const i of 'rgb') {
-        _this[i] = Math.round(rgba[i] * rgba.a)
-    }
+    Object.keys(rgb).map((k) => { rgb[k] = Math.round(rgba[k] * rgba.a) })
 
-    return _this
+    return rgb
 }
 
 // 14 | --- rgbdecimal -----------------------------------------------------
 
-colorConvertor.rgbdecimal.rgb = function convertRgbDRgb(RGBdecimal) {
-    return {
-        r: (RGBdecimal & 0xff0000) >> 16,
-        g: (RGBdecimal & 0x00ff00) >> 8,
-        b: (RGBdecimal & 0x0000ff),
-    }
-}
+colorConvertor.rgbdecimal.rgb = (RGBd) => ({
+    r: (RGBd & 0xff0000) >> 16,
+    g: (RGBd & 0x00ff00) >> 8,
+    b: (RGBd & 0x0000ff),
+})
 
 // 15 | --- w -----------------------------------------------------
-colorConvertor.w.rgb = function convertWRgb(w) {
+colorConvertor.w.rgb = (w) => {
     const rgb = { r: 0, g: 0, b: 0 }
 
     if (w >= 380 && w < 440) {
@@ -582,39 +529,37 @@ colorConvertor.w.rgb = function convertWRgb(w) {
         rgb.r = 1
     }
 
-    for (const i of 'rgb') {
-        rgb[i] = Math.round(rgb[i] * 255)
-    }
+    Object.keys(rgb).map((k) => { rgb[k] = Math.round(rgb[k] * 255) })
 
     return rgb
 }
 
 // 16 | --- XYZ -----------------------------------------------------
-colorConvertor.xyz.lab = function convertXyzLab(xyz) {
-    function pivot(n) {
-        return n > 0.008856 ? (n ** 0.3333) : (903.3 * n + 16) / 116
-    }
+colorConvertor.xyz.lab = (_xyz) => {
+    const pivot = (n) => (n > 0.008856 ? (n ** 0.3333) : (903.3 * n + 16) / 116)
 
-    const x = pivot(xyz.x / 95.047)
-    const y = pivot(xyz.y / 100.000)
-    const z = pivot(xyz.z / 108.883)
+    const xyz = { ..._xyz }
+
+    xyz.x /= 95.047
+    xyz.y /= 100.000
+    xyz.z /= 108.883
+
+    Object.keys(xyz).map((k) => { xyz[k] = pivot(xyz[k]) })
 
     const lab = {
-        l: Math.max(0, 116 * y - 16),
-        a: 500 * (x - y),
-        b: 200 * (y - z),
+        l: Math.max(0, 116 * xyz.y - 16),
+        a: 500 * (xyz.x - xyz.y),
+        b: 200 * (xyz.y - xyz.z),
     }
 
-    return toFixed(lab)
+    return approxFix(lab)
 }
 
 // 16 | --- YUV -----------------------------------------------------
-colorConvertor.yuv.rgb = function convertYuvRGB(yuv) {
-    return {
-        r: Math.round(yuv.y + (1.140 * yuv.v)),
-        g: Math.round(yuv.y - (0.395 * yuv.v) - (0.581 * yuv.v)),
-        b: Math.round(yuv.y + (2.032 * yuv.u)),
-    }
-}
+colorConvertor.yuv.rgb = (yuv) => ({
+    r: Math.round(yuv.y + (1.140 * yuv.v)),
+    g: Math.round(yuv.y - (0.395 * yuv.v) - (0.581 * yuv.v)),
+    b: Math.round(yuv.y + (2.032 * yuv.u)),
+})
 
 module.exports = colorConvertor

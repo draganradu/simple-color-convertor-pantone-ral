@@ -1,12 +1,10 @@
-module.exports = function generateSteps(list, from, to, maxLen) {
-    function noDuplicates(array) {
-        return (new Set(array)).size === array.length
-    }
+module.exports = (list, from, to, maxLen) => {
+    const noDuplicates = (array) => (new Set(array)).size === array.length
 
     // Copy initial values as arrays
     const perm = list.map((val) => [val])
     // Our permutation generator
-    const generate = function recursiveFunction(_perm, _maxLen, currLen) {
+    const generate = (_perm, _maxLen, currLen) => {
         // Reached desired length
         if (currLen === _maxLen) {
             return _perm

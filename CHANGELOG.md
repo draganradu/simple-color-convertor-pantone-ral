@@ -13,3 +13,5 @@ Fixed the Travis CI issue caused by Jest, added a older version and removed JSdo
 Fixed leaky convertor methods
 Removed support for node 6 (it dose not run with current version of jest)
 
+### 2.1.13
+Optimized for speed. No functionality change.

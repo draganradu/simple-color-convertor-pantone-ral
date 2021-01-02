@@ -1,7 +1,7 @@
 const _colorSanitizer = require('./_color_sanitizer')
 
-module.exports = function colorTell(data) {
-    function everyKeyIndexOf(keys, string) {
+module.exports = (data) => {
+    const everyKeyIndexOf = (keys, string) => {
         for (const i of keys) {
             if (string.indexOf(i) === -1) {
                 return false
@@ -11,7 +11,7 @@ module.exports = function colorTell(data) {
         return true
     }
 
-    function ColorHasKeys(color, rawData) {
+    const ColorHasKeys = (color, rawData) => {
         for (let i = 0; i < color.length; i++) {
             if (!Object.prototype.hasOwnProperty.call(rawData, color[i])) {
                 return false

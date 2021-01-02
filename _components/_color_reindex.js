@@ -1,19 +1,19 @@
-module.exports = function reindex(settingsColorString, settingsIndexColor, settingsRegexColorMatch) {
+module.exports = ({ colorData, colorName, regex }) => {
     // stop it impossible due to length
-    if (settingsColorString.length < (settingsIndexColor.length + (settingsIndexColor.length - 1))) { return false }
+    if (colorData.length < (colorName.length + (colorName.length - 1))) { return false }
 
     const _this = {
         tempOut: {},
-        regexColorMatch: new RegExp(settingsRegexColorMatch, 'g') || new RegExp('/(d+)/', 'g'),
+        regexColorMatch: new RegExp(regex, 'g') || new RegExp('/(d+)/', 'g'),
 
         get perfectMatch() {
-            return settingsColorString.indexOf(settingsIndexColor) > -1
+            return colorData.indexOf(colorName) > -1
         },
 
         get partialMatch() {
-            let requiredLetters = settingsIndexColor.length
-            for (const i of settingsIndexColor) {
-                if (settingsColorString.indexOf(i) > -1) {
+            let requiredLetters = colorName.length
+            for (const i of colorName) {
+                if (colorData.indexOf(i) > -1) {
                     requiredLetters -= 1
                 }
             }
@@ -22,8 +22,8 @@ module.exports = function reindex(settingsColorString, settingsIndexColor, setti
         },
 
         get preventNoFormatReindex() {
-            if (settingsIndexColor === 'hsl' || settingsIndexColor === 'hsv') {
-                if (settingsColorString.indexOf('°') === -1) {
+            if (colorName === 'hsl' || colorName === 'hsv') {
+                if (colorData.indexOf('°') === -1) {
                     return false
                 }
             }
@@ -33,15 +33,15 @@ module.exports = function reindex(settingsColorString, settingsIndexColor, setti
 
     if (_this.perfectMatch) {
         // perfect match
-        _this.tempOut = settingsColorString.match(_this.regexColorMatch)
-        if (_this.tempOut.length === settingsIndexColor.length) {
+        _this.tempOut = colorData.match(_this.regexColorMatch)
+        if (_this.tempOut.length === colorName.length) {
             return _this.tempOut
         }
     } else if (_this.partialMatch) {
         // partial - runs unordered reindex
-        for (const i of settingsIndexColor) {
-            const colorIndex = settingsColorString.indexOf(i) + 1
-            const match = settingsColorString.substring(colorIndex).match(_this.regexColorMatch)
+        for (const i of colorName) {
+            const colorIndex = colorData.indexOf(i) + 1
+            const match = colorData.substring(colorIndex).match(_this.regexColorMatch)
             if (match) {
                 const [a] = match
                 _this.tempOut[i] = a
@@ -51,10 +51,10 @@ module.exports = function reindex(settingsColorString, settingsIndexColor, setti
         return (_this.tempOut) ? _this.tempOut : false
     } else if (_this.preventNoFormatReindex) {
         // no match - unordered reindexing
-        const match = settingsColorString.match(_this.regexColorMatch)
-        if (match && match.length === settingsIndexColor.length) {
-            for (let i = 0; i < settingsIndexColor.length; i++) {
-                _this.tempOut[settingsIndexColor[i]] = match[i]
+        const match = colorData.match(_this.regexColorMatch)
+        if (match && match.length === colorName.length) {
+            for (let i = 0; i < colorName.length; i++) {
+                _this.tempOut[colorName[i]] = match[i]
             }
             return _this.tempOut
         }

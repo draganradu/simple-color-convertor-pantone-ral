@@ -3,13 +3,13 @@ const _colorSanitizer = require('./_components/_color_sanitizer')
 const _colorTell = require('./_components/_color_tell')
 const _permutation = require('./_components/frame/_frame_permutation')
 
-const _clone = require('./_components/frame/_frame_clone')
+const { cloneData, cloneAndFormat } = require('./_components/frame/_frame_clone')
 const _removeFromArray = require('./_components/frame/_remove_array_from_array')
 
 class color {
     constructor(settingsArg = {}) {
         // get settings
-        this.settings = _clone(settingsArg)
+        this.settings = cloneAndFormat(settingsArg)
         this.sanitizeAlternativeKeys()
         this.debug = settingsArg.debug || false
         this.error = ''
@@ -17,7 +17,7 @@ class color {
 
         // set from and to
         this.from = this.sanitizeFrom(this.settings) || false
-        this.to = this.sanitizeTo(this.from, this.settings.to) || false
+        this.to = this.sanitizeTo({ from: this.from, to: this.settings.to }) || false
 
         // run extra work for flags
         this.extraStepsForGrayscale()
@@ -26,7 +26,7 @@ class color {
         this.color = (this.from && this.to) ? _colorSanitizer[this.from](this.settings[this.from]) : false
 
         // convert
-        this.color = this.ColorConvert(this.color, this.to)
+        this.color = this.ColorConvert({ color: this.color, steps: this.to })
 
         // build extra hex3 for
         this.hexRefBuild()
@@ -39,8 +39,8 @@ class color {
         if (!this.error && this.grayscale === true) {
             const LastColorStep = this.to.pop()
             const tempTo = [
-                this.sanitizeTo(LastColorStep, 'grayscale'),
-                this.sanitizeTo('grayscale', LastColorStep),
+                this.sanitizeTo({ from: LastColorStep, to: 'grayscale' }),
+                this.sanitizeTo({ from: 'grayscale', to: LastColorStep }),
             ]
             if (tempTo[0] && tempTo[1]) {
                 tempTo[0].pop()
@@ -52,12 +52,12 @@ class color {
     hexRefBuild() {
         if (this.settings.hexref) {
             const lastElement = this.to[this.to.length - 1]
-            const stepsTemp = this.sanitizeTo(lastElement, 'hex6')
+            const stepsTemp = this.sanitizeTo({ from: lastElement, to: 'hex6' })
 
             if (lastElement === 'ral' || lastElement === 'html') {
-                this.hexref = this.ColorConvert(_colorSanitizer[lastElement](this.color), stepsTemp)
+                this.hexref = this.ColorConvert({ color: _colorSanitizer[lastElement](this.color), steps: stepsTemp })
             } else {
-                this.hexref = this.ColorConvert(this.color, stepsTemp)
+                this.hexref = this.ColorConvert({ color: this.color, steps: stepsTemp })
             }
 
             return true
@@ -161,7 +161,7 @@ class color {
         return to
     }
 
-    sanitizeTo(from, to) {
+    sanitizeTo({ from, to }) {
         if (!this.error) {
             const _to = this.constructor.sanitizeExceptionsTo(to)
 
@@ -202,20 +202,20 @@ class color {
         }
     }
 
-    ColorConvert(tempColor, to) {
-        let _tempColor = tempColor
-        if (!this.error && _tempColor && to) {
+    ColorConvert({ color, steps }) {
+        let _color = cloneData(color)
+        if (!this.error && _color && steps) {
             // normal flow
-            if (to[0] !== to[1]) {
-                for (let i = 0; i < to.length - 1; i++) {
-                    _tempColor = _colorFactory[to[i]][to[i + 1]](_clone(_tempColor))
+            if (steps[0] !== steps[1]) {
+                for (let i = 0; i < steps.length - 1; i++) {
+                    _color = _colorFactory[steps[i]][steps[i + 1]](_color)
                 }
                 // if the to and from are both hex return uppercase value
-            } else if (['hex3', 'hex4', 'hex6', 'hex8'].indexOf(to[0]) > -1) {
-                return _tempColor.toUpperCase()
+            } else if (['hex3', 'hex4', 'hex6', 'hex8'].indexOf(steps[0]) > -1) {
+                return _color.toUpperCase()
             }
             // if to and from are both the same and not hex
-            return _tempColor
+            return _color
         }
         this.error = this.error || 'Can`t convert color.'
         return {}

@@ -1,7 +1,7 @@
 // safeguard function is used to prevent string that contain obvious strings to be excluded
 const AcceptedColors = require('./_accepted_colors')
 
-module.exports = function safeGuarColor(colorString, probableColor) {
+module.exports = (colorString, probableColor) => {
     if (typeof colorString !== 'string') { return false }
 
     const _this = {

@@ -33,7 +33,7 @@
   "repository": "draganradu/simple-color-convertor-pantone-ral",
   "homepage": "https://draganradu.github.io/",
   "scripts": {
-    "dev": "node test/dev.test.js",
+    "dev": "node test/one.line.js",
     "test": "jest",
     "lint": "eslint *.js _components/*.js _components/**/*.js",
     "lintfix": "eslint *.js test/*.js _components/**/*.js --fix"
