@@ -1,10 +1,19 @@
 {
-  "name": "simple-color-convertor-pantone-ral",
-  "version": "1.0.0",
+  "name": "simple-color-converter",
+  "version": "3.0.0",
   "description": "",
+  "keywords": [
+    "color"
+  ],
   "main": "index.js",
+  "engines": {
+    "node": ">= 0.8"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "build": "tsc index.ts",
+    "watch": "",
+    "lint": "eslint *.ts test/*.js _components/**/*.ts --fix"
   },
   "repository": {
     "type": "git",
@@ -15,5 +24,13 @@
   "bugs": {
     "url": "https://github.com/draganradu/simple-color-convertor-pantone-ral/issues"
   },
-  "homepage": "https://github.com/draganradu/simple-color-convertor-pantone-ral#readme"
+  "homepage": "https://github.com/draganradu/simple-color-convertor-pantone-ral#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^7.13.8",
+    "@babel/preset-typescript": "^7.13.0",
+    "babel": "^6.23.0",
+    "eslint": "^7.21.0",
+    "jest": "^26.6.3",
+    "typescript": "^4.2.2"
+  }
 }
