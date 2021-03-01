@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "jest",
-    "build": "tsc index.ts",
+    "build": "tsc -t es5 _components/*.ts",
     "watch": "",
     "lint": "eslint *.ts test/*.js _components/**/*.ts --fix"
   },
@@ -28,6 +28,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.13.8",
     "@babel/preset-typescript": "^7.13.0",
+    "@types/jest": "^26.0.20",
     "babel": "^6.23.0",
     "eslint": "^7.21.0",
     "jest": "^26.6.3",
