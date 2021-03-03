@@ -1,6 +1,6 @@
-const AcceptedColors: any = require('./_accepted_colors')
-const { doubleString } = require('./helper')
-const colorConvertor:any = new AcceptedColors()
+const AppAcceptedColor: any = require('./_accepted_colors')
+const { doubleString, approxFix, splitCamelCase } = require('./helper')
+const colorConvertor:any = new AppAcceptedColor()
 
 // 0 | --- typescript setup ---------------------------------------------------------
 interface typeCMYK {
@@ -44,6 +44,12 @@ interface typeLAB {
 
 interface typePantone {
 
+}
+
+interface typeXYZ {
+    x:number,
+    y:number,
+    z:number,
 }
 
 interface typeYUV {
@@ -460,7 +466,7 @@ colorConvertor.rgb.cmyk = (_rgb) => {
 
 colorConvertor.rgb.rgbdecimal = (rgb) => (rgb.r << 16) + (rgb.g << 8) + (rgb.b)
 
-colorConvertor.rgb.html = (rgb) => {
+colorConvertor.rgb.html = (rgb:typeRGB):typeHTML => {
     const _this = {
         index: 768,
         html: '',
@@ -481,8 +487,8 @@ colorConvertor.rgb.html = (rgb) => {
     return _this.html
 }
 
-colorConvertor.rgb.xyz = (_rgb) => {
-    const pivot = (n) => (n > 0.04045 ? (((n + 0.055) / 1.055) ** 2.4) :n / 12.92) * 100.0
+colorConvertor.rgb.xyz = (_rgb:typeRGB):typeXYZ => {
+    const pivot = (n:number) => (n > 0.04045 ? (((n + 0.055) / 1.055) ** 2.4) :n / 12.92) * 100.0
 
     const rgb = { ..._rgb }
 
@@ -495,7 +501,7 @@ colorConvertor.rgb.xyz = (_rgb) => {
     }
 }
 
-colorConvertor.rgb.yuv = (rgb) => {
+colorConvertor.rgb.yuv = (rgb:typeRGB):typeYUV => {
     const yuv = { y: 0, u: 0, v: 0 }
     yuv.y = (0.257 * rgb.r) + (0.504 * rgb.g) + (0.098 * rgb.b) + 16
     yuv.u = (-0.148 * rgb.r) - (0.291 * rgb.g) + (0.439 * rgb.b) + 128
@@ -505,7 +511,7 @@ colorConvertor.rgb.yuv = (rgb) => {
 }
 
 // 14 | --- rgba -----------------------------------------------------
-colorConvertor.rgba.rgb = (rgba) => {
+colorConvertor.rgba.rgb = (rgba:typeRGBA):typeRGB => {
     const rgb = { r: 0, g: 0, b: 0 }
 
     Object.keys(rgb).map((k) => { rgb[k] = Math.round(rgba[k] * rgba.a) })
@@ -515,14 +521,14 @@ colorConvertor.rgba.rgb = (rgba) => {
 
 // 14 | --- rgbdecimal -----------------------------------------------------
 
-colorConvertor.rgbdecimal.rgb = (RGBd) => ({
+colorConvertor.rgbdecimal.rgb = (RGBd:String):typeRGB => ({
     r: (RGBd & 0xff0000) >> 16,
     g: (RGBd & 0x00ff00) >> 8,
     b: (RGBd & 0x0000ff),
 })
 
 // 15 | --- w -----------------------------------------------------
-colorConvertor.w.rgb = (w) => {
+colorConvertor.w.rgb = (w:number):typeRGB => {
     const rgb = { r: 0, g: 0, b: 0 }
 
     if (w >= 380 && w < 440) {
@@ -550,16 +556,16 @@ colorConvertor.w.rgb = (w) => {
 }
 
 // 16 | --- XYZ -----------------------------------------------------
-colorConvertor.xyz.lab = (_xyz) => {
-    const pivot = (n) => (n > 0.008856 ? (n ** 0.3333) : (903.3 * n + 16) / 116)
+colorConvertor.xyz.lab = (_xyz: typeXYZ):typeLAB => {
+    const pivot = (n:number):number => (n > 0.008856 ? (n ** 0.3333) : (903.3 * n + 16) / 116)
 
-    const xyz = { ..._xyz }
+    const xyz:typeXYZ = { ..._xyz }
 
     xyz.x /= 95.047
     xyz.y /= 100.000
     xyz.z /= 108.883
 
-    Object.keys(xyz).map((k) => { xyz[k] = pivot(xyz[k]) })
+    Object.keys(xyz).map((i) => { xyz[i] = pivot(xyz[i]) })
 
     const lab = {
         l: Math.max(0, 116 * xyz.y - 16),
