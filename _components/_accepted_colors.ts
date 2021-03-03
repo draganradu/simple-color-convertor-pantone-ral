@@ -1,4 +1,4 @@
-const { _removeFromArray } = require('./frame/_remove_array_from_array')
+const { _removeFromArray } = require('./helper')
 
 class AcceptedColors {
     cmyk : {}
