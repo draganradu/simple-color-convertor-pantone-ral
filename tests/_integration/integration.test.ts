@@ -1,4 +1,4 @@
-const AcceptedColors: any = require('./_accepted_colors')
+const AcceptedColors: any = require('../../src/_components/_accepted_colors')
 const usableColors: any = new AcceptedColors()
 
 const colorConvertor: {} = require('./convertColor')

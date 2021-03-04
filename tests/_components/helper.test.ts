@@ -1,4 +1,4 @@
-const helper = require('./helper.ts');
+const helper = require('../../src/_components/helper');
 
 describe('_removeFromArray', () => {
     test ('remove valid array from array', () => {

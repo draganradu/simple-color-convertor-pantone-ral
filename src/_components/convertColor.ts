@@ -1,6 +1,7 @@
 const AppAcceptedColor: any = require('./_accepted_colors')
 const { doubleString, approxFix, splitCamelCase } = require('./helper')
 const colorConvertor:any = new AppAcceptedColor()
+const PullDataFromList:any = require('./pullDataFromList')
 
 // 0 | --- typescript setup ---------------------------------------------------------
 interface typeCMYK {
@@ -315,7 +316,7 @@ colorConvertor.ral.cmyk = (ralInput) => PullDataFromList(ral, 'cmyk', ralInput, 
 colorConvertor.ral.lab = (ralInput) => PullDataFromList(ral, 'lab', ralInput, 'ral')
 
 // 13 | --- rgb -----------------------------------------------------
-colorConvertor.rgb.hex6 = (_rgb) => {
+colorConvertor.rgb.hex6 = (_rgb:typeRGB):string => {
     const rgbNormalize = (colorBase) => {
         let color = makeNumeric(colorBase)
 
@@ -328,7 +329,7 @@ colorConvertor.rgb.hex6 = (_rgb) => {
         return color
     }
 
-    const rgb = { ..._rgb }
+    const rgb:typeRGB = { ..._rgb }
 
     Object.keys(rgb).map((k) => { rgb[k] = rgbNormalize(rgb[k]) })
 
@@ -337,32 +338,33 @@ colorConvertor.rgb.hex6 = (_rgb) => {
 
 colorConvertor.rgb.rgba = (rgb) => Object.assign(rgb, { a: 1 })
 
-colorConvertor.rgb.hsl = (_rgb) => {
-    const rgb = { ..._rgb }
-    const hsl = { h: 0, s: 0, l: 0 }
+colorConvertor.rgb.hsl = (_rgb:typeRGB):typeHSL => {
+    const rgb:typeRGB = { ..._rgb }
+    const hsl:typeHSL = { h: 0, s: 0, l: 0 }
 
     Object.keys(rgb).map((k) => { rgb[k] /= 255 })
 
     // Min Max chanel val
-    rgb.cmin = Math.min(rgb.r, rgb.g, rgb.b)
-    rgb.cmax = Math.max(rgb.r, rgb.g, rgb.b)
-    rgb.delta = rgb.cmax - rgb.cmin
+    const _this:any = {}
+    _this.cmin = Math.min(rgb.r, rgb.g, rgb.b)
+    _this.cmax = Math.max(rgb.r, rgb.g, rgb.b)
+    _this.delta = _this.cmax - _this.cmin
 
     // Calculate hue
-    if (rgb.delta === 0) {
+    if (_this.delta === 0) {
         hsl.h = 0
-    } else if (rgb.cmax === rgb.r) {
-        hsl.h = Math.round((((rgb.g - rgb.b) / rgb.delta) % 6) * 60)
-    } else if (rgb.cmax === rgb.g) {
-        hsl.h = Math.round(((rgb.b - rgb.r) / rgb.delta + 2) * 60)
+    } else if (_this.cmax === rgb.r) {
+        hsl.h = Math.round((((rgb.g - rgb.b) / _this.delta) % 6) * 60)
+    } else if (_this.cmax === rgb.g) {
+        hsl.h = Math.round(((rgb.b - rgb.r) / _this.delta + 2) * 60)
     } else {
-        hsl.h = Math.round(((rgb.r - rgb.g) / rgb.delta + 4) * 60)
+        hsl.h = Math.round(((rgb.r - rgb.g) / _this.delta + 4) * 60)
     }
 
     // Make negative hues positive behind 360°
     hsl.h = (hsl.h < 0) ? hsl.h + 360 : hsl.h
-    hsl.l = (rgb.cmax + rgb.cmin) / 2
-    hsl.s = rgb.delta === 0 ? 0 : rgb.delta / (1 - Math.abs(2 * hsl.l - 1))
+    hsl.l = (_this.cmax + _this.cmin) / 2
+    hsl.s = _this.delta === 0 ? 0 : _this.delta / (1 - Math.abs(2 * hsl.l - 1))
 
     hsl.s = parseFloat((hsl.s * 100).toFixed(1))
     hsl.l = parseFloat((hsl.l * 100).toFixed(1))
@@ -370,26 +372,22 @@ colorConvertor.rgb.hsl = (_rgb) => {
     return approxFix(hsl)
 }
 
-colorConvertor.rgb.hsv = (_rgb) => {
-    const rgb = { ..._rgb }
+colorConvertor.rgb.hsv = (_rgb:typeRGB):typeHSV => {
+    const rgb:typeRGB = { ..._rgb }
 
     Object.keys(rgb).map((k) => { rgb[k] /= 255 })
 
     const minRGB = Math.min(rgb.r, Math.min(rgb.g, rgb.b))
     const maxRGB = Math.max(rgb.r, Math.max(rgb.g, rgb.b))
-    let hsv = false
+    let hsv:typeHSV = { h:0, s:0, v: 0 }
 
     if (minRGB === maxRGB) {
         // grayscale
-        hsv = {
-            h: 0,
-            s: 0,
-            v: minRGB * 100,
-        }
+        hsv.v = minRGB * 100
     } else {
         // color
-        let d = ((rgb.b === minRGB) ? rgb.r - rgb.g : rgb.b - rgb.r)
-        let h = (rgb.b === minRGB) ? 1 : 5
+        let d:number = ((rgb.b === minRGB) ? rgb.r - rgb.g : rgb.b - rgb.r)
+        let h:number = (rgb.b === minRGB) ? 1 : 5
         if (rgb.r === minRGB) {
             d = (rgb.g - rgb.b)
             h = 3
@@ -405,7 +403,7 @@ colorConvertor.rgb.hsv = (_rgb) => {
     return hsv
 }
 
-colorConvertor.rgb.grayscale = (_rgb) => {
+colorConvertor.rgb.grayscale = (_rgb:typeRGB):number => {
     if (_rgb) {
         const rgb = { ..._rgb }
         const grayscaleWhite = {
@@ -421,7 +419,7 @@ colorConvertor.rgb.grayscale = (_rgb) => {
     return 100
 }
 
-colorConvertor.rgb.lab = (_rgb) => {
+colorConvertor.rgb.lab = (_rgb:typeRGB):typeLAB => {
     const rgb = { ..._rgb }
     Object.keys(rgb).map((k) => {
         rgb[k] /= 255
@@ -440,7 +438,7 @@ colorConvertor.rgb.lab = (_rgb) => {
     return approxFix(lab)
 }
 
-colorConvertor.rgb.cmyk = (_rgb) => {
+colorConvertor.rgb.cmyk = (_rgb:typeRGB):typeCMYK => {
     const rgb = { ..._rgb }
     const cmyk = {
         c: 0, m: 0, y: 0, k: 0,
@@ -464,7 +462,7 @@ colorConvertor.rgb.cmyk = (_rgb) => {
     return cmyk
 }
 
-colorConvertor.rgb.rgbdecimal = (rgb) => (rgb.r << 16) + (rgb.g << 8) + (rgb.b)
+colorConvertor.rgb.rgbdecimal = (rgb:typeRGB):number => (rgb.r << 16) + (rgb.g << 8) + (rgb.b)
 
 colorConvertor.rgb.html = (rgb:typeRGB):typeHTML => {
     const _this = {
